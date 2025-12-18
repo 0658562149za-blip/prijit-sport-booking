@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ระบบจองสนามฟุตบอล 7 คน</title>
+     <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+     <link rel="icon" type="image/jpeg" href="f6.jpg">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f3f4f6;
+        line-height: 1.6;
+      }
+
+      /* Navigation Bar */
+      .navbar {
+        background: #22c55e;
+        padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .nav-item {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1em;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: background 0.3s;
+        cursor: pointer;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .user-section {
+        color: white;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logout-btn {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .logout-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Page Container */
+      .page {
+        display: none;
+        min-height: calc(100vh - 200px);
+        animation: fadeIn 0.5s;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        position: relative;
+
+        background-image: linear-gradient(
+            rgba(0, 40, 10, 0.5),
+            rgba(22, 163, 74, 0.6)
+          ),
+          url("f7.jpg");
+        background-size:cover;
+        background-position: 80%center;
+        background-repeat: no-repeat;
+      }
+      .auth-box {
+        background: white;
+        border-radius: 20px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        max-width: 450px;
+        width: 100%;
+      }
+
+      .auth-title {
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #1f2937;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #374151;
+        font-size: 1.1em;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #d1d5db;
+        border-radius: 10px;
+        font-size: 1.1em;
+        transition: border-color 0.3s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #22c55e;
+      }
+
+      .submit-btn {
+        width: 100%;
+        background: #22c55e;
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 10px;
+        font-size: 1.2em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 10px;
+      }
+
+      .submit-btn:hover {
+        background: #16a34a;
+      }
+
+      .auth-switch {
+        text-align: center;
+        margin-top: 20px;
+        color: #6b7280;
+      }
+
+      .auth-switch a {
+        color: #22c55e;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .auth-switch a:hover {
+        text-decoration: underline;
+      }
+
+      /* Hero Section */
+      .hero {
+        position: relative;
+        color: white;
+        text-align: center;
+        padding: 100px 20px;
+        /* รูปพื้นหลังสนามฟุตบอล */
+        background-image: linear-gradient(
+            rgba(34, 197, 94, 0),
+            rgba(22, 163, 74, 1)
+          ),
+          url("f5.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .hero h1 {
+        font-size: 3.5em;
+        margin-bottom: 20px;
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7); /* เงาเข้มขึ้น */
+      }
+
+      .hero p {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6); /* เงาเข้มขึ้น */
+      }
+
+      .hero-logo-left {
+        position: absolute;
+        top: 50%;
+        left: 8%;
+        transform: translateY(-50%);
+        width: 250px;
+        height: 250px;
+        opacity: 0.85;
+        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+        animation: floatLogoLeft 4s ease-in-out infinite;
+        z-index: 1;
+      }
+      /* ===== IMAGE SLIDER - เพิ่มส่วนนี้ ===== */
+      .slider-section {
+        position: relative;
+        padding: 60px 20px;
+        min-height: 100vh;
+        /* พื้นหลังใต้ Slider - ใช้รูปของคุณเอง */
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0)
+          ),
+          url("f4.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+      }
+
+      .slider-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        height: 450px;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .slider-wrapper {
+        position: relative;
+        height: 100%;
+        width: 100%;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .slide.active {
+        opacity: 1;
+      }
+
+      /* รูปภาพปรับขนาดเต็มกรอบ - สำคัญมาก! */
+      .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* ← ทำให้รูปเต็มกรอบไม่บิดเบี้ยว */
+        object-position: center;
+      }
+
+      /* ปุ่มลูกศร */
+      .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5em;
+        color: #22c55e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        z-index: 10;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .slider-btn:hover {
+        background: white;
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .slider-btn.prev {
+        left: 20px;
+      }
+
+      .slider-btn.next {
+        right: 20px;
+      }
+
+      /* จุดด้านล่าง (Dots) */
+      .slider-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .dot.active {
+        background: white;
+        width: 30px;
+        border-radius: 6px;
+      }
+
+      /* Responsive Slider */
+      @media (max-width: 768px) {
+        .slider-container {
+          height: 300px;
+        }
+
+        .slider-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 1.2em;
+        }
+
+        .slider-btn.prev {
+          left: 10px;
+        }
+
+        .slider-btn.next {
+          right: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .slider-container {
+          height: 200px;
+          border-radius: 10px;
+        }
+      }
+        /* Welcome Text ใต้ Slider */
+.slider-welcome-text {
+  text-align: center;
+  margin-top: 40px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #0dd417, #00aa3e);
+  border-radius: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.slider-welcome-text h2 {
+  font-size: 3em;
+  color: white;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.slider-welcome-text p {
+  font-size: 1.3em;
+  color: white;
+  opacity: 0.95;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slider-welcome-text h2 {
+    font-size: 2em;
+  }
+
+  .slider-welcome-text p {
+    font-size: 1.2em;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider-welcome-text h2 {
+    font-size: 1.5em;
+  }
+
+  .slider-welcome-text p {
+    font-size: 1em;
+  }
+}
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .hero-logo-left {
+          width: 180px;
+          height: 180px;
+          left: 5%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero-logo-left {
+          width: 130px;
+          height: 10px;
+          left: 3%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-logo-left {
+          display: none; /* ซ่อนในมือถือ */
+        }
+      }
+
+      /* Section Styles */
+      section {
+        padding: 60px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 50px;
+        color: #1f2937;
+        font-weight: bold;
+      }
+
+      .content-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        background: #e5e7eb;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-size: 1.4em;
+        font-weight: bold;
+        margin-bottom: 25px;
+        color: #1f2937;
+      }
+
+      /* Field Info */
+      .field-details {
+        line-height: 2;
+        color: #374151;
+        font-size: 1.1em;
+      }
+
+      .price-list {
+        margin: 25px 0;
+        background: #f9fafb;
+        padding: 25px;
+        border-radius: 10px;
+      }
+
+      .price-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .price-item:last-child {
+        border-bottom: none;
+      }
+
+      .field-name {
+        font-weight: bold;
+        color: #1f2937;
+        font-size: 1.1em;
+      }
+
+      .field-price {
+        color: #22c55e;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+
+      /* Rules */
+      .rules-list {
+        counter-reset: rule-counter;
+      }
+
+      .rule-item {
+        margin: 25px 0;
+        padding: 20px;
+        background: #f9fafb;
+        border-radius: 10px;
+        position: relative;
+        padding-left: 60px;
+        font-size: 1.05em;
+        line-height: 1.8;
+      }
+
+      .rule-item:before {
+        counter-increment: rule-counter;
+        content: counter(rule-counter) ".";
+        position: absolute;
+        left: 20px;
+        font-weight: bold;
+        font-size: 1.3em;
+        color: #22c55e;
+      }
+
+      /* Time Slots */
+      .time-slots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .time-slot-btn {
+        padding: 15px;
+        border: 2px solid #d1d5db;
+        border-radius: 10px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1em;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      .time-slot-btn:hover {
+        border-color: #22c55e;
+        background: #f0fdf4;
+        transform: translateY(-2px);
+      }
+
+      .time-slot-btn.selected {
+        background: #22c55e;
+        color: white;
+        border-color: #22c55e;
+      }
+
+      /* Booking Card */
+      .booking-card {
+        background: #f9fafb;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border-left: 5px solid #22c55e;
+        position: relative;
+      }
+
+      .booking-card h3 {
+        color: #1f2937;
+        margin-bottom: 10px;
+      }
+
+      .booking-card p {
+        margin: 5px 0;
+      }
+
+      .cancel-btn {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.3s;
+      }
+
+      .cancel-btn:hover {
+        background: #dc2626;
+      }
+
+      /* Contact */
+.contact-wrapper {
+  display: flex;
+  flex-direction: row;     
+  align-items: center;    
+  justify-content: center; 
+  gap: 60px;
+  margin: 40px auto;
+  max-width: 800px;
+  flex-wrap: wrap;
+}
+
+    .contact-logo-img {
+  width: 220px; 
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-logo-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 15px;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s;
+}
+
+.contact-logo-img img:hover {
+  transform: scale(1.05);
+}
+  .contact-info {
+        text-align: center;
+      }
+
+      .contact-phone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin: 15px 0;
+        font-size: 1.3em;
+      }
+
+      .contact-phone span {
+        font-size: 1.5em;
+      }
+
+      .thank-you-text {
+        font-size: 5em;
+        font-weight: bold;
+        letter-spacing: 10px;
+        margin-top: 60px;
+        color: #1f2937;
+        text-align: center;
+      }
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-logo-img {
+    width: 120px;
+    height: 120px;
+  }
+  .contact-phone {
+    font-size: 1em;
+  }
+}
+@media (max-width: 480px) {
+  .contact-logo-img {
+    width: 90px;
+    height: 90px;
+  }
+  .contact-phone {
+    font-size: 1em;
+  }
+}
+
+      /* Storage Notice */
+      .storage-notice {
+        background: #fef3c7;
+        border: 2px solid #fbbf24;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #92400e;
+        font-weight: 500;
+      }
+      .availability-notice {
+  background: #dbeafe;
+  border: 2px solid #3b82f6;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.availability-notice.checking {
+  background: #fef3c7;
+  border-color: #fbbf24;
+}
+
+/* 2. คำอธิบายสี (Legend) */
+.availability-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1em;
+}
+
+.legend-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid #d1d5db;
+}
+
+.legend-box.available {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.legend-box.booked {
+  background: #ef4444;
+  border-color: #ef4444;
+}
+
+/* 3. สถานะช่วงเวลา - ว่าง */
+.time-slot-btn.available {
+  background: #f0fdf4;
+  border-color: #22c55e;
+}
+
+/* 4. สถานะช่วงเวลา - ไม่ว่าง */
+.time-slot-btn.booked {
+  background: #fee2e2;
+  border-color: #ef4444;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* 5. แบดจ์สถานะ */
+.time-slot-btn .status-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 0.8em;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.time-slot-btn.available .status-badge {
+  background: #22c55e;
+  color: white;
+}
+
+.time-slot-btn.booked .status-badge {
+  background: #ef4444;
+  color: white;
+}
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2em;
+        }
+
+        .section-title {
+          font-size: 1.8em;
+        }
+
+        .time-slots-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .auth-box {
+          padding: 30px;
+        }
+
+        .nav-links {
+          gap: 10px;
+        }
+
+        .nav-item {
+          font-size: 0.9em;
+          padding: 8px 12px;
+        }
+
+        .contact-logo {
+          font-size: 5em;
+        }
+
+        .thank-you-text {
+          font-size: 3em;
+          letter-spacing: 5px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login Page -->
+    <div id="loginPage" class="page active">
+      <div class="auth-container">
+        <div class="auth-box">
+          <h1 class="auth-title">⚽ เข้าสู่ระบบ</h1>
+          <div class="Storage">
+          </div>
+          <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label class="form-label">ชื่อผู้ใช้</label>
+              <input
+                type="text"
+                id="loginUsername"
+                class="form-input"
+                placeholder="กรอกชื่อผู้ใช้"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">รหัสผ่าน</label>
+              <input
+                type="password"
+                id="loginPassword"
+                class="form-input"
+                placeholder="กรอกรหัสผ่าน"
+                required
+              />
+            </div>
+            <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
+          </form>
+          <div class="auth-switch">
+            ยังไม่มีบัญชี? <a onclick="showPage('registerPage')">สมัครสมาชิก</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="page">
+      <div class="auth-container">
+        <div class="auth-box">
+          <h1 class="auth-title">📝 สมัครสมาชิก</h1>
+          <form onsubmit="handleRegister(event)">
+            <div class="form-group">
+              <label class="form-label">ชื่อผู้ใช้</label>
+              <input
+                type="text"
+                id="regUsername"
+                class="form-input"
+                placeholder="กรอกชื่อผู้ใช้"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">ชื่อ-นามสกุล</label>
+              <input
+                type="text"
+                id="regFullname"
+                class="form-input"
+                placeholder="กรอกชื่อ-นามสกุล"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">เบอร์โทร</label>
+              <input
+                type="tel"
+                id="regPhone"
+                class="form-input"
+                placeholder="กรอกเบอร์โทรศัพท์"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">รหัสผ่าน</label>
+              <input
+                type="password"
+                id="regPassword"
+                class="form-input"
+                placeholder="กรอกรหัสผ่าน"
+                required
+              />
+            </div>
+            <button type="submit" class="submit-btn">สมัครสมาชิก</button>
+          </form>
+          <div class="auth-switch">
+            มีบัญชีแล้ว? <a onclick="showPage('loginPage')">เข้าสู่ระบบ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation (Hidden until logged in) -->
+    <nav id="mainNav" class="navbar" style="display: none">
+      <div class="nav-container">
+        <div class="nav-links">
+          <span class="nav-item" onclick="showPage('homePage')">หน้าแรก</span>
+          <span class="nav-item" onclick="showPage('fieldInfoPage')"
+            >ข้อมูลสนาม</span
+          >
+          <span class="nav-item" onclick="showPage('rulesPage')"
+            >กฎระเบียบ</span
+          >
+          <span class="nav-item" onclick="showPage('bookingPage')"
+            >จองสนาม</span
+          >
+          <span class="nav-item" onclick="showPage('checkBookingPage')"
+            >ตรวจสอบการจอง</span
+          >
+          <span class="nav-item" onclick="showPage('contactPage')"
+            >ติดต่อเรา</span
+          >
+        </div>
+        <div class="user-section">
+          <span>👤 <span id="currentUser"></span></span>
+          <span class="logout-btn" onclick="handleLogout()">ออกจากระบบ</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="homePage" class="page">
+      <div class="hero">
+        <!-- โลโก้มุมซ้าย - เพิ่มบรรทัดนี้ -->
+        <img src="f6.jpg" alt="Logo" class="hero-logo-left" />
+        <h1>PRIJIT SPORT</h1>
+        <p>⚽ ระบบจองสนามฟุตบอล 7 คน ⚽</p>
+        <p>เปิดให้บริการทุกวัน จองง่าย สะดวก รวดเร็ว</p>
+        <p>✨ ยินดีให้บริการ 💡</p>
+      </div>
+      <div class="slider-section">
+        <div class="slider-container">
+          <div class="slider-wrapper">
+            <!-- Slide 1 -->
+            <div class="slide active">
+              <img src="f11.jpg" alt="slide11" />
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide">
+              <img src="f8.jpg" alt="f8" />
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide">
+              <img src="f9.jpg" alt="slide9" />
+            </div>
+          </div>
+
+          <!-- ปุ่มลูกศรซ้าย-ขวา -->
+          <button class="slider-btn prev" onclick="changeSlide(-1)">‹</button>
+          <button class="slider-btn next" onclick="changeSlide(1)">›</button>
+
+          <!-- จุดด้านล่าง -->
+          <div class="slider-dots">
+            <span class="dot active" onclick="currentSlide(0)"></span>
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+          </div>
+        </div>
+     <div class="slider-welcome-text">
+  <h2>⚽ Welcome ⚽</h2>
+  <p>สู่สนามฟุตบอล PRIJIT SPORT</p>
+  <p style="margin-top: 10px; color: #ffffff;">สนามหญ้าเทียมคุณภาพ มาตรฐาน และ ปลอดภัย</p>
+</div>
+    </div>
+  </div>
+
+    <!-- Field Info Page -->
+    <div id="fieldInfoPage" class="page">
+      <section>
+        <h2 class="section-title">ข้อมูลสนาม</h2>
+        <div class="content-card">
+          <div class="section-header">รายละเอียดสนาม</div>
+
+          <div class="field-details">
+            <p><strong>🏟️ มีทั้งหมด 6 สนาม</strong></p>
+            <p>💡 มีสปอตไลท์ สนามละ 6 จุด</p>
+            <p>🌱 สนามหญ้าเทียม</p>
+            <p>0-0 ที่ปรับผลสกอร์</p>
+            <p>⚽ ลูกฟุตบอล สนามละ 2 ใบ</p>
+            <p>🚻 มีห้องน้ำ 2 จุด</p>
+          </div>
+
+          <div class="price-list">
+            <h3 style="margin-bottom: 20px; color: #1f2937">
+              💰 อัตราค่าบริการ
+            </h3>
+
+            <div class="price-item">
+              <span class="field-name">สนาม 1 (35×54m)</span>
+              <span class="field-price"
+                >ก่อน 6 โมง = 1,000 บาท | หลัง 6 โมง = 1,200 บาท</span
+              >
+            </div>
+
+            <div class="price-item">
+              <span class="field-name">สนาม 2 (35×54m)</span>
+              <span class="field-price"
+                >ก่อน 6 โมง = 1,000 บาท | หลัง 6 โมง = 1,200 บาท</span
+              >
+            </div>
+
+            <div class="price-item">
+              <span class="field-name">สนาม 3 (35×52m)</span>
+              <span class="field-price"
+                >ก่อน 6 โมง = 1,000 บาท | หลัง 6 โมง = 1,200 บาท</span
+              >
+            </div>
+
+            <div class="price-item">
+              <span class="field-name">สนาม 4 (37×55m)</span>
+              <span class="field-price"
+                >ก่อน 6 โมง = 1,100 บาท | หลัง 6 โมง = 1,300 บาท</span
+              >
+            </div>
+
+            <div class="price-item">
+              <span class="field-name">สนาม 5 (34×50m)</span>
+              <span class="field-price"
+                >ก่อน 6 โมง = 900 บาท | หลัง 6 โมง = 1,100 บาท</span
+              >
+            </div>
+
+            <div class="price-item">
+              <span class="field-name">สนาม 6 (27×45m)</span>
+              <span class="field-price"
+                >ก่อน 6 โมง = 700 บาท | หลัง 6 โมง = 900 บาท</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Rules Page -->
+    <div id="rulesPage" class="page">
+      <section>
+        <h2 class="section-title">กฎระเบียบ</h2>
+        <div class="content-card">
+          <div class="section-header">ข้อปฏิบัติในการใช้สนาม</div>
+
+          <div class="rules-list">
+            <div class="rule-item">
+              การเตะบอล ต้องใช้รองเท้าฟุตบอลสนามหญ้าเทียม (Stud Turf/AG)
+              หรือรองเท้าฟุตซอล ห้ามใช้รองเท้าหมุดแหลม หรือรองเท้าแบบหมุดเหล็ก
+              เนื่องจากอาจทำลายสนามได้
+            </div>
+
+            <div class="rule-item">
+              การใช้งานสนาม ห้ามนำสัตว์เลี้ยงเข้ามา ห้ามนำอาหาร
+              เครื่องดื่มแอลกอฮอล์เข้ามา และควรดูแลรักษาความสะอาดภายในบริเวณสนาม
+            </div>
+
+            <div class="rule-item">
+              การเล่นและความปลอดภัย ห้ามเล่นรุนแรง ใช้ท่าเสี่ยงอันตราย
+              หรือกระทำการใดๆ ที่อาจก่อให้เกิดอันตรายต่อผู้เล่นคนอื่น
+            </div>
+
+            <div class="rule-item">
+              การรักษาความสะอาด กรุณาทิ้งขยะลงถังขยะ
+              เก็บของใช้ส่วนตัวให้เรียบร้อยหลังการใช้งาน
+            </div>
+
+            <div
+              class="rule-item"
+              style="background: #dcfce7; border-left: 5px solid #22c55e"
+            >
+              ⚠️ ข้อสำคัญ:
+              ผู้เช่าต้องรับผิดชอบความเสียหายที่เกิดขึ้นจากการกระทำของตนเอง
+              ทางสนามไม่รับผิดชอบต่อความสูญหายหรือความเสียหายของทรัพย์สินส่วนบุคคล
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Booking Page -->
+    <div id="bookingPage" class="page">
+      <section>
+        <h2 class="section-title">จองสนาม</h2>
+        <div class="content-card">
+          <div class="section-header">ระบบจองสนาม</div>
+<div class="availability-legend">
+  <div class="legend-item">
+    <div class="legend-box available"></div>
+    <span>ว่าง</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-box booked"></div>
+    <span>ไม่ว่าง</span>
+  </div>
+</div>
+          <div class="form-group">
+            <label class="form-label">เลือกสนาม</label>
+           <select id="fieldSelect" class="form-input" onchange="checkAvailability()">
+              <option value="">เลือกสนามที่ต้องการ</option>
+              <option value="สนาม 1">สนาม 1 (35×54m) - 1,000/1,200 บาท</option>
+              <option value="สนาม 2">สนาม 2 (35×54m) - 1,000/1,200 บาท</option>
+              <option value="สนาม 3">สนาม 3 (35×52m) - 1,000/1,200 บาท</option>
+              <option value="สนาม 4">สนาม 4 (37×55m) - 1,100/1,300 บาท</option>
+              <option value="สนาม 5">สนาม 5 (34×50m) - 900/1,100 บาท</option>
+              <option value="สนาม 6">สนาม 6 (27×45m) - 700/900 บาท</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">เลือกวันที่</label>
+           <input type="date" id="dateSelect" class="form-input" onchange="checkAvailability()" />
+          </div>
+<div id="availabilityStatus" class="availability-notice" style="display: none">
+  <strong>กำลังตรวจสอบสถานะสนาม...</strong>
+</div>
+          <div class="form-group">
+            <label class="form-label">เลือกช่วงเวลา</label>
+            <div class="time-slots-grid" id="timeSlotsContainer">
+  <button class="time-slot-btn" type="button" data-time="08:00 - 10:00">
+    08:00 - 10:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="10:00 - 12:00">
+    10:00 - 12:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="11:00 - 13:00">
+    11:00 - 13:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="13:00 - 14:00">
+    13:00 - 14:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="14:00 - 16:00">
+    14:00 - 16:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="15:00 - 16:00">
+    15:00 - 16:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="16:00 - 17:00">
+    16:00 - 17:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="17:00 - 18:00">
+    17:00 - 18:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="18:00 - 19:00">
+    18:00 - 19:00
+  </button>
+  <button class="time-slot-btn" type="button" data-time="19:00 - 20:00">
+    19:00 - 20:00
+  </button>
+</div>
+
+          <button class="submit-btn" onclick="confirmBooking()">
+            ยืนยันการจอง
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Check Booking Page -->
+    <div id="checkBookingPage" class="page">
+      <section>
+        <h2 class="section-title">ตรวจสอบการจอง</h2>
+        <div class="content-card">
+          <div class="section-header">รายการจองของคุณ</div>
+
+          <div id="bookingList" style="min-height: 200px">
+            <p style="text-align: center; color: #6b7280; padding: 40px">
+              ยังไม่มีรายการจอง
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contactPage" class="page">
+      <section>
+        <h2 class="section-title">ติดต่อเรา</h2>
+        <div class="content-card">
+          <div class="section-header">ข้อมูลการติดต่อ</div>
+
+          <div class="contact-wrapper">
+              <div class="contact-logo-img">
+             <img src="f6.jpg" alt="PRIJIT SPORT Logo" />
+  </div>
+
+            <div class="contact-info">
+              <div class="contact-phone">
+                <span>📞</span>
+                <strong>089-115-3822</strong>
+              </div>
+              <div class="contact-phone">
+                <span>📞</span>
+                <strong>02-899-2448</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="thank-you-text">thank you</div>
+          <p>⚽PRIJIT SPORT⚽</p>
+        </div>
+      </section>
+    </div>
+
+  <script>
+
+let currentUser = null;
+let selectedTimeSlot = null;
+let currentSlideIndex = 0;
+let slideInterval;
+
+
+function startSlider() {
+  slideInterval = setInterval(() => {
+    changeSlide(1);
+  }, 4000);
+}
+
+function stopSlider() {
+  clearInterval(slideInterval);
+}
+
+function showSlide(index) {
+  const slides = document.querySelectorAll(".slide");
+  const dots = document.querySelectorAll(".dot");
+
+  if (index >= slides.length) currentSlideIndex = 0;
+  if (index < 0) currentSlideIndex = slides.length - 1;
+
+  slides.forEach((slide) => slide.classList.remove("active"));
+  dots.forEach((dot) => dot.classList.remove("active"));
+
+  slides[currentSlideIndex].classList.add("active");
+  dots[currentSlideIndex].classList.add("active");
+}
+
+function changeSlide(direction) {
+  currentSlideIndex += direction;
+  const slides = document.querySelectorAll(".slide");
+
+  if (currentSlideIndex >= slides.length) {
+    currentSlideIndex = 0;
+  } else if (currentSlideIndex < 0) {
+    currentSlideIndex = slides.length - 1;
+  }
+
+  showSlide(currentSlideIndex);
+  stopSlider();
+  startSlider();
+}
+
+function currentSlide(index) {
+  currentSlideIndex = index;
+  showSlide(currentSlideIndex);
+  stopSlider();
+  startSlider();
+}
+
+// ===== PAGE NAVIGATION =====
+function showPage(pageId) {
+  const pages = document.querySelectorAll(".page");
+  pages.forEach((page) => page.classList.remove("active"));
+  document.getElementById(pageId).classList.add("active");
+
+  if (pageId === "homePage") {
+    startSlider();
+  } else {
+    stopSlider();
+  }
+
+  if (pageId === "checkBookingPage") {
+    updateBookingList();
+  }
+
+  if (pageId === "bookingPage") {
+    resetBookingForm();
+  }
+}
+
+// ===== TIME SLOT FUNCTIONS =====
+function initializeTimeSlots() {
+  const timeSlots = document.querySelectorAll('.time-slot-btn');
+  timeSlots.forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (this.classList.contains('booked')) {
+        alert('❌ ช่วงเวลานี้ถูกจองแล้ว กรุณาเลือกช่วงเวลาอื่น');
+        return;
+      }
+      selectTime(this);
+    });
+  });
+}
+
+function selectTime(element) {
+  if (element.classList.contains('booked')) return;
+  
+  const timeSlots = document.querySelectorAll(".time-slot-btn");
+  timeSlots.forEach((slot) => slot.classList.remove("selected"));
+  element.classList.add("selected");
+  selectedTimeSlot = element.getAttribute('data-time');
+}
+
+function checkAvailability() {
+  const field = document.getElementById('fieldSelect').value;
+  const date = document.getElementById('dateSelect').value;
+
+  if (!field || !date) {
+    resetTimeSlots();
+    return;
+  }
+
+  const statusDiv = document.getElementById('availabilityStatus');
+  statusDiv.style.display = 'block';
+  statusDiv.className = 'availability-notice checking';
+  statusDiv.innerHTML = '<strong>⏳ กำลังตรวจสอบสถานะสนาม...</strong>';
+
+  // ดึงข้อมูลจาก Firebase
+  database.ref('bookings')
+    .orderByChild('field')
+    .equalTo(field)
+    .once('value')
+    .then((snapshot) => {
+      const bookedTimes = [];
+      snapshot.forEach((child) => {
+        const booking = child.val();
+        if (booking.date === date) {
+          bookedTimes.push(booking.time);
+        }
+      });
+
+      updateTimeSlotAvailability(bookedTimes);
+      statusDiv.style.display = 'none';
+    })
+    .catch((error) => {
+      console.error("Error checking availability:", error);
+      statusDiv.style.display = 'none';
+    });
+}
+
+function updateTimeSlotAvailability(bookedTimes) {
+  const timeSlots = document.querySelectorAll('.time-slot-btn');
+  
+  timeSlots.forEach(btn => {
+    const time = btn.getAttribute('data-time');
+    
+    btn.classList.remove('available', 'booked', 'selected');
+    const existingBadge = btn.querySelector('.status-badge');
+    if (existingBadge) existingBadge.remove();
+
+    if (bookedTimes.includes(time)) {
+      btn.classList.add('booked');
+      btn.disabled = true;
+      const badge = document.createElement('span');
+      badge.className = 'status-badge';
+      badge.textContent = 'ไม่ว่าง';
+      btn.appendChild(badge);
+    } else {
+      btn.classList.add('available');
+      btn.disabled = false;
+      const badge = document.createElement('span');
+      badge.className = 'status-badge';
+      badge.textContent = 'ว่าง';
+      btn.appendChild(badge);
+    }
+  });
+}
+
+function resetTimeSlots() {
+  const timeSlots = document.querySelectorAll('.time-slot-btn');
+  timeSlots.forEach(btn => {
+    btn.classList.remove('available', 'booked', 'selected');
+    btn.disabled = false;
+    const badge = btn.querySelector('.status-badge');
+    if (badge) badge.remove();
+  });
+}
+
+function resetBookingForm() {
+  document.getElementById('fieldSelect').value = '';
+  document.getElementById('dateSelect').value = '';
+  selectedTimeSlot = null;
+  resetTimeSlots();
+}
+
+// ===== AUTHENTICATION FUNCTIONS =====
+function handleRegister(event) {
+  event.preventDefault();
+
+  const username = document.getElementById("regUsername").value;
+  const fullname = document.getElementById("regFullname").value;
+  const phone = document.getElementById("regPhone").value;
+  const password = document.getElementById("regPassword").value;
+  const email = username + "@prijitsport.com";
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      
+      return database.ref('users/' + user.uid).set({
+        username: username,
+        fullname: fullname,
+        phone: phone,
+        createdAt: new Date().toISOString()
+      });
+    })
+    .then(() => {
+      alert("✅ สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
+      event.target.reset();
+      showPage("loginPage");
+    })
+    .catch((error) => {
+      if (error.code === 'auth/email-already-in-use') {
+        alert("❌ ชื่อผู้ใช้นี้มีอยู่แล้ว");
+      } else if (error.code === 'auth/weak-password') {
+        alert("❌ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
+      } else {
+        alert("❌ เกิดข้อผิดพลาด: " + error.message);
+      }
+    });
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+
+  const username = document.getElementById("loginUsername").value;
+  const password = document.getElementById("loginPassword").value;
+  const email = username + "@prijitsport.com";
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      return database.ref('users/' + user.uid).once('value');
+    })
+    .then((snapshot) => {
+      currentUser = {
+        uid: auth.currentUser.uid,
+        ...snapshot.val()
+      };
+      
+      document.getElementById("currentUser").textContent = currentUser.fullname;
+      document.getElementById("mainNav").style.display = "block";
+      showPage("homePage");
+      alert("✅ เข้าสู่ระบบสำเร็จ!");
+    })
+    .catch((error) => {
+      alert("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+    });
+}
+
+function handleLogout() {
+  if (confirm("ต้องการออกจากระบบ?")) {
+    auth.signOut().then(() => {
+      currentUser = null;
+      document.getElementById("mainNav").style.display = "none";
+      showPage("loginPage");
+      document.getElementById("loginUsername").value = "";
+      document.getElementById("loginPassword").value = "";
+    });
+  }
+}
+
+// ===== BOOKING FUNCTIONS =====
+function confirmBooking() {
+  const field = document.getElementById("fieldSelect").value;
+  const date = document.getElementById("dateSelect").value;
+
+  if (!field || !date || !selectedTimeSlot) {
+    alert("❌ กรุณากรอกข้อมูลให้ครบถ้วน");
+    return;
+  }
+
+  // ตรวจสอบว่าซ้ำหรือไม่
+  database.ref('bookings')
+    .orderByChild('field_date_time')
+    .equalTo(`${field}_${date}_${selectedTimeSlot}`)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        alert("❌ ช่วงเวลานี้ถูกจองแล้ว");
+        checkAvailability();
+        return Promise.reject('already_booked');
+      }
+
+      // คำนวณราคา
+      let price = 0;
+      const hour = parseInt(selectedTimeSlot.split(":")[0]);
+
+      if (field.includes("สนาม 1") || field.includes("สนาม 2") || field.includes("สนาม 3")) {
+        price = hour >= 18 ? 1200 : 1000;
+      } else if (field.includes("สนาม 4")) {
+        price = hour >= 18 ? 1300 : 1100;
+      } else if (field.includes("สนาม 5")) {
+        price = hour >= 18 ? 1100 : 900;
+      } else if (field.includes("สนาม 6")) {
+        price = hour >= 18 ? 900 : 700;
+      }
+
+      // บันทึกการจอง
+      const bookingData = {
+        userId: currentUser.uid,
+        username: currentUser.fullname,
+        phone: currentUser.phone,
+        field: field,
+        date: date,
+        time: selectedTimeSlot,
+        price: price,
+        field_date_time: `${field}_${date}_${selectedTimeSlot}`,
+        createdAt: new Date().toISOString()
+      };
+
+      return database.ref('bookings').push(bookingData).then(() => {
+        return { field, date, selectedTimeSlot, price };
+      });
+    })
+    .then((bookingInfo) => {
+      if (bookingInfo) {
+        alert(`✅ จองสำเร็จ!\n\n📍 สนาม: ${bookingInfo.field}\n📅 วันที่: ${bookingInfo.date}\n⏰ เวลา: ${bookingInfo.selectedTimeSlot}\n💰 ราคา: ${bookingInfo.price} บาท`);
+        resetBookingForm();
+      }
+    })
+    .catch((error) => {
+      if (error !== 'already_booked') {
+        alert("❌ เกิดข้อผิดพลาด: " + error.message);
+      }
+    });
+}
+
+function updateBookingList() {
+  const bookingList = document.getElementById("bookingList");
+
+  if (!currentUser) {
+    bookingList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">กรุณาเข้าสู่ระบบ</p>';
+    return;
+  }
+
+  database.ref('bookings')
+    .orderByChild('userId')
+    .equalTo(currentUser.uid)
+    .once('value')
+    .then((snapshot) => {
+      if (!snapshot.exists()) {
+        bookingList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">ยังไม่มีรายการจอง</p>';
+        return;
+      }
+
+      let html = "";
+      let index = 0;
+      snapshot.forEach((child) => {
+        const booking = child.val();
+        const bookingId = child.key;
+        
+        html += `
+          <div class="booking-card">
+            <h3>รายการที่ ${index + 1}</h3>
+            <p><strong>📍 สนาม:</strong> ${booking.field}</p>
+            <p><strong>📅 วันที่:</strong> ${booking.date}</p>
+            <p><strong>⏰ เวลา:</strong> ${booking.time}</p>
+            <p><strong>💰 ราคา:</strong> ${booking.price} บาท</p>
+            <p><strong>📞 เบอร์ติดต่อ:</strong> ${booking.phone}</p>
+            <p style="color: #6b7280; font-size: 0.9em; margin-top: 10px;">จองเมื่อ: ${new Date(booking.createdAt).toLocaleString('th-TH')}</p>
+            <button class="cancel-btn" onclick="cancelBooking('${bookingId}')">
+              ❌ ยกเลิกการจอง
+            </button>
+          </div>
+        `;
+        index++;
+      });
+
+      bookingList.innerHTML = html;
+    });
+}
+
+function cancelBooking(bookingId) {
+  if (confirm("⚠️ ต้องการยกเลิกการจองนี้ใช่หรือไม่?")) {
+    database.ref('bookings/' + bookingId).remove()
+      .then(() => {
+        alert("✅ ยกเลิกการจองเรียบร้อยแล้ว");
+        updateBookingList();
+      })
+      .catch((error) => {
+        alert("❌ เกิดข้อผิดพลาด: " + error.message);
+      });
+  }
+}
+
+// ===== INITIALIZATION =====
+document.addEventListener("DOMContentLoaded", () => {
+  if(document.getElementById("homePage").classList.contains("active")) {        
+    startSlider();        
+  }
+
+  const dateInput = document.getElementById("dateSelect");
+  if (dateInput) {
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+  }
+
+  initializeTimeSlots();
+});
+</script>
+    <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<script>
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
+    authDomain: "prijit-sport.firebaseapp.com",
+    databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "prijit-sport",
+    storageBucket: "prijit-sport.firebasestorage.app",
+    messagingSenderId: "19782245186",
+    appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // Initialize Services
+  const auth = firebase.auth();
+  const database = firebase.database();
+  
+  console.log("✅ Firebase initialized successfully!");
+</script>
+</body>
+</html>
