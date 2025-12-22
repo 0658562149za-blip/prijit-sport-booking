@@ -822,7 +822,7 @@
   padding: 2px 8px;
   border-radius: 12px;
   font-weight: bold;
-  position: relative;
+  
 }
 
 .time-slot-btn.available .status-badge {
@@ -1913,16 +1913,16 @@ function showPaymentModal() {
           </p>
         </div>
 
-        <div class="qr-code-container">
-          <div class="qr-code-image">
-            <canvas id="qrCodeCanvas"></canvas>
-          </div>
-        </div>
-
+<div class="qr-code-container">
+  <div class="qr-code-image">
+    <img id="qrCodeCanvas" src="qr-promptpay.png" alt="QR Code PromptPay" 
+         style="width: 100%; height: 100%; object-fit: contain;">
+  </div>
+</div>
         <div class="payment-info">
           <p><strong>💰 ยอดชำระ:</strong> ${data.depositAmount.toLocaleString()} บาท</p>
-          <p><strong>📱 เลขพร้อมเพย์:</strong> 089-115-3822</p>
-          <p><strong>🏢 ชื่อบัญชี:</strong> PRIJIT SPORT</p>
+          <p><strong>📱 เลขพร้อมเพย์:</strong>1103100835163 </p>
+          <p><strong>🏢 ชื่อบัญชี:</strong>นาย พัสกร ราชชมภู </p>
           <p><strong>🆔 Ref:</strong> ${data.field.replace('สนาม ', 'F')}-${data.date.replace(/-/g, '')}</p>
         </div>
 
@@ -1967,23 +1967,9 @@ function showPaymentModal() {
   startPaymentTimer();
   setupDragDrop();
   }
-
-function generateQRCode(data) {
-  const canvas = document.getElementById('qrCodeCanvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 220;
-  canvas.height = 220;
+  function generateQRCode(data) {
   
-  ctx.fillStyle = '#f3f4f6';
-  ctx.fillRect(0, 0, 220, 220);
-  ctx.fillStyle = '#1f2937';
-  ctx.font = 'bold 16px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('QR Code', 110, 90);
-  ctx.font = '14px Arial';
-  ctx.fillText('สำหรับชำระเงิน', 110, 110);
-  ctx.font = 'bold 18px Arial';
-  ctx.fillText(`${data.depositAmount} บาท`, 110, 135);
+  console.log('✅ QR Code loaded for deposit:', data.depositAmount, 'บาท');
 }
 
 function handleSlipUpload(event) {
