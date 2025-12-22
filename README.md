@@ -1,6 +1,2 @@
-# บอก Google ให้ crawl ทุกหน้า
-User-agent: *
-Allow: /
+# PRIJIT SPORT - ระบบจองสนามฟุตบอล 7 คน
 
-# บอก Sitemap อยู่ที่ไหน
-Sitemap: https://0658562149za-blip.github.io/prijit-sport-booking/sitemap.xml

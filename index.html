@@ -612,6 +612,7 @@
         font-size: 1em;
         font-weight: 500;
         text-align: center;
+        position: relative;
       }
 
       .time-slot-btn:hover {
@@ -821,6 +822,7 @@
   padding: 2px 8px;
   border-radius: 12px;
   font-weight: bold;
+  position: relative;
 }
 
 .time-slot-btn.available .status-badge {
@@ -832,7 +834,261 @@
   background: #ef4444;
   color: white;
 }
+/* Payment & Deposit Styles */
+.payment-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
 
+.payment-modal.active {
+  display: flex;
+}
+
+.payment-content {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.payment-header h2 {
+  font-size: 1.8em;
+  color: #1f2937;
+  margin-bottom: 10px;
+}
+
+.payment-summary {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #22c55e;
+  padding-top: 15px;
+  margin-top: 10px;
+  border-top: 2px solid #22c55e;
+}
+
+.summary-label {
+  color: #6b7280;
+}
+
+.summary-value {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.deposit-highlight {
+  background: #dcfce7;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border-left: 4px solid #22c55e;
+}
+
+.deposit-highlight strong {
+  color: #16a34a;
+  font-size: 1.2em;
+}
+
+.qr-code-container {
+  text-align: center;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.qr-code-image {
+  width: 250px;
+  height: 250px;
+  margin: 20px auto;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.payment-info {
+  background: #fef3c7;
+  border: 2px solid #fbbf24;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.payment-info p {
+  margin: 8px 0;
+  color: #92400e;
+  font-weight: 500;
+}
+
+.upload-section {
+  margin: 25px 0;
+}
+
+.upload-label {
+  display: block;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.upload-area {
+  border: 3px dashed #d1d5db;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #f9fafb;
+}
+
+.upload-area:hover {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+
+.upload-area.dragover {
+  border-color: #22c55e;
+  background: #dcfce7;
+}
+
+#slipPreview {
+  max-width: 100%;
+  max-height: 300px;
+  margin-top: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.payment-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.payment-buttons button {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.upload-slip-btn {
+  background: #22c55e;
+  color: white;
+}
+
+.upload-slip-btn:hover {
+  background: #16a34a;
+}
+
+.upload-slip-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.cancel-payment-btn {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.cancel-payment-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.payment-terms {
+  background: #fee2e2;
+  border: 2px solid #ef4444;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.payment-terms h4 {
+  color: #dc2626;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.payment-terms ul {
+  list-style: none;
+  padding: 0;
+}
+
+.payment-terms li {
+  padding: 8px 0;
+  color: #991b1b;
+  font-weight: 500;
+}
+
+.payment-terms li:before {
+  content: "• ";
+  color: #ef4444;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.timer-warning {
+  text-align: center;
+  color: #dc2626;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-top: 20px;
+  padding: 10px;
+  background: #fee2e2;
+  border-radius: 8px;
+}
       /* Responsive */
       @media (max-width: 768px) {
         .hero h1 {
@@ -1279,6 +1535,10 @@ let currentUser = null;
 let selectedTimeSlot = null;
 let currentSlideIndex = 0;
 let slideInterval;
+let currentBookingData = null;
+let uploadedSlipFile = null;
+let paymentTimer = null;
+
 
 
 function startSlider() {
@@ -1558,87 +1818,339 @@ function confirmBooking() {
     alert("❌ ไม่สามารถจองย้อนหลังได้");
     return;
   }
+
  // คำนวณราคา
-      let price = 0;
+      let totalPrice = 0;
       const hour = parseInt(selectedTimeSlot.split(":")[0]);
 
       if (field.includes("สนาม 1") || field.includes("สนาม 2") || field.includes("สนาม 3")) {
-        price = hour >= 18 ? 1200 : 1000;
+         totalPrice = hour >= 18 ? 1200 : 1000;
       } else if (field.includes("สนาม 4")) {
-        price = hour >= 18 ? 1300 : 1100;
+        totalPrice = hour >= 18 ? 1300 : 1100;
       } else if (field.includes("สนาม 5")) {
-        price = hour >= 18 ? 1100 : 900;
+         totalPrice= hour >= 18 ? 1100 : 900;
       } else if (field.includes("สนาม 6")) {
-        price = hour >= 18 ? 900 : 700;
+        totalPrice = hour >= 18 ? 900 : 700;
       }
-      
- // ✅ #3: Confirmation Dialog
+
+       // ✅ คำนวณค่ามัดจำ 30%
+  const depositAmount = Math.round(totalPrice * 0.3);
+  const remainingAmount = totalPrice - depositAmount;
+
+  // ✅ เก็บข้อมูลการจองไว้ใช้ภายหลัง
+  currentBookingData = {
+    field: field,
+    date: date,
+    time: selectedTimeSlot,
+    totalPrice: totalPrice,
+    depositAmount: depositAmount,
+    remainingAmount: remainingAmount
+  };
+
+  // ✅ #3: Confirmation Dialog พร้อมข้อมูลมัดจำ
   const confirmMsg = `📋 กรุณาตรวจสอบข้อมูลการจอง:
 
-📍 สนาม: ${field}
+  📍 สนาม: ${field}
 📅 วันที่: ${date}
 ⏰ เวลา: ${selectedTimeSlot}
-💰 ราคา: ${price} บาท
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 ค่าบริการทั้งหมด: ${totalPrice.toLocaleString()} บาท
+💵 ค่ามัดจำ 30%: ${depositAmount.toLocaleString()} บาท
+💸 ค่าบริการคงเหลือ: ${remainingAmount.toLocaleString()} บาท
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
 👤 ผู้จอง: ${currentUser.fullname}
 📞 เบอร์: ${currentUser.phone}
 
-ต้องการยืนยันการจองใช่หรือไม่?`;
+⚠️ เงื่อนไข:
+- ชำระค่ามัดจำ ${depositAmount.toLocaleString()} บาทผ่าน QR Code
+- มาตามนัด = คืนเงินมัดจำทันที
+- ไม่มาตามนัด = ริบเงินมัดจำ
 
-  if (!confirm(confirmMsg)) {
+ต้องการดำเนินการจองต่อ?`;
+ if (!confirm(confirmMsg)) {
     return;
   }
 
-  // ✅ #4: Loading State
-  const submitBtn = document.querySelector('#bookingPage .submit-btn');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.textContent = "⏳ กำลังจอง...";
+  // ✅ แสดงหน้าชำระเงิน
+  showPaymentModal();
+}
+function showPaymentModal() {
+  const data = currentBookingData;
 
-  // ตรวจสอบว่าซ้ำหรือไม่
-  database.ref('bookings')
-    .orderByChild('field_date_time')
-    .equalTo(`${field}_${date}_${selectedTimeSlot}`)
-    .once('value')
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        alert("❌ ช่วงเวลานี้ถูกจองแล้ว");
-        checkAvailability();
-        return Promise.reject('already_booked');
-      }
+  const modalHTML = `
+    <div id="paymentModal" class="payment-modal active">
+      <div class="payment-content">
+        <div class="payment-header">
+          <h2>💳 ชำระค่ามัดจำ</h2>
+          <p>จองสนาม ${data.field}</p>
+        </div>
 
-      // บันทึกการจอง
-      const bookingData = {
-        userId: currentUser.uid,
-        username: currentUser.fullname,
-        phone: currentUser.phone,
-        field: field,
-        date: date,
-        time: selectedTimeSlot,
-        price: price,
-        field_date_time: `${field}_${date}_${selectedTimeSlot}`,
-        createdAt: new Date().toISOString()
-      };
+        <div class="payment-summary">
+          <div class="summary-row">
+            <span class="summary-label">💵 ค่าบริการทั้งหมด:</span>
+            <span class="summary-value">${data.totalPrice.toLocaleString()} บาท</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">📍 ค่ามัดจำ 30%:</span>
+            <span class="summary-value">${data.depositAmount.toLocaleString()} บาท</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">💸 ค่าบริการคงเหลือ:</span>
+            <span class="summary-value">${data.remainingAmount.toLocaleString()} บาท</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">💰 ต้องชำระตอนนี้:</span>
+            <span class="summary-value" style="color: #22c55e; font-size: 1.3em;">${data.depositAmount.toLocaleString()} บาท</span>
+          </div>
+        </div>
 
-      return database.ref('bookings').push(bookingData).then(() => {
-        return { field, date, selectedTimeSlot, price };
+        <div class="deposit-highlight">
+          <p><strong>📱 สแกน QR Code เพื่อชำระค่ามัดจำ</strong></p>
+          <p style="font-size: 0.95em; color: #16a34a; margin-top: 5px;">
+            ชำระเพียง ${data.depositAmount.toLocaleString()} บาท ค่าบริการคงเหลือจ่ายที่สนาม
+          </p>
+        </div>
+
+        <div class="qr-code-container">
+          <div class="qr-code-image">
+            <canvas id="qrCodeCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="payment-info">
+          <p><strong>💰 ยอดชำระ:</strong> ${data.depositAmount.toLocaleString()} บาท</p>
+          <p><strong>📱 เลขพร้อมเพย์:</strong> 089-115-3822</p>
+          <p><strong>🏢 ชื่อบัญชี:</strong> PRIJIT SPORT</p>
+          <p><strong>🆔 Ref:</strong> ${data.field.replace('สนาม ', 'F')}-${data.date.replace(/-/g, '')}</p>
+        </div>
+
+        <div class="upload-section">
+          <label class="upload-label">📤 อัพโหลดสลิปการโอนเงิน</label>
+          <div class="upload-area" id="uploadArea" onclick="document.getElementById('slipInput').click()">
+            <p>📎 คลิกเพื่ออัพโหลดรูปสลิป</p>
+            <p style="font-size: 0.9em; color: #6b7280; margin-top: 10px;">
+              หรือลากไฟล์มาวางที่นี่<br>
+              รองรับ: JPG, PNG (ไฟล์เดียว)
+            </p>
+          </div>
+          <input type="file" id="slipInput" accept="image/*" style="display: none;" onchange="handleSlipUpload(event)">
+          <img id="slipPreview" style="display: none;">
+        </div>
+
+        <div class="payment-terms">
+          <h4>⚠️ เงื่อนไขการคืนเงินมัดจำ</h4>
+          <ul>
+            <li>✅ มาตามเวลานัด: คืนเงินมัดจำ ${data.depositAmount.toLocaleString()} บาท ทันที</li>
+            <li>❌ ไม่มาตามนัด: ริบเงินมัดจำทั้งหมด</li>
+            <li>📌 กรุณามาถึงก่อนเวลา 15 นาที</li>
+          </ul>
+        </div>
+
+        <div class="payment-buttons">
+          <button class="cancel-payment-btn" onclick="closePaymentModal()">❌ ยกเลิก</button>
+          <button class="upload-slip-btn" id="confirmPaymentBtn" disabled onclick="submitPayment()">
+            ⬆️ อัพโหลดสลิป
+          </button>
+        </div>
+
+        <div class="timer-warning" id="paymentTimer">
+          ⏰ กรุณาชำระภายใน 15 นาที
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  generateQRCode(data);
+  startPaymentTimer();
+  setupDragDrop();
+  }
+
+function generateQRCode(data) {
+  const canvas = document.getElementById('qrCodeCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 220;
+  canvas.height = 220;
+  
+  ctx.fillStyle = '#f3f4f6';
+  ctx.fillRect(0, 0, 220, 220);
+  ctx.fillStyle = '#1f2937';
+  ctx.font = 'bold 16px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('QR Code', 110, 90);
+  ctx.font = '14px Arial';
+  ctx.fillText('สำหรับชำระเงิน', 110, 110);
+  ctx.font = 'bold 18px Arial';
+  ctx.fillText(`${data.depositAmount} บาท`, 110, 135);
+}
+
+function handleSlipUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    uploadedSlipFile = file;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('slipPreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      document.getElementById('confirmPaymentBtn').disabled = false;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function setupDragDrop() {
+  const uploadArea = document.getElementById('uploadArea');
+  
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+  
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+  
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const input = document.getElementById('slipInput');
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      input.files = dataTransfer.files;
+      handleSlipUpload({ target: input });
+    }
+  });
+}
+
+function startPaymentTimer() {
+  let timeLeft = 15 * 60;
+  const timerDiv = document.getElementById('paymentTimer');
+  
+  paymentTimer = setInterval(() => {
+    timeLeft--;
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    
+    timerDiv.textContent = `⏰ เหลือเวลา ${minutes}:${seconds.toString().padStart(2, '0')} นาที`;
+    
+    if (timeLeft <= 0) {
+      clearInterval(paymentTimer);
+      alert('❌ หมดเวลาชำระเงิน กรุณาทำการจองใหม่อีกครั้ง');
+      closePaymentModal();
+    }
+  }, 1000);
+}
+
+function closePaymentModal() {
+  clearInterval(paymentTimer);
+  const modal = document.getElementById('paymentModal');
+  if (modal) {
+    modal.remove();
+  }
+  currentBookingData = null;
+  uploadedSlipFile = null;
+}
+
+function submitPayment() {
+  if (!uploadedSlipFile) {
+    alert('❌ กรุณาอัพโหลดสลิปการโอนเงิน');
+    return;
+  }
+
+  const btn = document.getElementById('confirmPaymentBtn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังตรวจสอบ...';
+
+  uploadSlipAndCreateBooking();
+}
+
+function uploadSlipAndCreateBooking() {
+  const data = currentBookingData;
+  const reader = new FileReader();
+  
+  reader.onload = function(e) {
+    const slipBase64 = e.target.result;
+    
+    database.ref('bookings')
+      .orderByChild('field_date_time')
+      .equalTo(`${data.field}_${data.date}_${data.time}`)
+      .once('value')
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          alert('❌ ช่วงเวลานี้ถูกจองไปแล้ว');
+          closePaymentModal();
+          checkAvailability();
+          return Promise.reject('already_booked');
+        }
+
+        const bookingData = {
+          userId: currentUser.uid,
+          username: currentUser.fullname,
+          phone: currentUser.phone,
+          field: data.field,
+          date: data.date,
+          time: data.time,
+          totalPrice: data.totalPrice,
+          depositAmount: data.depositAmount,
+          remainingAmount: data.remainingAmount,
+          depositStatus: 'pending',
+          depositSlipUrl: slipBase64,
+          depositPaidAt: new Date().toISOString(),
+          remainingStatus: 'unpaid',
+          remainingPaidAt: null,
+          bookingStatus: 'pending_payment',
+          checkedInAt: null,
+          completedAt: null,
+          depositRefunded: false,
+          depositRefundedAt: null,
+          depositForfeited: false,
+          depositForfeitedAt: null,
+          field_date_time: `${data.field}_${data.date}_${data.time}`,
+          createdAt: new Date().toISOString()
+        };
+
+        return database.ref('bookings').push(bookingData);
+      })
+      .then((ref) => {
+        if (ref) {
+          clearInterval(paymentTimer);
+          
+          alert(`✅ อัพโหลดสลิปสำเร็จ!
+
+📋 เลขที่การจอง: #${ref.key.substr(-6).toUpperCase()}
+
+ระบบจะตรวจสอบการชำระเงินภายใน 5 นาที
+คุณจะได้รับการยืนยันผ่าน SMS
+
+📍 สนาม: ${data.field}
+📅 วันที่: ${data.date}
+⏰ เวลา: ${data.time}
+💰 มัดจำ: ${data.depositAmount.toLocaleString()} บาท ✅
+💸 ค่าบริการคงเหลือ: ${data.remainingAmount.toLocaleString()} บาท
+
+⚠️ กรุณามาตามเวลานัดเพื่อรับเงินมัดจำคืน`);
+          
+          closePaymentModal();
+          resetBookingForm();
+          showPage('checkBookingPage');
+        }
+      })
+      .catch((error) => {
+        if (error !== 'already_booked') {
+          alert('❌ เกิดข้อผิดพลาด: ' + error.message);
+        }
+        document.getElementById('confirmPaymentBtn').disabled = false;
+        document.getElementById('confirmPaymentBtn').textContent = '⬆️ อัพโหลดสลิป';
       });
-    })
-    .then((bookingInfo) => {
-      if (bookingInfo) {
-        alert(`✅ จองสำเร็จ!\n\n📍 สนาม: ${bookingInfo.field}\n📅 วันที่: ${bookingInfo.date}\n⏰ เวลา: ${bookingInfo.selectedTimeSlot}\n💰 ราคา: ${bookingInfo.price} บาท`);
-        resetBookingForm();
-      }
-    })
-    .catch((error) => {
-      if (error !== 'already_booked') {
-        alert("❌ เกิดข้อผิดพลาด: " + error.message);
-      }
-    })
-    .finally(() => {
-      // ✅ คืนสถานะปุ่ม
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
-    });
+  };
+  reader.readAsDataURL(uploadedSlipFile);
 }
 
 function updateBookingList() {
@@ -1665,18 +2177,61 @@ function updateBookingList() {
         const booking = child.val();
         const bookingId = child.key;
         
+        let statusColor = '#22c55e';
+        let statusText = 'รอตรวจสอบ';
+      
+       
+        if (booking.bookingStatus === 'confirmed') {
+          statusColor = '#3b82f6';
+          statusText = 'ยืนยันแล้ว';
+        } else if (booking.bookingStatus === 'completed') {
+          statusColor = '#10b981';
+          statusText = 'เสร็จสิ้น';
+        } else if (booking.bookingStatus === 'no_show') {
+          statusColor = '#ef4444';
+          statusText = 'ไม่มาตามนัด';
+        } else if (booking.bookingStatus === 'cancelled') {
+          statusColor = '#6b7280';
+          statusText = 'ยกเลิก';
+        }
+
         html += `
-          <div class="booking-card">
-            <h3>รายการที่ ${index + 1}</h3>
+          <div class="booking-card" style="border-left-color: ${statusColor}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="margin: 0;">รายการที่ ${index + 1}</h3>
+              <span style="background: ${statusColor}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.9em; font-weight: bold;">
+                ${statusText}
+              </span>
+            </div>
+            
             <p><strong>📍 สนาม:</strong> ${booking.field}</p>
             <p><strong>📅 วันที่:</strong> ${booking.date}</p>
             <p><strong>⏰ เวลา:</strong> ${booking.time}</p>
-            <p><strong>💰 ราคา:</strong> ${booking.price} บาท</p>
+            
+            <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 10px 0;">
+              <p><strong>💰 ราคาทั้งหมด:</strong> ${booking.totalPrice ? booking.totalPrice.toLocaleString() : 'N/A'} บาท</p>
+              <p><strong>💵 มัดจำ 30%:</strong> 
+                <span style="color: ${booking.depositStatus === 'pending' ? '#f59e0b' : '#10b981'};">
+                  ${booking.depositAmount ? booking.depositAmount.toLocaleString() : 'N/A'} บาท 
+                  ${booking.depositStatus === 'pending' ? '🟡' : '✅'}
+                </span>
+              </p>
+              <p><strong>💸 ค่าบริการคงเหลือ:</strong> ${booking.remainingAmount ? booking.remainingAmount.toLocaleString() : 'N/A'} บาท</p>
+            </div>
+            
+            ${booking.depositRefunded ? '<p style="color: #10b981; font-weight: bold;">✅ คืนเงินมัดจำแล้ว</p>' : ''}
+            ${booking.depositForfeited ? '<p style="color: #ef4444; font-weight: bold;">❌ ริบเงินมัดจำแล้ว</p>' : ''}
+            
             <p><strong>📞 เบอร์ติดต่อ:</strong> ${booking.phone}</p>
-            <p style="color: #6b7280; font-size: 0.9em; margin-top: 10px;">จองเมื่อ: ${new Date(booking.createdAt).toLocaleString('th-TH')}</p>
-            <button class="cancel-btn" onclick="cancelBooking('${bookingId}')">
-              ❌ ยกเลิกการจอง
-            </button>
+            <p style="color: #6b7280; font-size: 0.9em; margin-top: 10px;">
+              จองเมื่อ: ${new Date(booking.createdAt).toLocaleString('th-TH')}
+            </p>
+            
+            ${booking.bookingStatus === 'pending_payment' || booking.bookingStatus === 'confirmed' ? `
+              <button class="cancel-btn" onclick="cancelBooking('${bookingId}')">
+                ❌ ยกเลิกการจอง
+              </button>
+            ` : ''}
           </div>
         `;
         
