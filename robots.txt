@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # บอก Sitemap อยู่ที่ไหน
-Sitemap: https://0658562149za-blip.github.io/prijit-sport-booking/sitemap.xml
+Sitemap: https://prijit-sport.github.io./prijit-sport-booking/sitemap.xml
