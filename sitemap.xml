@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- หน้าแรก -->
   <url>
-    <loc>https://0658562149za-blip.github.io/prijit-sport-booking/</loc>
-    <lastmod>2024-12-18</lastmod>
+     <loc>https://prijit-sport.github.io/prijit-sport-booking/</loc>
+    <lastmod>2025-12-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   
   <!-- หน้าจอง (ถ้ามี booking.html แยก) -->
   <url>
-    <loc>https://0658562149za-blip.github.io/prijit-sport-booking/booking.html</loc>
-    <lastmod>2024-12-18</lastmod>
+    <loc>https://prijit-sport.github.io/prijit-sport-booking/booking.html</loc>
+    <lastmod>2025-12-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
