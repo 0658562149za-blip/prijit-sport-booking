@@ -750,17 +750,7 @@
   }
 }
 
-      /* Storage Notice */
-      .storage-notice {
-        background: #fef3c7;
-        border: 2px solid #fbbf24;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        text-align: center;
-        color: #92400e;
-        font-weight: 500;
-      }
+      
       .availability-notice {
   background: #dbeafe;
   border: 2px solid #3b82f6;
@@ -1156,8 +1146,6 @@
       <div class="auth-container">
         <div class="auth-box">
           <h1 class="auth-title">⚽ เข้าสู่ระบบ</h1>
-          <div class="Storage">
-          </div>
           <form onsubmit="handleLogin(event)">
             <div class="form-group">
               <label class="form-label">ชื่อผู้ใช้</label>
@@ -1561,6 +1549,7 @@ let slideInterval;
 let currentBookingData = null;
 let uploadedSlipFile = null;
 let paymentTimer = null;
+let currentAvailabilityCheck = null;
 
 const DEPOSIT_PERCENTAGE = 0.3;
 const MAX_BOOKING_DAYS = 30;
@@ -1667,6 +1656,11 @@ function selectTime(element) {
 }
 
 function checkAvailability() {
+   if (currentAvailabilityCheck) {
+    database.ref().off('value', currentAvailabilityCheck);
+    currentAvailabilityCheck = null;
+  }
+
   const field = document.getElementById('fieldSelect').value;
   const date = document.getElementById('dateSelect').value;
 
@@ -1684,33 +1678,49 @@ function checkAvailability() {
     statusDiv.innerHTML = '<strong style="color: #ef4444;">⚠️ การเชื่อมต่อล่าช้า กรุณาลองใหม่อีกครั้ง</strong>';
   }, 10000);
 
-  // ดึงข้อมูลจาก Firebase
-  database.ref('bookings')
+   const query = database.ref('bookings')
     .orderByChild('field')
-    .equalTo(field)
-    .once('value')
+    .equalTo(field);
+  
+      currentAvailabilityCheck = query;
+
+      query.once('value')
     .then((snapshot) => {
-       clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
 
+        if (currentAvailabilityCheck !== query) {
+        console.log('⚠️ Request ถูกยกเลิกแล้ว');
+        return;
+      }
+      
       const bookedTimes = [];
-      snapshot.forEach((child) => {
-        const booking = child.val();
-        if (booking.date === date && booking.bookingStatus !== 'cancelled') {
-          bookedTimes.push(booking.time);
-        }
-      });
-
+       snapshot.forEach((child) => {
+         const booking = child.val();
+         if (booking.date === date && booking.bookingStatus !== 'cancelled') {
+           bookedTimes.push(booking.time);
+         }
+       });
+     
       updateTimeSlotAvailability(bookedTimes);
       statusDiv.style.display = 'none';
+      currentAvailabilityCheck = null;
     })
     .catch((error) => {
-      clearTimeout(timeoutId); 
+      clearTimeout(timeoutId);
+      
+      if (currentAvailabilityCheck !== query) {
+        return;
+      }
+
       console.error("Error checking availability:", error);
       statusDiv.className = 'availability-notice';
       statusDiv.style.display = 'block';
       statusDiv.innerHTML = '<strong style="color: #ef4444;">❌ เกิดข้อผิดพลาดในการตรวจสอบ กรุณาลองใหม่อีกครั้ง</strong>';
-    });
+      currentAvailabilityCheck = null;
+  });  
 }
+
+
 
 function updateTimeSlotAvailability(bookedTimes) {
   const timeSlots = document.querySelectorAll('.time-slot-btn');
@@ -2402,33 +2412,77 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initializeTimeSlots();
-});
-</script>
-    <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
+}); 
+</script> 
 <script>
-  // Firebase Configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
-    authDomain: "prijit-sport.firebaseapp.com",
-    databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "prijit-sport",
-    storageBucket: "prijit-sport.firebasestorage.app",
-    messagingSenderId: "19782245186",
-    appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
-  };
+  
+  let auth, database;
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  
-  // Initialize Services
-  const auth = firebase.auth();
-  const database = firebase.database();
-  
-  console.log("✅ Firebase initialized successfully!");
+  try {
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
+      authDomain: "prijit-sport.firebaseapp.com",
+      databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "prijit-sport",
+      storageBucket: "prijit-sport.firebasestorage.app",
+      messagingSenderId: "19782245186",
+      appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Services
+    auth = firebase.auth();
+    database = firebase.database();
+    
+    console.log("✅ Firebase initialized successfully!");
+    
+  } catch (error) {
+    console.error("❌ Firebase initialization failed:", error);
+    
+    // แสดง error page
+    document.body.innerHTML = `
+      <div style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      ">
+        <div style="
+          background: white;
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+          text-align: center;
+          max-width: 500px;
+        ">
+          <h1 style="color: #ef4444; font-size: 3em; margin: 0;">⚠️</h1>
+          <h2 style="color: #1f2937; margin: 20px 0;">ไม่สามารถเชื่อมต่อระบบได้</h2>
+          <p style="color: #6b7280; line-height: 1.6;">
+            กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต<br>
+            หรือลองใหม่อีกครั้งในภายหลัง
+          </p>
+          <button onclick="window.location.reload()" style="
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+          ">
+            🔄 ลองใหม่อีกครั้ง
+          </button>
+        </div>
+      </div>
+    `;
+  }
 </script>
 </body>
 </html>
