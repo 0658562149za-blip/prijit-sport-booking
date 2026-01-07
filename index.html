@@ -1422,6 +1422,30 @@
   color: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
+.map-container {
+  margin-top: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.map-container iframe {
+  display: block;
+  width: 100%;
+}
+
+/* Responsive Map */
+@media (max-width: 768px) {
+  .map-container iframe {
+    height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-container iframe {
+    height: 300px;
+  }
+}
 #galleryPage {
   background-image: linear-gradient(
       rgba(255, 255, 255, 0.0),
@@ -1890,7 +1914,29 @@
               >
             </div>
           </div>
-        </div>
+
+       <div class="section-header" style="margin-top: 40px; text-align: center;">📍 ตำแหน่งที่ตั้ง</div>
+          <div class="map-container">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.8933288886447!2d100.54842931483254!3d13.730984290351654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDQzJzUxLjUiTiAxMDDCsDMzJzAxLjAiRQ!5e0!3m2!1sth!2sth!4v1234567890123!5m2!1sth!2sth"
+              width="100%" 
+              height="450" 
+              style="border:0; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+
+          <div style="text-align: center; margin-top: 20px; padding: 20px; background: #f0fdf4; border-radius: 10px;">
+            <p style="color: #16a34a; font-weight: bold; font-size: 1.1em;">
+              📞 สอบถามเส้นทาง: 089-115-3822 หรือ 02-899-2448
+            </p>
+            <p style="color: #6b7280; margin-top: 10px;">
+              🚗 มีที่จอดรถกว้างขวาง สะดวกสบาย
+            </p>
+          </div>
+        </div> 
       </section>
     </div>
 
