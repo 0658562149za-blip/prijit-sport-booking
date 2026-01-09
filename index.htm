@@ -17,11 +17,7 @@
 <meta property="og:url" content="https://prijit-sport.github.io/prijit-sport-booking/">
     <meta property="og:site_name" content="PRIJIT SPORT">
     <meta property="og:locale" content="th_TH">
-     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="จองสนามฟุตบอล PRIJIT SPORT">
-    <meta name="twitter:description" content="จองสนามฟุตบอล 7 คน ระบบออนไลน์ 24 ชั่วโมง">
-    <meta name="twitter:image" content="https://prijit-sport.github.io/prijit-sport-booking/f4.jpg">
+    
     
     <!-- Structured Data (JSON-LD) สำหรับ Google -->
     <script type="application/ld+json">
@@ -54,9 +50,21 @@
         box-sizing: border-box;
       }
 
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: #f3f4f6;
+        background-image: linear-gradient(
+            rgba(243, 244, 246, 0.3),
+            rgba(243, 244, 246, 0.3)
+          ),
+          url("f4.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
         line-height: 1.6;
       }
 
@@ -210,17 +218,6 @@
   transform: rotate(90deg);   /* หมุน 90 องศาเมื่อ hover */
 }
 
-      /* Page Container */
-      .page {
-        display: none;
-        min-height: calc(100vh - 200px);
-        animation: fadeIn 0.5s;
-      }
-
-      .page.active {
-        display: block;
-      }
-
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -352,18 +349,8 @@
       /* ===== IMAGE SLIDER - เพิ่มส่วนนี้ ===== */
       .slider-section {
         position: relative;
-        padding: 60px 20px;
-        min-height: 100vh;
-       
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0),
-            rgba(255, 255, 255, 0)
-          ),
-          url("f4.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: scroll;
+        padding: 40px 15px;
+        width: 100%;
       }
 
       .slider-container {
@@ -562,15 +549,21 @@
 
       /* Section Styles */
       section {
-        padding: 60px 20px;
+        padding: 30px 15px;
+        scroll-margin-top: 70px;
+        width: 100%;
+      }
+
+      section > * {
         max-width: 1200px;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .section-title {
         font-size: 2.5em;
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         color: #1f2937;
         font-weight: bold;
       }
@@ -578,17 +571,17 @@
       .content-card {
         background: white;
         border-radius: 15px;
-        padding: 40px;
+        padding: 20px 15px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
       }
 
       .section-header {
         background: #e5e7eb;
-        padding: 15px 25px;
+        padding: 12px 20px;
         border-radius: 10px;
-        font-size: 1.4em;
+        font-size: 1.3em;
         font-weight: bold;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         color: #1f2937;
       }
 
@@ -600,9 +593,9 @@
       }
 
       .price-list {
-        margin: 25px 0;
+        margin: 20px 0;
         background: #f9fafb;
-        padding: 25px;
+        padding: 20px 15px;
         border-radius: 10px;
       }
 
@@ -1233,12 +1226,21 @@
 }
       /* Responsive */
       @media (max-width: 768px) {
-        .hero h1 {
-          font-size: 2em;
+        section {
+          padding: 20px 10px;
         }
 
         .section-title {
           font-size: 1.8em;
+          margin-bottom: 15px;
+        }
+
+        .content-card {
+          padding: 15px 10px;
+        }
+
+        .hero h1 {
+          font-size: 2em;
         }
 
         .time-slots-grid {
@@ -1261,6 +1263,29 @@
         .thank-you-text {
           font-size: 3em;
           letter-spacing: 5px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        section {
+          padding: 15px 8px;
+        }
+
+        .section-title {
+          font-size: 1.5em;
+          margin-bottom: 10px;
+        }
+
+        .content-card {
+          padding: 12px 8px;
+        }
+
+        .hero h1 {
+          font-size: 1.5em;
+        }
+
+        .hero p {
+          font-size: 1em;
         }
       }
       @keyframes spin {
@@ -1296,107 +1321,65 @@
   animation: spin 0.6s linear infinite;
   margin-left: 8px;
 }
-#rulesPage {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.0),
-      rgba(255, 255, 255, 0.0)
-    ),
-    url("f4.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 100vh;
+#rulesSection {
+  width: 100%;
 }
 
-#rulesPage .content-card {
+#rulesSection .content-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
 }
 
-#contactPage {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.0),
-      rgba(255, 255, 255, 0.0)
-    ),
-    url("f4.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 100vh;
+#contactSection {
+  width: 100%;
 }
 
-#contactPage .content-card {
+#contactSection .content-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
 }
- #fieldInfoPage {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.0),
-      rgba(255, 255, 255, 0.0)
-    ),
-    url("f4.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100vh;
+ #fieldInfoSection {
+  width: 100%;
 }
 
-#fieldInfoPage .content-card {
+#fieldInfoSection .content-card {
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
-#bookingPage {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.0),
-      rgba(255, 255, 255, 0.0)
-    ),
-    url("f4.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100vh;
+#bookingSection {
+  width: 100%;
 }
 
-#bookingPage .content-card {
+#bookingSection .content-card {
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
 /* Background for Check Booking Page */
-#checkBookingPage {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.0),
-      rgba(255, 255, 255, 0.0)
-    ),
-    url("f4.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100vh;
+#checkBookingSection {
+  width: 100%;
 }
 
-#checkBookingPage .content-card {
+#checkBookingSection .content-card {
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
 /* ปรับ Booking Card ให้โดดเด่นขึ้น */
-#checkBookingPage .booking-card {
+#checkBookingSection .booking-card {
   background: rgba(249, 250, 251, 0.98);
   backdrop-filter: blur(5px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
-#fieldInfoPage .section-title,
-#rulesPage .section-title,
-#bookingPage .section-title,
-#checkBookingPage .section-title,
-#contactPage .section-title {
+#fieldInfoSection .section-title,
+#rulesSection .section-title,
+#bookingSection .section-title,
+#checkBookingSection .section-title,
+#contactSection .section-title,
+#gallerySection .section-title {
   color: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
@@ -1424,27 +1407,14 @@
     height: 300px;
   }
 }
-#galleryPage {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.0),
-      rgba(255, 255, 255, 0.0)
-    ),
-    url("f4.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 100vh;
+#gallerySection {
+  width: 100%;
 }
 
-#galleryPage .content-card {
+#gallerySection .content-card {
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-}
-
-#galleryPage .section-title {
-  color: white;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 /* Main Image Container */
@@ -1681,29 +1651,17 @@
   </div>
 </div>
 
-    <!-- Main Navigation (Hidden until logged in) -->
+    <!-- Main Navigation -->
   <nav id="mainNav" class="navbar">
   <div class="nav-container">
         <div class="nav-links">
-          <span class="nav-item" onclick="showPage('homePage')">หน้าแรก</span>
-          <span class="nav-item" onclick="showPage('fieldInfoPage')"
-            >ข้อมูลสนาม</span
-          >
-          <span class="nav-item" onclick="showPage('rulesPage')"
-            >กฎระเบียบ</span
-          >
-          <span class="nav-item" onclick="showPage('bookingPage')"
-            >จองสนาม</span
-          >
-          <span class="nav-item" onclick="showPage('checkBookingPage')"
-            >ตรวจสอบการจอง</span
-          >
-          <span class="nav-item" onclick="showPage('galleryPage')"
-            >แกลเลอรี่</span
-          > 
-          <span class="nav-item" onclick="showPage('contactPage')"
-            >ติดต่อสอบถาม</span
-          >
+          <a href="#homeSection" class="nav-item">หน้าแรก</a>
+          <a href="#fieldInfoSection" class="nav-item">ข้อมูลสนาม</a>
+          <a href="#rulesSection" class="nav-item">กฎระเบียบ</a>
+          <a href="#bookingSection" class="nav-item">จองสนาม</a>
+          <a href="#checkBookingSection" class="nav-item">ตรวจสอบการจอง</a>
+          <a href="#gallerySection" class="nav-item">แกลเลอรี่</a> 
+          <a href="#contactSection" class="nav-item">ติดต่อสอบถาม</a>
         </div>
 
         <div class="user-section">
@@ -1719,8 +1677,8 @@
   </div>
   </nav>
 
-    <!-- Home Page -->
-    <div id="homePage" class="page active">
+    <!-- Home Section -->
+    <section id="homeSection">
 
       <div class="hero">
         <!-- โลโก้มุมซ้าย - เพิ่มบรรทัดนี้ -->
@@ -1775,63 +1733,9 @@
   <p>สู่สนามฟุตบอล PRIJIT SPORT</p>
   <p style="margin-top: 10px; color: #ffffff;">สนามหญ้าเทียมคุณภาพ มาตรฐาน และ ปลอดภัย</p>
 </div>
-
-<!-- Features Section - ย้ายมาอยู่ใน slider-section -->
-<div class="features-section">
-  <div class="container">
-    
-    <div class="features-grid">
-      <!-- Feature 1 -->
-      <div class="feature-card" onclick="showPage('fieldInfoPage')">
-        <div class="feature-icon">🏟️</div>
-        <h3>6 สนามมาตรฐาน</h3>
-        <p>สนามหญ้าเทียมคุณภาพ พร้อมไฟส่องสนาม</p>
-      </div>
-
-      <!-- Feature 2 -->
-      <div class="feature-card" onclick="showPage('fieldInfoPage')">
-        <div class="feature-icon">⚽</div>
-        <h3>อุปกรณ์ครบครัน</h3>
-        <p>ลูกฟุตบอล ที่ปรับผลสกอร์ ครบทุกสนาม</p>
-      </div>
-
-      <!-- Feature 3 -->
-      <div class="feature-card" onclick="showPage('fieldInfoPage')">
-        <div class="feature-icon">🚻</div>
-        <h3>สิ่งอำนวยความสะดวก</h3>
-        <p>ห้องน้ำสะอาด ที่จอดรถกว้างขวาง</p>
-      </div>
-
-      <!-- Feature 4 -->
-      <div class="feature-card" onclick="showPage('bookingPage')">
-        <div class="feature-icon">📱</div>
-        <h3>จองออนไลน์ 24/7</h3>
-        <p>จองง่าย สะดวก รวดเร็ว ผ่านเว็บไซต์</p>
-      </div>
-
-      <!-- Feature 5 -->
-      <div class="feature-card" onclick="showPage('fieldInfoPage')">
-        <div class="feature-icon">💰</div>
-        <h3>ราคาเป็นธรรม</h3>
-        <p>เริ่มต้น 700 บาท/ชั่วโมง</p>
-      </div>
-
-      <!-- Feature 6 -->
-      <div class="feature-card" onclick="showPage('rulesPage')">
-        <div class="feature-icon">🔒</div>
-        <h3>กฎระเบียบและความปลอดภัย</h3>
-        <p>รักษาความปลอดภัย CCTV ตลอด 24 ชม.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-    </div>  
-  </div>  
-
-    <!-- Field Info Page -->
-    <div id="fieldInfoPage" class="page">
-      <section>
+     </div>
+    <!-- Field Info Section -->
+    <section id="fieldInfoSection">
         <h2 class="section-title">ข้อมูลสนาม</h2>
         <div class="content-card">
           <div class="section-header">รายละเอียดสนามและอุปกรณ์</div>
@@ -1895,31 +1799,28 @@
 
        <div class="section-header" style="margin-top: 40px; text-align: center;">📍 ตำแหน่งที่ตั้ง</div>
           <div class="map-container">
-           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.5192781248843!2d100.42645101115241!3d13.686969686642623!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2bd50acd08fd7%3A0x9ec98b477706a73!2z4Liq4LiZ4Liy4Lih4Lif4Li44LiV4Lia4Lit4Lil4LmE4Lie4Lij4LiI4Li04LiV4Lij4Liq4Lib4Lit4Lij4LmM4LiV!5e0!3m2!1sth!2sth!4v1767921658410!5m2!1sth!2sth"
-            width="600" 
-            height="450"
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy" 
-            referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.519192244568!2d100.42645637479106!3d13.68697489879167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2bd50acd08fd7%3A0x9ec98b477706a73!2z4Liq4LiZ4Liy4Lih4Lif4Li44LiV4Lia4Lit4Lil4LmE4Lie4Lij4LiI4Li04LiV4Lij4Liq4Lib4Lit4Lij4LmM4LiV!5e0!3m2!1sth!2sth!4v1767945226405!5m2!1sth!2sth"
+             width="600" 
+             height="450" 
+             style="border:0;"
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
           </div>
 
           <div style="text-align: center; margin-top: 20px; padding: 20px; background: #f0fdf4; border-radius: 10px;">
             <p style="color: #16a34a; font-weight: bold; font-size: 1.1em;">
-              📞 ติดต่อสอบถาม: 089-115-3822 หรือ 02-899-2448
-            </p>
-            <p style="color: #6b7280; margin-top: 10px;">
+                📌 จุดสังเกต: ก่อนสี่แยกบางบอน 1 และ บางแค </p>
+            <p style="color: #020202; margin-top: 10px;">
               🚗 มีที่จอดรถกว้างขวาง สะดวกสบาย
             </p>
           </div>
         </div> 
-      </section>
-    </div>
+    </section>
 
-    <!-- Rules Page -->
-    <div id="rulesPage" class="page">
-      <section>
+    <!-- Rules Section -->
+    <section id="rulesSection">
         <h2 class="section-title">กฎระเบียบ</h2>
         <div class="content-card">
           <div class="section-header">ข้อปฏิบัติในการใช้สนาม</div>
@@ -1956,12 +1857,10 @@
             </div>
           </div>
         </div>
-      </section>
-    </div>
+    </section>
 
-    <!-- Booking Page -->
-    <div id="bookingPage" class="page">
-      <section>
+    <!-- Booking Section -->
+    <section id="bookingSection">
         <h2 class="section-title">จองสนาม</h2>
         <div class="content-card">
           <div class="section-header">ระบบจองสนาม</div>
@@ -2034,12 +1933,10 @@
             ยืนยันการจอง
           </button>
         </div>
-      </section>
-    </div>
+    </section>
 
-    <!-- Check Booking Page -->
-    <div id="checkBookingPage" class="page">
-      <section>
+    <!-- Check Booking Section -->
+    <section id="checkBookingSection">
         <h2 class="section-title">ตรวจสอบการจอง</h2>
         <div class="content-card">
           <div class="section-header">รายการจองของคุณ</div>
@@ -2050,42 +1947,10 @@
             </p>
           </div>
         </div>
-      </section>
-    </div>
-
-    <!-- Contact Page -->
-    <div id="contactPage" class="page">
-      <section>
-        <h2 class="section-title">ติดต่อสอบถาม</h2>
-        <div class="content-card">
-          <div class="section-header">ข้อมูลการติดต่อ</div>
-
-          <div class="contact-wrapper">
-              <div class="contact-logo-img">
-             <img src="f6.jpg" alt="PRIJIT SPORT Logo" />
-  </div>
-
-            <div class="contact-info">
-              <div class="contact-phone">
-                <span>📞</span>
-                <strong>089-115-3822</strong>
-              </div>
-              <div class="contact-phone">
-                <span>📞</span>
-                <strong>02-899-2448</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="thank-you-text">thank you</div>
-          <p>⚽PRIJIT SPORT⚽</p>
-        </div>
     </section>
-      </div>
 
-    <!-- Gallery Page -->
-    <div id="galleryPage" class="page">
-      <section>
+    <!-- Gallery Section -->
+    <section id="gallerySection">
     <h2 class="section-title">แกลเลอรี่</h2>
     <div class="content-card">
       <div class="section-header" style="text-align: center;">📸 ภาพบรรยากาศสนาม PRIJIT SPORT</div>
@@ -2121,8 +1986,36 @@
           จองสนามผ่านระบบออนไลน์ สะดวก รวดเร็ว
         </p>
     </div>
-      </section>
     </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contactSection">
+        <h2 class="section-title">ติดต่อสอบถาม</h2>
+        <div class="content-card">
+          <div class="section-header">ข้อมูลการติดต่อ</div>
+
+          <div class="contact-wrapper">
+              <div class="contact-logo-img">
+             <img src="f6.jpg" alt="PRIJIT SPORT Logo" />
+  </div>
+
+            <div class="contact-info">
+              <div class="contact-phone">
+                <span>📞</span>
+                <strong>089-115-3822</strong>
+              </div>
+              <div class="contact-phone">
+                <span>📞</span>
+                <strong>02-899-2448</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="thank-you-text">thank you</div>
+          <p>⚽PRIJIT SPORT⚽</p>
+        </div>
+    </section>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -2213,8 +2106,8 @@ function updateGalleryDisplay() {
 
 // Keyboard navigation for gallery
 document.addEventListener('keydown', (e) => {
-  const galleryPage = document.getElementById('galleryPage');
-  if (galleryPage && galleryPage.classList.contains('active')) {
+  const gallerySection = document.getElementById('gallerySection');
+  if (gallerySection && isInViewport(gallerySection)) {
     if (e.key === 'ArrowLeft') {
       changeGalleryImage(-1);
     } else if (e.key === 'ArrowRight') {
@@ -2222,6 +2115,17 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
+
+function isInViewport(element) {
+  const rect = element.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
 function openLoginModal() {
   document.getElementById('loginModal').classList.add('active');
   showLoginInModal();  
@@ -2310,32 +2214,6 @@ function currentSlide(index) {
   showSlide(currentSlideIndex);
   stopSlider();
   startSlider();
-}
-
-// ===== PAGE NAVIGATION =====
-function showPage(pageId) {
-  const pages = document.querySelectorAll(".page");
-  pages.forEach((page) => page.classList.remove("active"));
-  document.getElementById(pageId).classList.add("active");
-
-  if (paymentTimer) {
-    clearInterval(paymentTimer);
-    paymentTimer = null;
-  }
-
-  if (pageId === "homePage") {
-    startSlider();
-  } else {
-    stopSlider();
-  }
-
-  if (pageId === "checkBookingPage") {
-    updateBookingList();
-  }
-
-  if (pageId === "bookingPage") {
-    resetBookingForm();
-  }
 }
 
 // ===== TIME SLOT FUNCTIONS =====
@@ -2545,7 +2423,6 @@ const password = document.getElementById("modalLoginPassword").value;
   document.getElementById("userInfo").style.display = "flex";         // แสดงชื่อผู้ใช้
   document.getElementById("mainNav").style.display = "block";
      closeLoginModal();  // ปิด Modal
-  showPage("homePage");
   alert("✅ เข้าสู่ระบบสำเร็จ!");
 })
     .catch((error) => {
@@ -2565,7 +2442,6 @@ function handleLogout() {
       currentUser = null;
      document.getElementById("loginNavBtn").style.display = "inline-block";
        document.getElementById("userInfo").style.display = "none";
-        showPage("homePage");
        alert("✅ ออกจากระบบเรียบร้อยแล้ว");
     });
   }
@@ -2975,7 +2851,9 @@ function uploadSlipAndCreateBooking() {
           
           closePaymentModal();
           resetBookingForm();
-          showPage('checkBookingPage');
+          // Scroll to check booking section
+          document.location.href = '#checkBookingSection';
+          updateBookingList();
       })
     .catch((error) => {
             // ถ้าสร้าง booking ไม่สำเร็จ ลบ lock ออก
@@ -3108,9 +2986,7 @@ function cancelBooking(bookingId) {
 
 // ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
-  if(document.getElementById("homePage").classList.contains("active")) {        
-    startSlider();        
-  }
+  startSlider();
 
    const dateInput = document.getElementById("dateSelect");
   if (dateInput) {
