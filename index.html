@@ -18,6 +18,7 @@
     <meta property="og:site_name" content="PRIJIT SPORT">
     <meta property="og:locale" content="th_TH">
   
+
     <!-- Structured Data (JSON-LD) สำหรับ Google -->
     <script type="application/ld+json">
     {
@@ -271,31 +272,35 @@
         }
       }
 
-      #loginNavBtn {
-  background: white !important;
-  color: #22c55e !important;
-  font-weight: bold;
-  border: 2px solid white;
-  cursor: pointer;
-  transition: all 0.3s;
-}
+      /* ✅ แก้ไข: แยก login-btn ออกจาก nav-item */
+      .login-btn {
+        background: white !important;
+        color: #22c55e !important;
+        font-weight: bold;
+        border: 2px solid white;
+        cursor: pointer;
+        transition: all 0.3s;
+        padding: 10px 25px;
+        border-radius: 25px;
+        display: inline-block;
+      }
 
-#loginNavBtn:hover {
-  background: #f0fdf4 !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
+      .login-btn:hover {
+        background: #f0fdf4 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
 
-/* ซ่อน/แสดงตามสถานะ login */
-#userInfo {
-  display: none;
-}
+      /* ซ่อน/แสดงตามสถานะ login */
+      #userInfo {
+        display: none;
+      }
 
-#userInfo.active {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
+      #userInfo.active {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
 .modal-overlay {
   display: none;              /* ซ่อนไว้ตอนเริ่มต้น */
   position: fixed;            /* ติดกับหน้าจอ */
@@ -1819,8 +1824,7 @@
           <span></span>
           <span></span>
         </div>
-
-        <div class="nav-links" id="navLinks">
+        <div class="nav-links" id="navLinks" >
           <a href="#homeSection" class="nav-item" data-section="homeSection">หน้าแรก</a>
           <a href="#fieldInfoSection" class="nav-item" data-section="fieldInfoSection">ข้อมูลสนาม</a>
           <a href="#rulesSection" class="nav-item" data-section="rulesSection">กฎระเบียบ</a>
@@ -1831,13 +1835,13 @@
         </div>
 
         <div class="user-section">
-  <span class="nav-item" id="loginNavBtn" onclick="openLoginModal()" 
-        style="background: white; color: #22c55e; padding: 10px 25px; border-radius: 25px;">
-    🔐 เข้าสู่ระบบ
+  <!-- ✅ แก้ไข: เปลี่ยน class เป็น login-btn -->
+  <span class="login-btn" id="loginNavBtn" onclick="openLoginModal()">
+    🔐 login
   </span>
   <div id="userInfo" style="display: none;">
     <span>👤 <span id="currentUser"></span></span>
-    <span class="logout-btn" onclick="handleLogout()">ออกจากระบบ</span>
+    <span class="logout-btn" onclick="handleLogout()"> logout</span>
   </div>
 </div>
   </div>
@@ -2089,6 +2093,7 @@
           </button>
         </div>
     </section>
+    </section>
 
     <!-- Check Booking Section -->
     <section id="checkBookingSection">
@@ -2103,6 +2108,7 @@
           </div>
         </div>
     </section>
+     </section>
 
     <!-- Gallery Section -->
     <section id="gallerySection">
@@ -2169,65 +2175,18 @@
         </div>
     </section>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-  
+<!-- ✅ Firebase Scripts - Version 9.23.0 (Stable) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" 
+        onerror="console.error('❌ Failed to load firebase-app-compat.js'); window.firebaseLoadError = true;"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"
+        onerror="console.error('❌ Failed to load firebase-auth-compat.js'); window.firebaseLoadError = true;"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"
+        onerror="console.error('❌ Failed to load firebase-database-compat.js'); window.firebaseLoadError = true;"></script>
+
 <script>
+  
+// ===== GLOBAL VARIABLES =====
 let auth, database;
-
-try {
-  const firebaseConfig = {
-    apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
-    authDomain: "prijit-sport.firebaseapp.com",
-    databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "prijit-sport",
-    storageBucket: "prijit-sport.firebasestorage.app",
-    messagingSenderId: "19782245186",
-    appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  auth = firebase.auth();
-  database = firebase.database();
-  console.log("✅ Firebase ready!");
-  
-  // ✅ 1. เพิ่ม Auth State Listener - ฟื้นฟู session หลัง refresh
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      database.ref('users/' + user.uid).once('value')
-        .then((snapshot) => {
-          currentUser = {
-            uid: user.uid,
-            ...snapshot.val()
-          };
-          
-          document.getElementById("currentUser").textContent = currentUser.fullname;
-          document.getElementById("loginNavBtn").style.display = "none";
-          document.getElementById("userInfo").style.display = "flex";
-          
-          // โหลดรายการจองทันที
-          updateBookingList();
-          console.log("✅ Session restored:", currentUser.fullname);
-        })
-        .catch((error) => {
-          console.error("❌ Failed to load user:", error);
-        });
-    } else {
-      currentUser = null;
-      document.getElementById("loginNavBtn").style.display = "inline-block";
-      document.getElementById("userInfo").style.display = "none";
-    }
-  });
-  
-} catch (error) {
-  console.error("❌ Failed:", error);
-  alert("⚠️ ไม่สามารถเชื่อมต่อระบบได้");
-}
-</script>
-
-<script>  
- 
 let currentUser = null;
 let selectedTimeSlot = null;
 let currentSlideIndex = 0;
@@ -2244,9 +2203,69 @@ const galleryImages = [
   'f2.jpg',
   'f3.jpg'
 ];
-
 let currentGalleryIndex = 0;
+let currentAvailabilityCheck = null;
+const DEPOSIT_PERCENTAGE = 0.3;
+const MAX_BOOKING_DAYS = 30;
+const MAX_FILE_SIZE_MB = 5;
+const PAYMENT_TIMEOUT_MINUTES = 15;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
+// ===== HELPER FUNCTIONS =====
+
+// ✅ เพิ่ม: ตรวจสอบว่าเป็น Touch Device
+function isTouchDevice() {
+  return ('ontouchstart' in window) || 
+         (navigator.maxTouchPoints > 0) || 
+         (navigator.msMaxTouchPoints > 0);
+}
+
+// ✅ เพิ่ม: Initialize Mobile Navigation
+function initializeMobileNavigation() {
+  console.log('📱 Initializing mobile navigation...');
+  console.log('🔍 Touch device:', isTouchDevice());
+  
+  const navLinks = document.getElementById('navLinks');
+  
+  if (!navLinks) {
+    console.log('⚠️ navLinks not found, waiting...');
+    setTimeout(initializeMobileNavigation, 100);
+    return;
+  }
+  
+  const touchDevice = isTouchDevice();
+  
+  // ✅ ใช้ Event Delegation
+  const handleNavClick = (e) => {
+    const navItem = e.target.closest('.nav-item');
+    
+    // ข้าม ถ้าไม่ใช่ nav-item หรือเป็น login button
+    if (!navItem) return;
+    if (navItem.id === 'loginNavBtn') return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const sectionId = navItem.getAttribute('data-section');
+    const loadBooking = navItem.getAttribute('data-load-booking') === 'true';
+    
+    console.log('🔔 Navigating to:', sectionId);
+    navigateToSection(sectionId, loadBooking);
+  };
+  
+  // ✅ เพิ่ม event listener ตาม device type (เพียงอันเดียว!)
+  if (touchDevice) {
+    console.log('✅ Using touch events');
+    navLinks.addEventListener('touchstart', handleNavClick, { passive: false });
+  } else {
+    console.log('✅ Using click events');
+    navLinks.addEventListener('click', handleNavClick);
+  }
+  
+  console.log('✅ Mobile navigation initialized!');
+}
+
+// ===== GALLERY FUNCTIONS =====
 function changeGalleryImage(direction) {
   currentGalleryIndex += direction;
   
@@ -2311,7 +2330,6 @@ function toggleMobileMenu() {
   navLinks.classList.toggle('active');
   overlay.classList.toggle('active');
   
-  // ป้องกันการ scroll เมื่อเมนูเปิด
   if (navLinks.classList.contains('active')) {
     document.body.style.overflow = 'hidden';
   } else {
@@ -2330,55 +2348,19 @@ function closeMobileMenu() {
   document.body.style.overflow = '';
 }
 
-// ปิดเมนูเมื่อ resize หน้าจอ
 window.addEventListener('resize', () => {
   if (window.innerWidth > 768) {
     closeMobileMenu();
   }
 });
 
-// เพิ่ม Event Listener สำหรับ Navigation Items
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('📱 Initializing mobile navigation...');
-  
-  const navItems = document.querySelectorAll('.nav-item');
-  console.log(`Found ${navItems.length} nav items`);
-  
-  navItems.forEach((item, index) => {
-    // ใช้ทั้ง touchstart และ click
-    const handleNavigation = (e) => {
-      e.preventDefault(); // ป้องกัน default behavior
-      e.stopPropagation(); // ป้องกัน bubble
-      
-      const sectionId = item.getAttribute('data-section');
-      const loadBooking = item.getAttribute('data-load-booking') === 'true';
-      
-      console.log(`🔔 [${index}] Navigating to:`, sectionId);
-      
-      navigateToSection(sectionId, loadBooking);
-    };
-    
-    // เพิ่มทั้ง touchstart และ click
-    item.addEventListener('touchstart', handleNavigation, { passive: false });
-    item.addEventListener('click', handleNavigation);
-    
-    console.log(`✅ [${index}] Event listeners added:`, item.textContent.trim());
-  });
-  
-  console.log('✅ Mobile navigation initialized!');
-});
-
-// ฟังก์ชัน Navigate + Scroll
 function navigateToSection(sectionId, loadBooking = false) {
   console.log('📍 Navigating to:', sectionId);
   
-  // ปิดเมนูก่อน
   closeMobileMenu();
   
-  // หา section
   const section = document.getElementById(sectionId);
   if (section) {
-    // Scroll ไป section
     section.scrollIntoView({ 
       behavior: 'smooth',
       block: 'start'
@@ -2386,7 +2368,6 @@ function navigateToSection(sectionId, loadBooking = false) {
     
     console.log('✅ Scrolled to:', sectionId);
     
-    // ถ้าเป็นหน้าตรวจสอบการจอง ให้โหลดรายการ
     if (loadBooking) {
       setTimeout(() => {
         console.log('📋 Loading booking list...');
@@ -2424,19 +2405,11 @@ window.addEventListener('click', function(e) {
   }
 });
 
-document.addEventListener('keydown', function(e) {
+document.addEventListener('click', function(e) {
   if (e.key === 'Escape') {
     closeLoginModal();
   }
 });
-
-let currentAvailabilityCheck = null;
-
-const DEPOSIT_PERCENTAGE = 0.3;
-const MAX_BOOKING_DAYS = 30;
-const MAX_FILE_SIZE_MB = 5;
-const PAYMENT_TIMEOUT_MINUTES = 15;
-const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 function startSlider() {
   slideInterval = setInterval(() => {
@@ -2688,8 +2661,6 @@ function handleLogin(event) {
       document.getElementById("userInfo").style.display = "flex";
       
       closeLoginModal();
-      
-      // ✅ 2. โหลดรายการจองทันทีหลัง login
       updateBookingList();
       
       alert("✅ เข้าสู่ระบบสำเร็จ!");
@@ -3123,7 +3094,6 @@ function uploadSlipAndCreateBooking() {
   reader.readAsDataURL(uploadedSlipFile);
 }
 
-// ✅ 3. เพิ่ม Error Handling + Loading State
 function updateBookingList() {
   const bookingList = document.getElementById("bookingList");
 
@@ -3132,7 +3102,6 @@ function updateBookingList() {
     return;
   }
 
-  // แสดง Loading
   bookingList.innerHTML = `
     <div style="text-align: center; padding: 40px;">
       <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 20px; border: 4px solid #e5e7eb; border-top-color: #22c55e;"></div>
@@ -3257,7 +3226,10 @@ function cancelBooking(bookingId) {
   }
 }
 
+// ===== DOMContentLoaded =====
 document.addEventListener("DOMContentLoaded", () => {
+  console.log('📄 DOM Content Loaded');
+  
   startSlider();
 
   const dateInput = document.getElementById("dateSelect");
@@ -3271,8 +3243,115 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initializeTimeSlots();
+  
+  console.log('✅ DOM initialization complete');
 }); 
-</script> 
- 
+
+// ===== Firebase Initialization (ท้ายสุด) =====
+let firebaseInitRetryCount = 0;
+const MAX_FIREBASE_RETRIES = 50; // รอสูงสุด 5 วินาที (50 * 100ms)
+
+// ✅ รอให้ Firebase scripts โหลดเสร็จก่อน
+function initializeFirebase() {
+  firebaseInitRetryCount++;
+  
+  // ตรวจสอบว่ามี script loading error หรือไม่
+  if (window.firebaseLoadError) {
+    console.error('❌ Firebase scripts failed to load (network error)');
+    console.error('📡 Check:');
+    console.error('  1. Browser Network tab (F12 → Network)');
+    console.error('  2. Console for 404 or CORS errors');
+    console.error('  3. Firewall/Proxy blocking Firebase CDN');
+    
+    alert('⚠️ ไม่สามารถโหลด Firebase scripts ได้\n\nสาเหตุที่เป็นไปได้:\n- Network ไม่เสถียร\n- Firewall บล็อก www.gstatic.com\n- กรุณาเปิด Console (F12) เพื่อดูรายละเอียด');
+    
+    initializeMobileNavigation();
+    return;
+  }
+  
+  // ตรวจสอบว่า Firebase object พร้อมหรือยัง
+  if (typeof firebase === 'undefined') {
+    // ถ้ารอเกิน maximum retry
+    if (firebaseInitRetryCount > MAX_FIREBASE_RETRIES) {
+      console.error('❌ Firebase scripts failed to load after ' + (MAX_FIREBASE_RETRIES * 100 / 1000) + ' seconds');
+      console.error('📡 Possible causes:');
+      console.error('  1. Network is too slow');
+      console.error('  2. Firebase CDN is blocked');
+      console.error('  3. Check browser Network tab (F12)');
+      
+      alert('⚠️ ไม่สามารถเชื่อมต่อ Firebase ได้\n\nกรุณาตรวจสอบ:\n- สัญญาณอินเทอร์เน็ต\n- Firewall/Proxy settings\n- Browser console (F12) สำหรับรายละเอียด');
+      
+      // Initialize navigation แม้ Firebase ล้มเหลว
+      initializeMobileNavigation();
+      return;
+    }
+    
+    if (firebaseInitRetryCount === 1 || firebaseInitRetryCount % 10 === 0) {
+      console.log('⏳ Waiting for Firebase scripts... (' + firebaseInitRetryCount + '/' + MAX_FIREBASE_RETRIES + ')');
+    }
+    setTimeout(initializeFirebase, 100);  // รอ 100ms แล้วลองใหม่
+    return;
+  }
+
+  try {
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
+      authDomain: "prijit-sport.firebaseapp.com",
+      databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "prijit-sport",
+      storageBucket: "prijit-sport.firebasestorage.app",
+      messagingSenderId: "19782245186",
+      appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    database = firebase.database();
+    console.log("✅ Firebase ready! (loaded in " + (firebaseInitRetryCount * 100) + "ms)");
+    
+    // ✅ เรียก initializeMobileNavigation หลัง Firebase พร้อม
+    initializeMobileNavigation();
+    
+    // Auth State Listener - ฟื้นฟู session
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        database.ref('users/' + user.uid).once('value')
+          .then((snapshot) => {
+            currentUser = {
+              uid: user.uid,
+              ...snapshot.val()
+            };
+            
+            document.getElementById("currentUser").textContent = currentUser.fullname;
+            document.getElementById("loginNavBtn").style.display = "none";
+            document.getElementById("userInfo").style.display = "flex";
+            
+            updateBookingList();
+            console.log("✅ Session restored:", currentUser.fullname);
+          })
+          .catch((error) => {
+            console.error("❌ Failed to load user:", error);
+          });
+      } else {
+        currentUser = null;
+        document.getElementById("loginNavBtn").style.display = "inline-block";
+        document.getElementById("userInfo").style.display = "none";
+      }
+    });
+    
+  } catch (error) {
+    console.error("❌ Firebase initialization failed:", error);
+    alert("⚠️ ไม่สามารถเชื่อมต่อระบบได้\n\nError: " + error.message);
+    
+    // ✅ Fallback: Initialize navigation แม้ Firebase fail
+    initializeMobileNavigation();
+  }
+}
+
+// เริ่ม Firebase initialization
+console.log('🚀 Starting Firebase initialization...');
+initializeFirebase();
+</script>
+
 </body>
 </html>
