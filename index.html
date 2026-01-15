@@ -3,19 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    
-    <!-- ✅ FORCE NO CACHE -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    
     <meta name="google-site-verification" content="bR1mEsXKVvOw49DkWfjDAmJHnfmsgKIcgD6kVuu1stI" />
     <title>จองสนามฟุตบอล PRIJIT SPORT - ระบบจองออนไลน์ 24 ชม.</title>
     <meta name="description" content="จองสนามฟุตบอล 7 คน PRIJIT SPORT มี 6 สนาม ราคาถูก จองง่าย ระบบออนไลน์ตลอด 24 ชั่วโมง พร้อมระบบจัดการจองที่ทันสมัย">
     <meta name="keywords" content="จองสนามฟุตบอล, สนามฟุตบอล 7 คน, สนามฟุตบอล, PRIJIT SPORT, จองสนาม, สนามฟุตบอลออนไลน์, ฟุตบอล">
     <meta name="author" content="PRIJIT SPORT">
     <meta name="robots" content="index, follow">
-    
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="จองสนามฟุตบอล PRIJIT SPORT">
@@ -53,15 +46,12 @@
         padding: 0;
         box-sizing: border-box;
       }
-
       html {
         scroll-behavior: smooth;
       }
-
       section {
         scroll-margin-top: 80px;
       }
-
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background-image: linear-gradient(
@@ -77,95 +67,46 @@
       }
 
       /* Navigation Bar */
-      .navbar {
-        background: #22c55e;
-        padding: 15px 0;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+         .navbar {
+      background: #22c55e;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1002;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .nav-item {
+      color: white;
+      font-weight: bold;
+      font-size: 1em;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: background 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    .nav-item:hover {
+        background: rgba(255, 255, 255, 0.2);
       }
-      
-      .nav-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-      }
-
-      /* ✅ CORRECTED ORDER: webkit first, standard last */
-      .nav-item {
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 1em;
-        padding: 10px 20px;
-        border-radius: 8px;
-        cursor: pointer;
         
-        /* ✅ 1. Webkit prefixes FIRST */
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        
-        /* ✅ 2. Other prefixes */
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -ms-touch-action: manipulation;
-        
-        /* ✅ 3. Standard properties LAST */
-        user-select: none;
-        touch-action: manipulation;
-        transition: background 0.15s ease;
-      }
-      
-      button.nav-item {
-        background: none;
-        border: none;
-        color: white;
-        font-family: inherit;
-        display: block;
-      }
-
-      /* ✅ MOBILE NAVIGATION FIX - CORRECT ORDER */
-      @media (max-width: 768px) {
-        .nav-item {
-          /* ✅ 1. Webkit prefix FIRST */
-          -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
-          -webkit-user-select: none;
-          -webkit-touch-callout: none;
-          
-          /* ✅ 2. Other prefixes */
-          -moz-user-select: none;
-          -ms-user-select: none;
-          -ms-touch-action: manipulation;
-          
-          /* ✅ 3. Standard properties LAST */
-          tap-highlight-color: rgba(255, 255, 255, 0.3);
-          user-select: none;
-          touch-action: manipulation;
-          
-          /* ✅ 4. Other styles */
-          transition: none !important;
-          cursor: pointer;
-          pointer-events: auto !important;
-        }
-        
-        /* Active state ชัดเจน */
-        .nav-item:active {
-          background: rgba(255, 255, 255, 0.3) !important;
-          transform: none !important;
-        }
-      }
-
       /* Hover เฉพาะ Desktop */
       @media (hover: hover) and (pointer: fine) {
         .nav-item:hover {
@@ -182,287 +123,224 @@
       }
 
       .logout-btn {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(122, 120, 120, 0.527);
+        border: 2px solid white;
         padding: 8px 16px;
         border-radius: 8px;
         cursor: pointer;
-        transition: background 0.3s;
       }
-
-      .logout-btn:hover {
+       .logout-btn:hover {
         background: rgba(255, 255, 255, 0.3);
       }
+
+      .login-btn {
+      background: rgba(122, 120, 120, 0.527) !important;
+      color: #eef3f0 !important;
+      font-weight: bold;
+      border: 2px solid white;
+      padding: 10px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
 
       /* Hamburger Menu */
-      .hamburger {
-        display: none;
-        flex-direction: column;
-        cursor: pointer;
-        padding: 10px;
-        gap: 6px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s;
-        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        user-select: none;
-        touch-action: manipulation;
-      }
-
-      .hamburger:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      .hamburger:active {
-        transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.4) !important;
-      }
-
-      .hamburger span {
-        display: block;
-        width: 28px;
-        height: 3px;
-        background: white;
-        border-radius: 3px;
-        transition: all 0.3s ease;
-      }
-
-      .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(9px, 9px);
-      }
-
-      .hamburger.active span:nth-child(2) {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-
-      .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(8px, -8px);
-      }
+    .hamburger {
+      display: none;
+      width: 44px;
+      height: 44px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2.5px;
+      background: white;
+      border-radius: 3px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: all 0.3s ease;
+    }
+    .hamburger span:nth-child(1) { top: 12px; }
+    .hamburger span:nth-child(2) { top: 20px; }
+    .hamburger span:nth-child(3) { top: 28px; }
+    .hamburger.active span:nth-child(1) {
+      top: 20px;
+      transform: translateX(-50%) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) {
+      top: 20px;
+      transform: translateX(-50%) rotate(-45deg);
+    }
 
       /* Menu Overlay */
-      .menu-overlay {
-        display: none;
-        position: fixed;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        height: calc(100vh - 70px);
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 998;
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-
-      .menu-overlay.active {
-        display: block;
+  .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(34,197,94,0.98), rgba(16,185,129,0.98));
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .menu-overlay .nav-links {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .menu-overlay .nav-item {
+      padding: 18px 40px;
+      margin: 8px 0;
+      border-radius: 15px;
+      font-size: 1.3em;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,0.2);
+      min-width: 280px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .menu-overlay.active .nav-item {
+      animation: slideIn 0.4s ease forwards;
+    }
+    .menu-overlay.active .nav-item:nth-child(1) { animation-delay: 0.1s; }
+    .menu-overlay.active .nav-item:nth-child(2) { animation-delay: 0.15s; }
+    .menu-overlay.active .nav-item:nth-child(3) { animation-delay: 0.2s; }
+    .menu-overlay.active .nav-item:nth-child(4) { animation-delay: 0.25s; }
+    .menu-overlay.active .nav-item:nth-child(5) { animation-delay: 0.3s; }
+    .menu-overlay.active .nav-item:nth-child(6) { animation-delay: 0.35s; }
+    .menu-overlay.active .nav-item:nth-child(7) { animation-delay: 0.4s; }
+    @keyframes slideIn {
+      to {
         opacity: 1;
+        transform: translateY(0);
       }
-
-      /* Login Button */
-      .login-btn {
-        background: white !important;
-        color: #22c55e !important;
-        font-weight: bold;
-        border: 2px solid white;
-        cursor: pointer;
-        transition: all 0.3s;
-        padding: 10px 25px;
-        border-radius: 25px;
-        display: inline-block;
-      }
-
-      .login-btn:hover {
-        background: #f0fdf4 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      }
-
-      #userInfo {
-        display: none;
-      }
-
-      #userInfo.active {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
+    }
+    .menu-overlay .nav-item:active {
+      transform: scale(0.95);
+      background: rgba(255,255,255,0.3);
+    }
 
       /* Modal */
-      .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 2000;
-        justify-content: center;
-        align-items: center;
-        animation: fadeIn 0.3s ease;
-      }
-
-      .modal-overlay.active {
-        display: flex;
-      }
-
-      .auth-modal {
-        background: white;
-        border-radius: 20px;
-        padding: 50px;
-        max-width: 450px;
-        width: 90%;
-        position: relative;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        animation: slideDown 0.3s ease;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-
-      @keyframes slideDown {
-        from {
-          transform: translateY(-50px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .modal-close-btn {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        font-size: 28px;
-        cursor: pointer;
-        color: #666;
-        background: none;
-        border: none;
-        transition: all 0.3s ease;
-        width: 35px;
-        height: 35px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-      }
-
-      .modal-close-btn:hover {
-        background: #f3f4f6;
-        color: #22c55e;
-        transform: rotate(90deg);
-      }
-
-      .auth-title {
-        font-size: 2.5em;
-        text-align: center;
-        margin-bottom: 30px;
-        color: #1f2937;
-      }
-
-      .form-group {
-        margin-bottom: 25px;
-      }
-
-      .form-label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-        color: #374151;
-        font-size: 1.1em;
-      }
-
-      .form-input {
-        width: 100%;
-        padding: 15px;
-        border: 2px solid #d1d5db;
-        border-radius: 10px;
-        font-size: 1.1em;
-        transition: border-color 0.3s;
-      }
-
-      .form-input:focus {
-        outline: none;
-        border-color: #22c55e;
-      }
-
-      .submit-btn {
-        width: 100%;
-        background: #22c55e;
-        color: white;
-        border: none;
-        padding: 18px;
-        border-radius: 10px;
-        font-size: 1.2em;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.3s;
-        margin-top: 10px;
-      }
-
-      .submit-btn:hover {
-        background: #16a34a;
-      }
-
-      .auth-switch {
-        text-align: center;
-        margin-top: 20px;
-        color: #6b7280;
-      }
-
-      .auth-switch a {
-        color: #22c55e;
-        text-decoration: none;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      .auth-switch a:hover {
-        text-decoration: underline;
-      }
+        .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .auth-modal {
+      background: white;
+      border-radius: 20px;
+      padding: 50px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #666;
+    }
+    .auth-title {
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #1f2937;
+    }
+    .form-group { margin-bottom: 25px; }
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #374151;
+      font-size: 1.1em;
+    }
+    .form-input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 1.1em;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #22c55e;
+    }
+    .submit-btn {
+      width: 100%;
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 18px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .auth-switch {
+      text-align: center;
+      margin-top: 20px;
+      color: #6b7280;
+    }
+    .auth-switch a {
+      color: #22c55e;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
       /* Hero Section */
       .hero {
-        position: relative;
-        color: white;
-        text-align: center;
-        padding: 100px 20px;
-        background-image: linear-gradient(
-            rgba(34, 197, 94, 0),
-            rgba(22, 163, 74, 1)
-          ),
-          url("f5.png");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-
-      .hero h1 {
-        font-size: 3.5em;
-        margin-bottom: 20px;
-        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
-      }
-
-      .hero p {
-        font-size: 1.5em;
-        margin-bottom: 15px;
-        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-      }
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+      background: linear-gradient(rgba(34,197,94,0), rgba(22,163,74,1)), url("f5.png");
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: 3.5em;
+      margin-bottom: 20px;
+      text-shadow: 3px 3px 8px rgba(0,0,0,0.7);
+    }
+    .hero p {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+    }
 
       .hero-logo-left {
         position: absolute;
@@ -484,6 +362,47 @@
         50% {
           transform: translateY(-50%) translateX(-10px);
         }
+      }
+      
+      /* Section Styles */
+      section {
+        padding: 30px 15px;
+        scroll-margin-top: 70px;
+        width: 100%;
+      }
+
+      section > * {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .section-title {
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 20px;
+        color: white;
+        font-weight: bold;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+      }
+
+      .content-card {
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 15px;
+        padding: 20px 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .section-header {
+        background: #e5e7eb;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #1f2937;
+        text-align: center;
       }
 
       /* Slider */
@@ -615,160 +534,10 @@
 
       /* Mobile responsive */
       @media (max-width: 768px) {
-        .hamburger {
-          display: flex;
-        }
-
-        .nav-container {
-          flex-wrap: nowrap;
-        }
-
-        .nav-links {
-          position: fixed;
-          top: 70px;
-          left: -100%;
-          width: 85%;
-          max-width: 350px;
-          height: calc(100vh - 70px);
-          background: linear-gradient(180deg, #6ee7b7 0%, #34d399 100%);
-          flex-direction: column;
-          padding: 0;
-          gap: 0;
-          box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
-          transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          overflow-y: auto;
-          z-index: 999;
-        }
-
-        .nav-links.active {
-          left: 0;
-        }
-
-        .nav-item {
-          width: 100%;
-          padding: 18px 25px;
-          border-radius: 0;
-          margin: 0;
-          text-align: left;
-          font-size: 1.1em;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          pointer-events: auto;
-          cursor: pointer;
-          
-          -webkit-user-select: none;
-          -webkit-tap-highlight-color: transparent;
-          -webkit-touch-callout: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          -ms-touch-action: manipulation;
-          
-          user-select: none;
-          touch-action: manipulation;
-          transition: none !important;
-        }
-
-        .nav-item:active {
-          background: rgba(255, 255, 255, 0.2) !important;
-          transform: none !important;
-        }
-
-        .nav-item:last-child {
-          border-bottom: none;
-        }
-
-        .slider-container {
-          height: 300px;
-        }
-
-        .slider-btn {
-          width: 40px;
-          height: 40px;
-          font-size: 1.2em;
-        }
-
-        .slider-btn.prev {
-          left: 10px;
-        }
-
-        .slider-btn.next {
-          right: 10px;
-        }
-
-        .slider-welcome-text h2 {
-          font-size: 2em;
-        }
-
-        .slider-welcome-text p {
-          font-size: 1.2em;
-        }
-
-        .hero-logo-left {
-          width: 130px;
-          height: 130px;
-          left: 3%;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .slider-container {
-          height: 200px;
-          border-radius: 10px;
-        }
-
-        .slider-welcome-text h2 {
-          font-size: 1.5em;
-        }
-
-        .slider-welcome-text p {
-          font-size: 1em;
-        }
-
-        .hero-logo-left {
-          display: none;
-        }
-      }
-
-      /* Section Styles */
-      section {
-        padding: 30px 15px;
-        scroll-margin-top: 70px;
-        width: 100%;
-      }
-
-      section > * {
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .section-title {
-        font-size: 2.5em;
-        text-align: center;
-        margin-bottom: 20px;
-        color: white;
-        font-weight: bold;
-        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-      }
-
-      .content-card {
-        background: rgba(255, 255, 255, 0.97);
-        border-radius: 15px;
-        padding: 20px 15px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
-      }
-
-      .section-header {
-        background: #e5e7eb;
-        padding: 12px 20px;
-        border-radius: 10px;
-        font-size: 1.3em;
-        font-weight: bold;
-        margin-bottom: 20px;
-        color: #1f2937;
-        text-align: center;
-      }
-
+      .hamburger { display: block; }
+      .nav-container > .nav-links { display: none; }
+    }
+      
       /* Field Info */
       .field-details {
         line-height: 2;
@@ -859,24 +628,26 @@
       }
 
       .time-slot-btn {
-        padding: 15px;
-        border: 2px solid #d1d5db;
-        border-radius: 10px;
-        background: white;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 1em;
-        font-weight: 500;
-        text-align: center;
-        position: relative;
-      }
-
+  padding: 15px;
+  border: 2px solid #d1d5db;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1em;
+  font-weight: 500;
+  text-align: center;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+  @media (hover: hover) and (pointer: fine) {
       .time-slot-btn:hover {
         border-color: #22c55e;
         background: #f0fdf4;
         transform: translateY(-2px);
       }
-
+      }
       .time-slot-btn.selected {
         background: #22c55e;
         color: white;
@@ -1450,8 +1221,37 @@
           padding: 15px 10px;
         }
 
+        .hero {
+          padding: 60px 20px;
+        }
+
         .hero h1 {
           font-size: 2em;
+        }
+
+        .hero p {
+          font-size: 1.1em;
+        }
+
+        /* ซ่อนโลโก้บนมือถือเพื่อไม่ให้บังเนื้อหา */
+        .hero-logo-left {
+          display: none;
+        }
+
+        .slider-container {
+          height: 300px;
+        }
+
+        .slider-welcome-text {
+          padding: 30px 15px;
+        }
+
+        .slider-welcome-text h2 {
+          font-size: 2em;
+        }
+
+        .slider-welcome-text p {
+          font-size: 1.1em;
         }
 
         .time-slots-grid {
@@ -1519,11 +1319,36 @@
           padding: 12px 8px;
         }
 
+        .hero {
+          padding: 40px 15px;
+        }
+
         .hero h1 {
           font-size: 1.5em;
         }
 
         .hero p {
+          font-size: 0.9em;
+        }
+
+        /* ซ่อนโลโก้บนมือถือเพื่อไม่ให้บังเนื้อหา */
+        .hero-logo-left {
+          display: none;
+        }
+
+        .slider-container {
+          height: 250px;
+        }
+
+        .slider-welcome-text {
+          padding: 25px 10px;
+        }
+
+        .slider-welcome-text h2 {
+          font-size: 1.5em;
+        }
+
+        .slider-welcome-text p {
           font-size: 1em;
         }
 
@@ -1554,7 +1379,6 @@
         }
       }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script>
   </head>
   <body>
     <!-- Login/Register Modal -->
@@ -1608,40 +1432,51 @@
       </div>
     </div>
 
-    <!-- Main Navigation -->
-    <nav id="mainNav" class="navbar">
-      <div class="nav-container">
-        <div class="hamburger" id="hamburgerBtn">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        
-        <div class="nav-links" id="navLinks">
-          <button type="button" class="nav-item" data-section="homeSection">หน้าแรก</button>
-          <button type="button" class="nav-item" data-section="fieldInfoSection">ข้อมูลสนาม</button>
-          <button type="button" class="nav-item" data-section="rulesSection">กฎระเบียบ</button>
-          <button type="button" class="nav-item" data-section="bookingSection">จองสนาม</button>
-          <button type="button" class="nav-item" data-section="checkBookingSection" data-load-booking="true">ตรวจสอบการจอง</button>
-          <button type="button" class="nav-item" data-section="gallerySection">แกลเลอรี่</button>
-          <button type="button" class="nav-item" data-section="contactSection">ติดต่อสอบถาม</button>
-        </div>
-        
-        <div class="user-section">
-          <span class="login-btn" id="loginNavBtn">🔐 login</span>
-          <div id="userInfo" style="display: none;">
-            <span>👤 <span id="currentUser"></span></span>
-            <span class="logout-btn" id="logoutBtn">logout</span>
-          </div>
+    <!-- Navigation Bar -->
+     <nav class="navbar">
+    <div class="nav-container">
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="nav-links" id="desktopNav">
+        <button class="nav-item" data-section="homeSection">หน้าแรก</button>
+        <button class="nav-item" data-section="fieldInfoSection">ข้อมูลสนาม</button>
+        <button class="nav-item" data-section="rulesSection">กฎระเบียบ</button>
+        <button class="nav-item" data-section="bookingSection">จองสนาม</button>
+        <button class="nav-item" data-section="checkBookingSection">ตรวจสอบ</button>
+        <button class="nav-item" data-section="gallerySection">แกลเลอรี่</button>
+        <button class="nav-item" data-section="contactSection">ติดต่อ</button>
+      </div>
+      <div class="user-section">
+
+        <span class="login-btn" id="loginNavBtn">🔐 login</span>
+        <div id="userInfo" style="display:none;">
+          <span>👤 <span id="currentUser"></span></span>
+          <span class="logout-btn" id="logoutBtn">logout</span>
         </div>
       </div>
-    </nav>
+    </div>
+  </nav>
 
-    <!-- Menu Overlay -->
-    <div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+    <!-- Mobile Menu -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="nav-links" id="mobileNav">
+      <button class="nav-item" data-section="homeSection">🏠 หน้าแรก</button>
+      <button class="nav-item" data-section="fieldInfoSection">ℹ️ ข้อมูลสนาม</button>
+      <button class="nav-item" data-section="rulesSection">📋 กฎระเบียบ</button>
+      <button class="nav-item" data-section="bookingSection">⚽ จองสนาม</button>
+      <button class="nav-item" data-section="checkBookingSection">✅ ตรวจสอบ</button>
+      <button class="nav-item" data-section="gallerySection">📸 แกลเลอรี่</button>
+      <button class="nav-item" data-section="contactSection">📞 ติดต่อ</button>
+    </div>
+  </div>
 
     <!-- Home Section -->
     <section id="homeSection">
+
       <div class="hero">
         <img src="f6.jpg" alt="Logo" class="hero-logo-left" />
         <h1>PRIJIT SPORT</h1>
@@ -1653,6 +1488,7 @@
       <div class="slider-section">
         <div class="slider-container">
           <div class="slider-wrapper">
+
             <div class="slide active"><img src="f11.jpg" alt="slide1" /></div>
             <div class="slide"><img src="f8.jpg" alt="slide2" /></div>
             <div class="slide"><img src="f9.jpg" alt="slide3" /></div>
@@ -1793,7 +1629,6 @@
           <label class="form-label">เลือกวันที่</label>
           <input type="date" id="dateSelect" class="form-input" onchange="checkAvailability()" />
         </div>
-        
         <div id="availabilityStatus" class="availability-notice" style="display: none">
           <strong>กำลังตรวจสอบสถานะสนาม...</strong>
         </div>
@@ -1811,11 +1646,11 @@
             <button class="time-slot-btn" type="button" data-time="17:00 - 18:00">17:00 - 18:00</button>
             <button class="time-slot-btn" type="button" data-time="18:00 - 19:00">18:00 - 19:00</button>
             <button class="time-slot-btn" type="button" data-time="19:00 - 20:00">19:00 - 20:00</button>
-          </div>
+          </div> 
 
-          <button class="submit-btn" onclick="confirmBooking()">ยืนยันการจอง</button>
+          <button class="submit-btn" onclick="confirmBooking()">ยืนยันการจอง
+          </button>
         </div>
-      </div>
     </section>
 
     <!-- Check Booking Section -->
@@ -1823,6 +1658,7 @@
       <h2 class="section-title">ตรวจสอบการจอง</h2>
       <div class="content-card">
         <div class="section-header">รายการจองของคุณ</div>
+
         <div id="bookingList" style="min-height: 200px">
           <p style="text-align: center; color: #6b7280; padding: 40px">ยังไม่มีรายการจอง</p>
         </div>
@@ -1899,23 +1735,22 @@
 console.log('🚀 [PRIJIT SPORT] Script starting...', new Date().toISOString());
 
 // ========================================
-// 1️⃣ CACHE CLEANUP (วางก่อนสุด!)
+// 1️⃣ CACHE CLEANUP
 // ========================================
 (function() {
   console.log('🧹 [1/3] Cache cleanup...');
   try { localStorage.clear(); console.log('  ✅ localStorage cleared'); } catch(e) {}
   try { sessionStorage.clear(); console.log('  ✅ sessionStorage cleared'); } catch(e) {}
-  console.log('✅ [1/3] Cache cleanup complete (NO navLinks clone)');
+  console.log('✅ [1/3] Cache cleanup complete');
 })();
 
 // ========================================
-// 2️⃣ GLOBAL VARIABLES (ประกาศทุกตัวแปร)
+// 2️⃣ GLOBAL VARIABLES
 // ========================================
 console.log('📦 [2/3] Declaring global variables...');
 
 // Firebase
-let auth, database;
-let currentUser = null;
+let auth, database, currentUser = null;
 
 // Booking
 let selectedTimeSlot = null;
@@ -1925,9 +1760,9 @@ let currentAvailabilityCheck = null;
 
 // Navigation & Menu
 let lastMenuToggleTime = 0;
-const MENU_TOGGLE_DELAY = 100;
+const MENU_TOGGLE_DELAY = 150;
 let lastNavigationTime = 0;
-const NAVIGATION_DELAY = 100; 
+const NAVIGATION_DELAY = 150; 
 
 // Slider
 let currentSlideIndex = 0;
@@ -1957,12 +1792,6 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
 (function initNavigation() {
   console.log('🎯 [3/3] Initializing navigation...');
   
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindEvents);
-  } else {
-    bindEvents();
-  }
-  
   function bindEvents() {
     const navItems = document.querySelectorAll('.nav-item[data-section]');
     console.log('  🔧 Found', navItems.length, 'nav items');
@@ -1971,84 +1800,157 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
       const sectionId = item.getAttribute('data-section');
       const loadBooking = item.getAttribute('data-load-booking') === 'true';
       
-      // ✅ FIX: ใช้ touchend + preventDefault แทน touchstart
+      let touchStartTime = 0;
+      let touchHandled = false;
+      
+      // ✅ TOUCHSTART EVENT (Immediate - ไม่มี delay)
+      item.addEventListener('touchstart', function(e) {
+        touchStartTime = Date.now();
+        
+        // Visual feedback ทันที
+        this.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+        
+        console.log(`📱 Touch START: ${sectionId} [${index}]`);
+      }, { passive: true });
+      
+      // ✅ TOUCHEND EVENT (Execute action)
       item.addEventListener('touchend', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
         const now = Date.now();
-        const diff = now - lastNavigationTime;
+        const touchDuration = now - touchStartTime;
         
-        // ลด delay ลงเหลือ 100ms (จาก 200ms)
-        if (diff > 100) {
-          lastNavigationTime = now;
-          
-          // Visual feedback
-          this.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
-          setTimeout(() => { this.style.backgroundColor = ''; }, 150);
-          
-          console.log(`✅ Touch: ${sectionId} [${index}]`);
-          navigateToSection(sectionId, loadBooking);
+        // ป้องกัน accidental tap (เร็วเกินไป)
+        if (touchDuration < 50) {
+          console.log('  ⚠️ Touch too fast, ignoring');
+          return;
         }
-      }, { passive: false }); // ⚠️ ต้องเป็น passive: false เพื่อใช้ preventDefault ได้
+        
+        // Debounce
+        if (now - lastNavigationTime > 200) {
+          lastNavigationTime = now;
+          touchHandled = true;
+          
+          // Clear visual feedback
+          setTimeout(() => { 
+            this.style.backgroundColor = ''; 
+            touchHandled = false;
+          }, 300);
+          
+          console.log(`✅ Touch END: ${sectionId} [${index}] - navigating`);
+          navigateToSection(sectionId, loadBooking);
+        } else {
+          console.log('  ⚠️ Debounced touch');
+        }
+      }, { passive: false });
       
-      // Desktop click (ป้องกันการรันซ้ำจาก touch)
+      // ✅ CLICK EVENT (Desktop fallback)
       item.addEventListener('click', function(e) {
-        if (e.pointerType === 'touch') return;
+        // ป้องกัน ghost click หลัง touch
+        if (touchHandled || (Date.now() - lastNavigationTime) < 500) {
+          e.preventDefault();
+          console.log('  ⚠️ Blocked ghost click');
+          return;
+        }
         
         const now = Date.now();
-        const diff = now - lastNavigationTime;
-        
-        if (diff > 100) {
+        if (now - lastNavigationTime > 200) {
           lastNavigationTime = now;
-          console.log(`✅ Click: ${sectionId} [${index}]`);
+          console.log(`🖱️ Click nav: ${sectionId} [${index}]`);
           navigateToSection(sectionId, loadBooking);
         }
       });
     });  
       
-    // Hamburger Menu
+    // ✅ HAMBURGER MENU
     const hamburger = document.getElementById('hamburgerBtn');
     if (hamburger) {
+      let hamTouchStart = 0;
+      let hamTouchHandled = false;
+      
+      hamburger.addEventListener('touchstart', function(e) {
+        hamTouchStart = Date.now();
+        this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+      }, { passive: true });
+      
       hamburger.addEventListener('touchend', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        
         const now = Date.now();
-        if (now - lastMenuToggleTime > 100) { // ลดเหลือ 100ms
+        const duration = now - hamTouchStart;
+        
+        if (duration >= 50 && now - lastMenuToggleTime > 200) {
           lastMenuToggleTime = now;
-          console.log('  🍔 Hamburger touched');
+          hamTouchHandled = true;
+          
+          this.style.backgroundColor = '';
+          setTimeout(() => { hamTouchHandled = false; }, 300);
+          
+          console.log('  🍔 Hamburger toggled');
           toggleMobileMenu();
         }
       }, { passive: false });
       
       hamburger.addEventListener('click', function(e) {
+        if (hamTouchHandled || (Date.now() - lastMenuToggleTime) < 500) {
+          e.preventDefault();
+          return;
+        }
+        
         const now = Date.now();
-        if (now - lastMenuToggleTime > 100) {
+        if (now - lastMenuToggleTime > 200) {
           lastMenuToggleTime = now;
           toggleMobileMenu();
         }
       });
     }
     
-    // Login/Logout Buttons
+    // ✅ LOGIN/LOGOUT BUTTONS (same pattern)
     const loginBtn = document.getElementById('loginNavBtn');
     if (loginBtn) {
-      loginBtn.addEventListener('click', openLoginModal);
+      let loginTouchHandled = false;
+      
       loginBtn.addEventListener('touchend', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        loginTouchHandled = true;
         openLoginModal();
+        setTimeout(() => { loginTouchHandled = false; }, 300);
       }, { passive: false });
+      
+      loginBtn.addEventListener('click', function(e) {
+        if (loginTouchHandled) {
+          e.preventDefault();
+          return;
+        }
+        openLoginModal();
+      });
     }
     
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', handleLogout);
+      let logoutTouchHandled = false;
+      
       logoutBtn.addEventListener('touchend', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        logoutTouchHandled = true;
         handleLogout();
+        setTimeout(() => { logoutTouchHandled = false; }, 300);
       }, { passive: false });
+      
+      logoutBtn.addEventListener('click', function(e) {
+        if (logoutTouchHandled) {
+          e.preventDefault();
+          return;
+        }
+        handleLogout();
+      });
     }
     
-    console.log('✅ [3/3] Navigation initialized with', navItems.length, 'items (100ms debounce)');
+    console.log('✅ [3/3] Navigation initialized with touchstart + touchend pattern');
   }
   
   // ✅ เรียก bindEvents() เพียงครั้งเดียว
@@ -2079,64 +1981,53 @@ function navigateToSection(sectionId, loadBooking = false) {
     console.error('  ❌ Section not found:', sectionId);
   }
 }
-function toggleMobileMenu() {
-  const hamburger = document.getElementById('hamburgerBtn');
-  const navLinks = document.getElementById('navLinks');
+ 
+function navigateToSection(sectionId) {
   const overlay = document.getElementById('menuOverlay');
-  
-  hamburger.classList.toggle('active');
-  navLinks.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
-}
-
-function closeMobileMenu() {
   const hamburger = document.getElementById('hamburgerBtn');
-  const navLinks = document.getElementById('navLinks');
-  const overlay = document.getElementById('menuOverlay');
-  
-  hamburger.classList.remove('active');
-  navLinks.classList.remove('active');
   overlay.classList.remove('active');
+  hamburger.classList.remove('active');
   document.body.style.overflow = '';
+  
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 768) {
-    closeMobileMenu();
+function toggleMobileMenu() {
+  const overlay = document.getElementById('menuOverlay');
+  const hamburger = document.getElementById('hamburgerBtn');
+  const isActive = overlay.classList.contains('active');
+  
+  if (isActive) {
+    overlay.classList.remove('active');
+    hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  } else {
+    overlay.classList.add('active');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
-});
-
+}
 // ========================================
 // MODAL FUNCTIONS
 // ========================================
 function openLoginModal() {
   document.getElementById('loginModal').classList.add('active');
-  showLoginInModal();  
+  showLoginInModal();
 }
-
 function closeLoginModal() {
   document.getElementById('loginModal').classList.remove('active');
 }
-
 function showLoginInModal() {
   document.getElementById('modalLoginForm').style.display = 'block';
   document.getElementById('modalRegisterForm').style.display = 'none';
 }
-
 function showRegisterInModal() {
   document.getElementById('modalLoginForm').style.display = 'none';
   document.getElementById('modalRegisterForm').style.display = 'block';
 }
-
-window.addEventListener('click', function(e) {
-  const modal = document.getElementById('loginModal');
-  if (e.target === modal) closeLoginModal();
-});
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeLoginModal();
-});
 
 // ========================================
 // SLIDER FUNCTIONS
@@ -2232,14 +2123,40 @@ function isInViewport(element) {
 // ========================================
 // TIME SLOTS FUNCTIONS
 // ========================================
-function initializeTimeSlots() {
+function  initializeTimeSlots() {
   const timeSlots = document.querySelectorAll('.time-slot-btn');
+  
   timeSlots.forEach(btn => {
-    btn.addEventListener('click', function() {
+    let touchHandled = false;
+    
+    // ✅ TOUCHEND (Mobile)
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
       if (this.classList.contains('booked')) {
         alert('❌ ช่วงเวลานี้ถูกจองแล้ว กรุณาเลือกช่วงเวลาอื่น');
         return;
       }
+      
+      touchHandled = true;
+      selectTime(this);
+      setTimeout(() => { touchHandled = false; }, 300);
+    }, { passive: false });
+    
+    // ✅ CLICK (Desktop fallback)
+    btn.addEventListener('click', function(e) {
+      // ป้องกัน ghost click
+      if (touchHandled) {
+        e.preventDefault();
+        return;
+      }
+      
+      if (this.classList.contains('booked')) {
+        alert('❌ ช่วงเวลานี้ถูกจองแล้ว กรุณาเลือกช่วงเวลาอื่น');
+        return;
+      }
+      
       selectTime(this);
     });
   });
@@ -2360,102 +2277,69 @@ function resetBookingForm() {
 // ========================================
 // AUTH FUNCTIONS
 // ========================================
-function handleRegister(event) {
-  event.preventDefault();
+function handleLogin(e) {
+  e.preventDefault();
+  const username = document.getElementById("modalLoginUsername").value;
+  const password = document.getElementById("modalLoginPassword").value;
+  const email = username + "@prijitsport.com";
+  
+  auth.signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      return database.ref('users/' + userCredential.user.uid).once('value');
+    })
+    .then(snapshot => {
+      currentUser = { uid: auth.currentUser.uid, ...snapshot.val() };
+      document.getElementById("currentUser").textContent = currentUser.fullname;
+      document.getElementById("loginNavBtn").style.display = "none";
+      document.getElementById("userInfo").style.display = "flex";
+      closeLoginModal();
+      alert("✅ เข้าสู่ระบบสำเร็จ!");
+    })
+    .catch(error => {
+      alert("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+    });
+}
 
+function handleRegister(e) {
+  e.preventDefault();
   const username = document.getElementById("modalRegUsername").value;
   const fullname = document.getElementById("modalRegFullname").value;
   const phone = document.getElementById("modalRegPhone").value;
   const password = document.getElementById("modalRegPassword").value;
-  
-  const phoneRegex = /^0[0-9]{9}$/;
-  if (!phoneRegex.test(phone)) {
-    alert("❌ กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง\n(10 หลัก เริ่มต้นด้วย 0)");
-    return;
-  }
-  
-  const usernameRegex = /^[a-zA-Z0-9_]+$/;
-  if (!usernameRegex.test(username)) {
-    alert("❌ ชื่อผู้ใช้ต้องเป็นภาษาอังกฤษ ตัวเลข หรือ _ เท่านั้น\n(ไม่มีช่องว่างหรืออักขระพิเศษ)");
-    return;
-  }
-  
   const email = username + "@prijitsport.com";
-
+  
   auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      return database.ref('users/' + user.uid).set({
-        username: username,
-        fullname: fullname,
-        phone: phone,
+    .then(userCredential => {
+      return database.ref('users/' + userCredential.user.uid).set({
+        username, fullname, phone,
         createdAt: new Date().toISOString()
       });
     })
     .then(() => {
-      alert("✅ สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
-      event.target.reset();
-      showLoginInModal(); 
+      alert("✅ สมัครสมาชิกสำเร็จ!");
+      e.target.reset();
+      showLoginInModal();
     })
-    .catch((error) => {
+    .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
         alert("❌ ชื่อผู้ใช้นี้มีอยู่แล้ว");
-      } else if (error.code === 'auth/weak-password') {
-        alert("❌ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
       } else {
         alert("❌ เกิดข้อผิดพลาด: " + error.message);
       }
     });
 }
 
-function handleLogin(event) {
-  event.preventDefault();
-
-  const username = document.getElementById("modalLoginUsername").value;
-  const password = document.getElementById("modalLoginPassword").value;
-  const email = username + "@prijitsport.com";
-
-  auth.signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      return database.ref('users/' + user.uid).once('value');
-    })
-    .then((snapshot) => {
-      currentUser = {
-        uid: auth.currentUser.uid,
-        ...snapshot.val()
-      };
-      
-      document.getElementById("currentUser").textContent = currentUser.fullname;
-      document.getElementById("loginNavBtn").style.display = "none";
-      document.getElementById("userInfo").style.display = "flex";
-      
-      closeLoginModal();
-      updateBookingList();
-      
-      alert("✅ เข้าสู่ระบบสำเร็จ!");
-    })
-    .catch((error) => {
-      console.error("❌ Login error:", error);
-      alert("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
-    });
-}
-
 function handleLogout() {
   if (confirm("ต้องการออกจากระบบ?")) {
-    if (paymentTimer) {
-      clearInterval(paymentTimer);
-      paymentTimer = null;
-    }
-
     auth.signOut().then(() => {
       currentUser = null;
       document.getElementById("loginNavBtn").style.display = "inline-block";
       document.getElementById("userInfo").style.display = "none";
-      alert("✅ ออกจากระบบเรียบร้อยแล้ว");
+      alert("✅ ออกจากระบบเรียบร้อย");
     });
   }
 }
+
 
 // ========================================
 // BOOKING FUNCTIONS
@@ -2997,31 +2881,66 @@ function cancelBooking(bookingId) {
 }
 
 // ========================================
-// DOM CONTENT LOADED
+// iNITIALIZATION
 // ========================================
 document.addEventListener("DOMContentLoaded", () => {
-  if ('addEventListener' in document && typeof FastClick !== 'undefined') {
-    FastClick.attach(document.body);
-    console.log('⚡ FastClick initialized');
-  }
-  
-  console.log('📄 DOM Content Loaded');
-  startSlider();
-
-  const dateInput = document.getElementById("dateSelect");
-  if (dateInput) {
-    const today = new Date();
-    const maxDate = new Date(today);
-    maxDate.setDate(maxDate.getDate() + 30);
-    
-    dateInput.min = today.toISOString().split("T")[0];
-    dateInput.max = maxDate.toISOString().split("T")[0];
-  }
-
+  console.log('🎯 DOM ready - initializing...');
+// ========================================
+// HAMBURGER MENU
+document.getElementById('hamburgerBtn').addEventListener('click', toggleMobileMenu);
+// ========================================
+// TIME SLOTS
   initializeTimeSlots();
+  console.log('✅ Time slots initialized');
+// ========================================
+// Desktop Nav
+  document.querySelectorAll('#desktopNav .nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      navigateToSection(item.getAttribute('data-section'));
+    });
+  });
   
-  console.log('✅ DOM initialization complete');
-}); 
+  // Mobile Nav
+  document.querySelectorAll('#mobileNav .nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      navigateToSection(item.getAttribute('data-section'));
+    });
+  });
+  // Login/Logout
+  document.getElementById('loginNavBtn').addEventListener('click', openLoginModal);
+  document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+  
+  // Close overlay on background click
+  document.getElementById('menuOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'menuOverlay') toggleMobileMenu();
+  });
+  
+  // Close modal on background click
+  document.getElementById('loginModal').addEventListener('click', (e) => {
+    if (e.target.id === 'loginModal') closeLoginModal();
+  });
+  
+  // ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeLoginModal();
+      if (document.getElementById('menuOverlay').classList.contains('active')) {
+        toggleMobileMenu();
+      }
+    }
+  });
+
+// ========================================
+// window RESIZE HANDLER
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      document.getElementById('menuOverlay').classList.remove('active');
+      document.getElementById('hamburgerBtn').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+   });
+
 
 // ========================================
 // FIREBASE INITIALIZATION
@@ -3031,7 +2950,6 @@ const MAX_FIREBASE_RETRIES = 50;
 
 function initializeFirebase() {
   firebaseInitRetryCount++;
-  
   if (window.firebaseLoadError) {
     console.error('❌ Firebase scripts failed to load (network error)');
     alert('⚠️ ไม่สามารถโหลด Firebase scripts ได้\n\nสาเหตุที่เป็นไปได้:\n- Network ไม่เสถียร\n- Firewall บล็อก www.gstatic.com\n- กรุณาเปิด Console (F12) เพื่อดูรายละเอียด');
@@ -3100,7 +3018,6 @@ function initializeFirebase() {
   }
 }
 
-console.log('🚀 Starting Firebase initialization...');
 initializeFirebase();
     </script>
   </body>
