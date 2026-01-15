@@ -1446,9 +1446,9 @@
         <button class="nav-item" data-section="fieldInfoSection">ข้อมูลสนาม</button>
         <button class="nav-item" data-section="rulesSection">กฎระเบียบ</button>
         <button class="nav-item" data-section="bookingSection">จองสนาม</button>
-        <button class="nav-item" data-section="checkBookingSection">ตรวจสอบ</button>
+        <button class="nav-item" data-section="checkBookingSection">ตรวจสอบการจอง</button>
         <button class="nav-item" data-section="gallerySection">แกลเลอรี่</button>
-        <button class="nav-item" data-section="contactSection">ติดต่อ</button>
+        <button class="nav-item" data-section="contactSection">ติดต่อสอบถาม</button>
       </div>
       <div class="user-section">
 
@@ -1468,9 +1468,9 @@
       <button class="nav-item" data-section="fieldInfoSection">ℹ️ ข้อมูลสนาม</button>
       <button class="nav-item" data-section="rulesSection">📋 กฎระเบียบ</button>
       <button class="nav-item" data-section="bookingSection">⚽ จองสนาม</button>
-      <button class="nav-item" data-section="checkBookingSection">✅ ตรวจสอบ</button>
+      <button class="nav-item" data-section="checkBookingSection">✅ ตรวจสอบการจอง</button>
       <button class="nav-item" data-section="gallerySection">📸 แกลเลอรี่</button>
-      <button class="nav-item" data-section="contactSection">📞 ติดต่อ</button>
+      <button class="nav-item" data-section="contactSection">📞 ติดต่อสอบถาม</button>
     </div>
   </div>
 
@@ -1950,6 +1950,24 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
       });
     }
     
+    
+    // ✅ FIELD และ DATE SELECT - เพิ่มการเช็คสถานะสนาม
+    const fieldSelect = document.getElementById('fieldSelect');
+    const dateSelect = document.getElementById('dateSelect');
+    
+    if (fieldSelect && dateSelect) {
+      fieldSelect.addEventListener('change', function() {
+        console.log('🏟️ Field changed:', this.value);
+        checkAvailability();
+      });
+      
+      dateSelect.addEventListener('change', function() {
+        console.log('📅 Date changed:', this.value);
+        checkAvailability();
+      });
+      
+      console.log('✅ Field/Date select listeners bound');
+    }
     console.log('✅ [3/3] Navigation initialized with touchstart + touchend pattern');
   }
   
@@ -2182,8 +2200,8 @@ function resetTimeSlots() {
 }
 
 function checkAvailability() {
+  // ยกเลิก request เก่า (ถ้ามี) โดยไม่ต้องใช้ .off()
   if (currentAvailabilityCheck) {
-    database.ref().off('value', currentAvailabilityCheck);
     currentAvailabilityCheck = null;
   }
 
@@ -2747,7 +2765,57 @@ function uploadSlipAndCreateBooking() {
 
   reader.readAsDataURL(uploadedSlipFile);
 }
+function updateBookingList() {
+  console.log('🔄 Updating booking list...');
+  
+  const user = auth.currentUser;
+  if (!user) {
+    console.log('❌ No user logged in');
+    return;
+  }
 
+  const bookingListDiv = document.getElementById('bookingList');
+  if (!bookingListDiv) {
+    console.log('❌ bookingList element not found');
+    return;
+  }
+
+  bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">⏳ กำลังโหลดข้อมูล...</p>';
+
+  database.ref('bookings')
+    .orderByChild('userId')
+    .equalTo(user.uid)
+    .once('value')
+    .then((snapshot) => {
+      console.log('📊 Snapshot exists:', snapshot.exists());
+      
+      if (!snapshot.exists()) {
+        bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">ไม่มีรายการจอง</p>';
+        return;
+      }
+
+      const bookings = [];
+      snapshot.forEach((childSnapshot) => {
+        const booking = childSnapshot.val();
+        booking.id = childSnapshot.key;
+        bookings.push(booking);
+      });
+
+      console.log('📋 Total bookings:', bookings.length);
+
+      // เรียงตามวันที่ล่าสุด
+      bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      // แสดงรายการจอง
+      bookingListDiv.innerHTML = bookings.map(booking => {
+        return generateBookingCard(booking);
+      }).join('');
+    })
+    .catch((error) => {
+      console.error('❌ Error loading bookings:', error);
+      bookingListDiv.innerHTML = '<p style="text-align: center; color: red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
+    });
+}
 function updateBookingList() {
   const bookingList = document.getElementById("bookingList");
 
@@ -2829,9 +2897,9 @@ function updateBookingList() {
             </p>
             
             ${booking.bookingStatus === 'pending_payment' || booking.bookingStatus === 'confirmed' ? `
-              <button class="cancel-btn" onclick="cancelBooking('${bookingId}')">
-                ❌ ยกเลิกการจอง
-              </button>
+             <button class="cancel-btn" onclick="cancelBooking('${bookingId}')" id="cancel-btn-${bookingId}">
+  ❌ ยกเลิก
+</button>
             ` : ''}
           </div>
         `;
@@ -2857,27 +2925,65 @@ function updateBookingList() {
 }
 
 function cancelBooking(bookingId) {
-  if (confirm("⚠️ ต้องการยกเลิกการจองนี้ใช่หรือไม่?")) {
-    database.ref('bookings/' + bookingId).once('value')
-      .then((snapshot) => {
-        const booking = snapshot.val();
-        if (booking) {
-          const uniqueKey = `${booking.field}_${booking.date}_${booking.time}`;
-          const updates = {};
-          updates[`bookings/${bookingId}`] = null;
-          updates[`booking_locks/${uniqueKey}`] = null;
-          
-          return database.ref().update(updates);
-        }
-      })
-      .then(() => {
-        alert("✅ ยกเลิกการจองเรียบร้อยแล้ว");
-        updateBookingList();
-      })
-      .catch((error) => {
-        alert("❌ เกิดข้อผิดพลาด: " + error.message);
-      });
+  if (!confirm("⚠️ ต้องการยกเลิกการจองนี้ใช่หรือไม่?\n\nข้อมูลการจองจะถูกลบออกจากระบบทันที")) {
+    return;
   }
+
+  console.log('🗑️ Starting to cancel booking:', bookingId);
+  
+  const bookingRef = database.ref('bookings/' + bookingId);
+  
+  // แสดง loading
+  const originalButtonText = event.target.textContent;
+  event.target.textContent = '⏳ กำลังยกเลิก...';
+  event.target.disabled = true;
+  
+  bookingRef.once('value')
+    .then((snapshot) => {
+      const booking = snapshot.val();
+      
+      console.log('📋 Booking data:', booking);
+      
+      if (!booking) {
+        throw new Error('ไม่พบข้อมูลการจอง');
+      }
+      
+      // ตรวจสอบว่าเป็นเจ้าของการจองหรือไม่
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error('กรุณา Login ก่อนยกเลิกการจอง');
+      }
+      
+      if (booking.userId !== currentUser.uid) {
+        throw new Error('คุณไม่มีสิทธิ์ยกเลิกการจองนี้');
+      }
+      
+      const uniqueKey = `${booking.field}_${booking.date}_${booking.time}`;
+      console.log('🔑 Lock key:', uniqueKey);
+      
+      // ลบข้อมูลทั้งหมด
+      return Promise.all([
+        database.ref('bookings/' + bookingId).remove(),
+        database.ref('booking_locks/' + uniqueKey).remove()
+      ]);
+    })
+    .then(() => {
+      console.log('✅ Booking cancelled successfully');
+      alert("✅ ยกเลิกการจองเรียบร้อยแล้ว\n\nข้อมูลถูกลบออกจากระบบแล้ว");
+      
+      // รีเฟรชรายการจอง
+      updateBookingList();
+    })
+    .catch((error) => {
+      console.error('❌ Cancel booking error:', error);
+      alert("❌ เกิดข้อผิดพลาด: " + error.message);
+      
+      // คืนค่าปุ่มเดิม
+      if (event && event.target) {
+        event.target.textContent = originalButtonText;
+        event.target.disabled = false;
+      }
+    });
 }
 
 // ========================================
