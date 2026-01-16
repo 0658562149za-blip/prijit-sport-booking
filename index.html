@@ -103,14 +103,18 @@
       user-select: none;
     }
     
-    .nav-item:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
         
       /* Hover เฉพาะ Desktop */
       @media (hover: hover) and (pointer: fine) {
         .nav-item:hover {
           background: rgba(255, 255, 255, 0.2);
+        }
+      .logout-btn:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+        
+     .login-btn:hover {
+          background: rgba(122, 120, 120, 0.7) !important;
         }
       }
 
@@ -128,9 +132,6 @@
         padding: 8px 16px;
         border-radius: 8px;
         cursor: pointer;
-      }
-       .logout-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
       }
 
       .login-btn {
@@ -1727,6 +1728,7 @@
     </section>
     
     <!-- Firebase Scripts -->
+    <script>window.firebaseLoadError = false;</script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" onerror="console.error('❌ Failed to load firebase-app-compat.js'); window.firebaseLoadError = true;"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" onerror="console.error('❌ Failed to load firebase-auth-compat.js'); window.firebaseLoadError = true;"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" onerror="console.error('❌ Failed to load firebase-database-compat.js'); window.firebaseLoadError = true;"></script>
@@ -1735,22 +1737,33 @@
 console.log('🚀 [PRIJIT SPORT] Script starting...', new Date().toISOString());
 
 // ========================================
+// 🐛 DEBUG CONFIGURATION
+// ========================================
+const DEBUG_MODE = false; // เปลี่ยนเป็น true เมื่อต้องการดู console logs
+function debugLog(...args) {
+  if (DEBUG_MODE) console.log(...args);
+}
+console.log("🐛 Debug mode:", DEBUG_MODE ? "ON" : "OFF");
+
+
+// ========================================
 // 1️⃣ CACHE CLEANUP
 // ========================================
 (function() {
-  console.log('🧹 [1/3] Cache cleanup...');
-  try { localStorage.clear(); console.log('  ✅ localStorage cleared'); } catch(e) {}
-  try { sessionStorage.clear(); console.log('  ✅ sessionStorage cleared'); } catch(e) {}
-  console.log('✅ [1/3] Cache cleanup complete');
+  debugLog('🧹 [1/3] Cache cleanup...');
+  try { localStorage.clear(); debugLog('  ✅ localStorage cleared'); } catch(e) {}
+  try { sessionStorage.clear(); debugLog('  ✅ sessionStorage cleared'); } catch(e) {}
+  debugLog('✅ [1/3] Cache cleanup complete');
 })();
 
 // ========================================
 // 2️⃣ GLOBAL VARIABLES
 // ========================================
-console.log('📦 [2/3] Declaring global variables...');
+debugLog('📦 [2/3] Declaring global variables...');
 
 // Firebase
 let auth, database, currentUser = null;
+let isCancelling = false;
 
 // Booking
 let selectedTimeSlot = null;
@@ -1782,19 +1795,19 @@ const MAX_FILE_SIZE_MB = 5;
 const PAYMENT_TIMEOUT_MINUTES = 15;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
-console.log('✅ [2/3] Global variables initialized');
-console.log('  ⚙️ NAVIGATION_DELAY:', NAVIGATION_DELAY, 'ms');
-console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
+debugLog('✅ [2/3] Global variables initialized');
+debugLog('  ⚙️ NAVIGATION_DELAY:', NAVIGATION_DELAY, 'ms');
+debugLog('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
 
 // ========================================
 // 3️⃣ INIT NAVIGATION (bind events)
 // ========================================
 (function initNavigation() {
-  console.log('🎯 [3/3] Initializing navigation...');
+  debugLog('🎯 [3/3] Initializing navigation...');
   
   function bindEvents() {
     const navItems = document.querySelectorAll('.nav-item[data-section]');
-    console.log('  🔧 Found', navItems.length, 'nav items');
+    debugLog('  🔧 Found', navItems.length, 'nav items');
     
     navItems.forEach((item, index) => {
       const sectionId = item.getAttribute('data-section');
@@ -1810,10 +1823,11 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
         // Visual feedback ทันที
         this.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
         
-        console.log(`📱 Touch START: ${sectionId} [${index}]`);
+        debugLog(`📱 Touch START: ${sectionId} [${index}]`);
       }, { passive: true });
       
       // ✅ TOUCHEND EVENT (Execute action)
+      // Note: passive: false จำเป็นเพื่อใช้ preventDefault() ป้องกัน ghost clicks
       item.addEventListener('touchend', function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -1823,7 +1837,7 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
         
         // ป้องกัน accidental tap (เร็วเกินไป)
         if (touchDuration < 50) {
-          console.log('  ⚠️ Touch too fast, ignoring');
+          debugLog('  ⚠️ Touch too fast, ignoring');
           return;
         }
         
@@ -1838,10 +1852,10 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
             touchHandled = false;
           }, 300);
           
-          console.log(`✅ Touch END: ${sectionId} [${index}] - navigating`);
+          debugLog(`✅ Touch END: ${sectionId} [${index}] - navigating`);
           navigateToSection(sectionId, loadBooking);
         } else {
-          console.log('  ⚠️ Debounced touch');
+          debugLog('  ⚠️ Debounced touch');
         }
       }, { passive: false });
       
@@ -1850,14 +1864,14 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
         // ป้องกัน ghost click หลัง touch
         if (touchHandled || (Date.now() - lastNavigationTime) < 500) {
           e.preventDefault();
-          console.log('  ⚠️ Blocked ghost click');
+          debugLog('  ⚠️ Blocked ghost click');
           return;
         }
         
         const now = Date.now();
         if (now - lastNavigationTime > 200) {
           lastNavigationTime = now;
-          console.log(`🖱️ Click nav: ${sectionId} [${index}]`);
+          debugLog(`🖱️ Click nav: ${sectionId} [${index}]`);
           navigateToSection(sectionId, loadBooking);
         }
       });
@@ -1888,7 +1902,7 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
           this.style.backgroundColor = '';
           setTimeout(() => { hamTouchHandled = false; }, 300);
           
-          console.log('  🍔 Hamburger toggled');
+          debugLog('  🍔 Hamburger toggled');
           toggleMobileMenu();
         }
       }, { passive: false });
@@ -1957,18 +1971,18 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
     
     if (fieldSelect && dateSelect) {
       fieldSelect.addEventListener('change', function() {
-        console.log('🏟️ Field changed:', this.value);
+        debugLog('🏟️ Field changed:', this.value);
         checkAvailability();
       });
       
       dateSelect.addEventListener('change', function() {
-        console.log('📅 Date changed:', this.value);
+        debugLog('📅 Date changed:', this.value);
         checkAvailability();
       });
       
-      console.log('✅ Field/Date select listeners bound');
+      debugLog('✅ Field/Date select listeners bound');
     }
-    console.log('✅ [3/3] Navigation initialized with touchstart + touchend pattern');
+    debugLog('✅ [3/3] Navigation initialized with touchstart + touchend pattern');
   }
   
   // ✅ เรียก bindEvents() เพียงครั้งเดียว
@@ -1983,7 +1997,7 @@ console.log('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
 // NAVIGATION FUNCTIONS
 // ========================================
 function navigateToSection(sectionId, loadBooking = false) {
-  console.log('📍 Navigate to:', sectionId);
+  debugLog('📍 Navigate to:', sectionId);
   closeMobileMenu();
   
   const section = document.getElementById(sectionId);
@@ -1991,7 +2005,7 @@ function navigateToSection(sectionId, loadBooking = false) {
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (loadBooking) {
       setTimeout(() => {
-        console.log('  📋 Loading booking list...');
+        debugLog('  📋 Loading booking list...');
         updateBookingList();
       }, 300);
     }
@@ -2766,7 +2780,7 @@ function uploadSlipAndCreateBooking() {
   reader.readAsDataURL(uploadedSlipFile);
 }
 function updateBookingList() {
-  console.log('🔄 Updating booking list...');
+  debugLog('🔄 Updating booking list...');
   
   const user = auth.currentUser;
   if (!user) {
@@ -2787,7 +2801,7 @@ function updateBookingList() {
     .equalTo(user.uid)
     .once('value')
     .then((snapshot) => {
-      console.log('📊 Snapshot exists:', snapshot.exists());
+      debugLog('📊 Snapshot exists:', snapshot.exists());
       
       if (!snapshot.exists()) {
         bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">ไม่มีรายการจอง</p>';
@@ -2801,7 +2815,7 @@ function updateBookingList() {
         bookings.push(booking);
       });
 
-      console.log('📋 Total bookings:', bookings.length);
+      debugLog('📋 Total bookings:', bookings.length);
 
       // เรียงตามวันที่ล่าสุด
       bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -2908,7 +2922,7 @@ function updateBookingList() {
       });
 
       bookingList.innerHTML = html;
-      console.log(`✅ Loaded ${index} bookings`);
+      debugLog(`✅ Loaded ${index} bookings`);
     })
     .catch((error) => {
       console.error("❌ Error loading bookings:", error);
@@ -2923,45 +2937,52 @@ function updateBookingList() {
       `;
     });
 }
-
 function cancelBooking(bookingId) {
+
+  if (isCancelling) {
+     debugLog('⏳ Already cancelling a booking...');
+     return;
+    }
+
   if (!confirm("⚠️ ต้องการยกเลิกการจองนี้ใช่หรือไม่?\n\nข้อมูลการจองจะถูกลบออกจากระบบทันที")) {
     return;
+  } 
+  isCancelling = true;  
+  debugLog('🗑️ Starting to cancel booking:', bookingId);
+
+  // ใช้ bookingId หาปุ่มที่ถูกคลิก
+  const cancelBtn = document.getElementById(`cancel-btn-${bookingId}`);
+  const originalButtonText = cancelBtn ? cancelBtn.textContent : '❌ ยกเลิก';
+
+  if (cancelBtn) {
+    cancelBtn.textContent = '⏳ กำลังยกเลิก...';
+    cancelBtn.disabled = true;
   }
 
-  console.log('🗑️ Starting to cancel booking:', bookingId);
-  
   const bookingRef = database.ref('bookings/' + bookingId);
-  
-  // แสดง loading
-  const originalButtonText = event.target.textContent;
-  event.target.textContent = '⏳ กำลังยกเลิก...';
-  event.target.disabled = true;
-  
+
   bookingRef.once('value')
     .then((snapshot) => {
       const booking = snapshot.val();
-      
-      console.log('📋 Booking data:', booking);
+
+      debugLog('📋 Booking data:', booking);
       
       if (!booking) {
         throw new Error('ไม่พบข้อมูลการจอง');
       }
-      
-      // ตรวจสอบว่าเป็นเจ้าของการจองหรือไม่
+
       const currentUser = auth.currentUser;
       if (!currentUser) {
         throw new Error('กรุณา Login ก่อนยกเลิกการจอง');
       }
-      
+        
       if (booking.userId !== currentUser.uid) {
         throw new Error('คุณไม่มีสิทธิ์ยกเลิกการจองนี้');
       }
-      
+
       const uniqueKey = `${booking.field}_${booking.date}_${booking.time}`;
-      console.log('🔑 Lock key:', uniqueKey);
-      
-      // ลบข้อมูลทั้งหมด
+      debugLog('🔑 Lock key:', uniqueKey);
+
       return Promise.all([
         database.ref('bookings/' + bookingId).remove(),
         database.ref('booking_locks/' + uniqueKey).remove()
@@ -2970,52 +2991,38 @@ function cancelBooking(bookingId) {
     .then(() => {
       console.log('✅ Booking cancelled successfully');
       alert("✅ ยกเลิกการจองเรียบร้อยแล้ว\n\nข้อมูลถูกลบออกจากระบบแล้ว");
-      
-      // รีเฟรชรายการจอง
       updateBookingList();
     })
     .catch((error) => {
       console.error('❌ Cancel booking error:', error);
       alert("❌ เกิดข้อผิดพลาด: " + error.message);
-      
+  
+    }).finally(() => {
+      isCancelling = false; 
+
       // คืนค่าปุ่มเดิม
-      if (event && event.target) {
-        event.target.textContent = originalButtonText;
-        event.target.disabled = false;
+      if (cancelBtn) {
+        cancelBtn.textContent = originalButtonText;
+        cancelBtn.disabled = false;
       }
-    });
+    })
 }
 
 // ========================================
 // iNITIALIZATION
 // ========================================
+let isNavInitialized = false;
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log('🎯 DOM ready - initializing...');
-// ========================================
-// HAMBURGER MENU
-document.getElementById('hamburgerBtn').addEventListener('click', toggleMobileMenu);
-// ========================================
-// TIME SLOTS
-  initializeTimeSlots();
-  console.log('✅ Time slots initialized');
-// ========================================
-// Desktop Nav
-  document.querySelectorAll('#desktopNav .nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      navigateToSection(item.getAttribute('data-section'));
-    });
-  });
   
-  // Mobile Nav
-  document.querySelectorAll('#mobileNav .nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      navigateToSection(item.getAttribute('data-section'));
-    });
-  });
-  // Login/Logout
-  document.getElementById('loginNavBtn').addEventListener('click', openLoginModal);
-  document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-  
+  // ป้องกันการผูก event listeners ซ้ำ
+  if (isNavInitialized) {
+    console.log("⚠️ Navigation already initialized, skipping...");
+    return;
+  }
+  isNavInitialized = true;
+// ========================================
   // Close overlay on background click
   document.getElementById('menuOverlay').addEventListener('click', (e) => {
     if (e.target.id === 'menuOverlay') toggleMobileMenu();
@@ -3091,6 +3098,10 @@ function initializeFirebase() {
     auth = firebase.auth();
     database = firebase.database();
     console.log("✅ Firebase ready! (loaded in " + (firebaseInitRetryCount * 100) + "ms)");
+    
+    // Initialize time slots after Firebase is ready
+    initializeTimeSlots();
+    console.log("✅ Time slots initialized");
     
     auth.onAuthStateChanged((user) => {
       if (user) {
