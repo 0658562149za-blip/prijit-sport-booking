@@ -41,6 +41,109 @@
     <link rel="icon" type="image/jpeg" href="f6.jpg">
     
     <style>
+      input.error,
+select.error,
+textarea.error {
+  border: 2px solid #ef4444 !important;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+      #toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  min-width: 280px;
+  max-width: 400px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(450px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.toast-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+.toast-info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.toast-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.toast-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  #toast-container {
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
+  }
+  
+  .toast {
+    min-width: auto;
+    max-width: none;
+  }
+}
       * {
         margin: 0;
         padding: 0;
@@ -66,6 +169,134 @@
         line-height: 1.6;
       }
 
+      /* Loading Overlay */
+      .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+      /* Toast */
+      .toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  background: #22c55e;
+  color: white;
+  border-radius: 8px;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  z-index: 10000;
+}
+.toast.show { transform: translateX(0); }
+.toast-error { background: #ef4444; }
+.toast-warning { background: #f59e0b; }
+.toast-info { background: #3b82f6; }
+
+
+      /* Global Loading Overlay */  
+#global-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10001;
+  display: none;
+}
+
+#global-loading.active {
+  display: block;
+}
+
+.loading-overlay {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #22c55e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Inline Loading (สำหรับปุ่ม) */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
       /* Navigation Bar */
          .navbar {
       background: #22c55e;
@@ -2060,7 +2291,325 @@ function showRegisterInModal() {
   document.getElementById('modalLoginForm').style.display = 'none';
   document.getElementById('modalRegisterForm').style.display = 'block';
 }
+// ========================================
+// LOADING FUNCTIONS  
+// ========================================
+function showLoading(message = 'กำลังโหลด...') {
+  const loading = document.createElement('div');
+  loading.id = 'globalLoading';
+  loading.innerHTML = `
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+      <p>${message}</p>
+    </div>
+  `;
+  document.body.appendChild(loading);
+}
 
+function hideLoading() {
+  const loading = document.getElementById('globalLoading');
+  if (loading) loading.remove();
+}
+
+// ========================================
+// GLOBAL LODING EXAMPLE
+// ========================================
+async function submitBooking() {
+  showLoading('กำลังจองสนาม...');
+  
+  try {
+    await bookingRef.set(bookingData);
+    hideLoading();
+    showToast('✅ จองสำเร็จ!');
+  } catch (error) {
+    hideLoading();
+    showToast('❌ เกิดข้อผิดพลาด', 'error');
+  }
+}
+
+// ========================================
+// bUTTON LOADING SYSTEM
+// ========================================
+async function handleLogin() {
+  const loginBtn = document.getElementById('loginBtn');
+  LoadingSystem.showButton(loginBtn, 'เข้าสู่ระบบ');
+  
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+    LoadingSystem.hideButton(loginBtn);
+    showToast('เข้าสู่ระบบสำเร็จ!', 'success');
+  } catch (error) {
+    LoadingSystem.hideButton(loginBtn);
+    showToast('เข้าสู่ระบบไม่สำเร็จ', 'error');
+  }
+}
+
+// ========================================
+// RATE LIMITER CLASS
+// ========================================
+class RateLimiter {
+  constructor(maxCalls, timeWindow, message = null) {
+    this.maxCalls = maxCalls;
+    this.timeWindow = timeWindow; // milliseconds
+    this.calls = [];
+    this.message = message || `กรุณารอ ${timeWindow/1000} วินาที ก่อนทำรายการอีกครั้ง`;
+  }
+  
+  canCall() {
+    const now = Date.now();
+    
+    // ลบ calls ที่เก่าเกินกว่า timeWindow
+    this.calls = this.calls.filter(timestamp => now - timestamp < this.timeWindow);
+    
+    if (this.calls.length >= this.maxCalls) {
+      return false;
+    }
+    
+    this.calls.push(now);
+    return true;
+  }
+  
+  tryCall(callback) {
+    if (this.canCall()) {
+      return callback();
+    } else {
+      showToast(this.message, 'warning');
+      return null;
+    }
+  }
+  
+  reset() {
+    this.calls = [];
+  }
+  
+  getRemainingTime() {
+    if (this.calls.length === 0) return 0;
+    
+    const now = Date.now();
+    const oldestCall = Math.min(...this.calls);
+    const remaining = this.timeWindow - (now - oldestCall);
+    
+    return Math.max(0, Math.ceil(remaining / 1000)); // seconds
+  }
+}
+
+// ========================================
+// RATE LIMITER INSTANCES
+const RateLimiters = {
+  booking: new RateLimiter(3, 10000, 'กรุณารอ 10 วินาที ก่อนจองอีกครั้ง'),
+  login: new RateLimiter(5, 60000, 'พยายาม login มากเกินไป กรุณารอ 1 นาที'),
+  payment: new RateLimiter(2, 5000, 'กรุณารอ 5 วินาที ก่อนอัปโหลดสลิปอีกครั้ง'),
+  cancel: new RateLimiter(3, 30000, 'กรุณารอ 30 วินาที ก่อนยกเลิกอีกครั้ง')
+};
+
+// ========================================
+// RATE LIMITER EXAMPLES
+// ========================================
+
+// ✅ วิธีที่ 1: ใช้ canCall
+async function submitBooking() {
+  if (!RateLimiters.booking.canCall()) {
+    const remaining = RateLimiters.booking.getRemainingTime();
+    showToast(`กรุณารอ ${remaining} วินาที ก่อนจองอีกครั้ง`, 'warning');
+    return;
+  }
+  
+  showLoading('กำลังจองสนาม...');
+  // ... proceed with booking
+}
+
+// ✅ วิธีที่ 2: ใช้ tryCall
+function handleLogin() {
+  RateLimiters.login.tryCall(async () => {
+    showLoading('กำลังเข้าสู่ระบบ...');
+    await auth.signInWithEmailAndPassword(email, password);
+    hideLoading();
+    showToast('เข้าสู่ระบบสำเร็จ!', 'success');
+  });
+}
+
+// ✅ วิธีที่ 3: รีเซ็ตหลังสำเร็จ
+async function submitBooking() {
+  if (!RateLimiters.booking.canCall()) return;
+  
+  try {
+    await bookingRef.set(bookingData);
+    RateLimiters.booking.reset(); // Reset หลังสำเร็จ
+    showToast('จองสำเร็จ!', 'success');
+  } catch (error) {
+    showToast('เกิดข้อผิดพลาด', 'error');
+  }
+}
+
+// ========================================
+// VALIDATION FUNCTIONS
+// ========================================
+const Validator = {
+  // ตรวจสอบชื่อ-นามสกุล
+  name(value) {
+    if (!value || value.trim().length < 2) {
+      return 'กรุณากรอกชื่อ-นามสกุล (อย่างน้อย 2 ตัวอักษร)';
+    }
+    if (value.trim().length > 100) {
+      return 'ชื่อ-นามสกุลยาวเกินไป (ไม่เกิน 100 ตัวอักษร)';
+    }
+    return null;
+  },
+  
+  // ตรวจสอบเบอร์โทร
+  phone(value) {
+    if (!value) {
+      return 'กรุณากรอกเบอร์โทรศัพท์';
+    }
+    
+    // ลบ spaces, dashes
+    const cleaned = value.replace(/[\s-]/g, '');
+    
+    // ต้องขึ้นต้นด้วย 0 และมี 10 หลัก
+    if (!/^0[0-9]{9}$/.test(cleaned)) {
+      return 'เบอร์โทรไม่ถูกต้อง (ต้องขึ้นต้นด้วย 0 และมี 10 หลัก)';
+    }
+    
+    return null;
+  },
+  
+  // ตรวจสอบ email
+  email(value) {
+    if (!value) {
+      return 'กรุณากรอกอีเมล';
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      return 'รูปแบบอีเมลไม่ถูกต้อง';
+    }
+    
+    return null;
+  },
+  
+  // ตรวจสอบรหัสผ่าน
+  password(value) {
+    if (!value) {
+      return 'กรุณากรอกรหัสผ่าน';
+    }
+    
+    if (value.length < 6) {
+      return 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+    }
+    
+    return null;
+  },
+  
+  // ตรวจสอบการเลือกสนาม
+  field(value) {
+    if (!value) {
+      return 'กรุณาเลือกสนาม';
+    }
+    return null;
+  },
+  
+  // ตรวจสอบวันที่
+  date(value) {
+    if (!value) {
+      return 'กรุณาเลือกวันที่';
+    }
+    
+    const selectedDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+      return 'ไม่สามารถเลือกวันที่ในอดีตได้';
+    }
+    
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30);
+    
+    if (selectedDate > maxDate) {
+      return 'สามารถจองล่วงหน้าได้ไม่เกิน 30 วัน';
+    }
+    
+    return null;
+  },
+  
+  // ตรวจสอบเวลา
+  time(value) {
+    if (!value) {
+      return 'กรุณาเลือกเวลา';
+    }
+    return null;
+  },
+  
+  // ตรวจสอบไฟล์
+  file(file, maxSizeMB = 5) {
+    if (!file) {
+      return 'กรุณาเลือกไฟล์';
+    }
+    
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+      return 'รองรับเฉพาะไฟล์ JPG และ PNG เท่านั้น';
+    }
+    
+    const maxSize = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSize) {
+      return `ไฟล์ใหญ่เกินไป (ไม่เกิน ${maxSizeMB} MB)`;
+    }
+    
+    return null;
+  },
+  
+  // Validate form ทั้งหมด
+  form(data) {
+    const errors = {};
+    
+    Object.keys(data).forEach(field => {
+      if (this[field]) {
+        const error = this[field](data[field]);
+        if (error) {
+          errors[field] = error;
+        }
+      }
+    });
+    
+    return Object.keys(errors).length > 0 ? errors : null;
+  }
+};
+
+// Helper function สำหรับแสดง errors
+function showValidationErrors(errors) {
+  if (!errors) return;
+  
+  const errorMessages = Object.values(errors).join('\n');
+  showToast(errorMessages, 'error', 5000);
+  
+  // Highlight fields with errors
+  Object.keys(errors).forEach(field => {
+    const input = document.getElementById(field);
+    if (input) {
+      input.classList.add('error');
+      input.addEventListener('focus', () => input.classList.remove('error'), { once: true });
+    }
+  });
+}
+
+// ========================================
+// TOAST FUNCTIONS
+// ========================================
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }, 100);
+}
 // ========================================
 // SLIDER FUNCTIONS
 // ========================================
@@ -3045,6 +3594,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ========================================
 // window RESIZE HANDLER
+// ========================================
 window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
       document.getElementById('menuOverlay').classList.remove('active');
@@ -3053,6 +3603,143 @@ window.addEventListener('resize', () => {
     }
   });
    });
+
+// ========================================
+// TOAST NOTIFICATION SYSTEM
+// ========================================
+const ToastSystem = {
+  container: null,
+  
+  init() {
+    if (!this.container) {
+      this.container = document.getElementById('toast-container');
+      if (!this.container) {
+        this.container = document.createElement('div');
+        this.container.id = 'toast-container';
+        document.body.appendChild(this.container);
+      }
+    }
+  },
+  
+  show(message, type = 'success', duration = 3000) {
+    this.init();
+    
+    const icons = {
+      success: '✅',
+      error: '❌',
+      warning: '⚠️',
+      info: 'ℹ️'
+    };
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+      <span class="toast-icon">${icons[type]}</span>
+      <span class="toast-message">${message}</span>
+      <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    this.container.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Auto remove
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+    
+    return toast;
+  },
+  
+  success(message, duration) {
+    return this.show(message, 'success', duration);
+  },
+  
+  error(message, duration) {
+    return this.show(message, 'error', duration);
+  },
+  
+  warning(message, duration) {
+    return this.show(message, 'warning', duration);
+  },
+  
+  info(message, duration) {
+    return this.show(message, 'info', duration);
+  }
+};
+
+// Shorthand functions
+function showToast(message, type = 'success', duration = 3000) {
+  return ToastSystem.show(message, type, duration);
+}
+
+// ========================================
+// GLOBAL LOADING OVERLAY SYSTEM
+// ========================================
+const LoadingSystem = {
+  overlay: null,
+  loadingText: null,
+  
+  init() {
+    if (!this.overlay) {
+      this.overlay = document.getElementById('global-loading');
+      if (!this.overlay) {
+        this.overlay = document.createElement('div');
+        this.overlay.id = 'global-loading';
+        this.overlay.innerHTML = `
+          <div class="loading-overlay">
+            <div class="spinner"></div>
+            <p class="loading-text">กำลังโหลด...</p>
+          </div>
+        `;
+        document.body.appendChild(this.overlay);
+      }
+      this.loadingText = this.overlay.querySelector('.loading-text');
+    }
+  },
+  
+  show(message = 'กำลังโหลด...') {
+    this.init();
+    if (this.loadingText) {
+      this.loadingText.textContent = message;
+    }
+    this.overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  },
+  
+  hide() {
+    if (this.overlay) {
+      this.overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  },
+  
+  // สำหรับปุ่ม
+  showButton(button, originalText) {
+    button.dataset.originalText = originalText || button.textContent;
+    button.textContent = '';
+    button.classList.add('btn-loading');
+    button.disabled = true;
+  },
+  
+  hideButton(button) {
+    button.textContent = button.dataset.originalText || 'ตกลง';
+    button.classList.remove('btn-loading');
+    button.disabled = false;
+  }
+};
+
+// Shorthand functions
+function showLoading(message) {
+  LoadingSystem.show(message);
+}
+
+function hideLoading() {
+  LoadingSystem.hide();
+}
+
 
 
 // ========================================
@@ -3137,5 +3824,13 @@ function initializeFirebase() {
 
 initializeFirebase();
     </script>
+    <div id="toast-container"></div>
+    <!-- Global Loading Overlay -->
+<div id="global-loading" style="display: none;">
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+    <p class="loading-text">กำลังโหลด...</p>
+  </div>
+</div>
   </body>
 </html>
