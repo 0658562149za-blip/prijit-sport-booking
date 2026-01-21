@@ -2058,9 +2058,6 @@ function initNavigation() {
       // ✅ TOUCHEND EVENT (Execute action)
       // Note: passive: false จำเป็นเพื่อใช้ preventDefault() ป้องกัน ghost clicks
       item.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
         const now = Date.now();
         const touchDuration = now - touchStartTime;
         
@@ -2070,19 +2067,27 @@ function initNavigation() {
           return;
         }
         
-        // Debounce
-         if (now - lastNavigationTime > NAVIGATION_DELAY) {
-        lastNavigationTime = now;
-        touchHandled = true;
-        
-        // Clear visual feedback
-        this.style.backgroundColor = '';
-        setTimeout(() => { touchHandled = false; }, 300);
-        
-        console.log(`✅ Touch nav: ${sectionId} [${index}]`);
-        navigateToSection(sectionId, loadBooking);
-      }
-    }, { passive: false, once: false });
+        // Debounce check
+        if (now - lastNavigationTime > NAVIGATION_DELAY) {
+          // ป้องกัน ghost clicks ด้วย preventDefault
+          e.preventDefault();
+          e.stopPropagation();
+          
+          lastNavigationTime = now;
+          touchHandled = true;
+          
+          // Clear visual feedback
+          this.style.backgroundColor = '';
+          setTimeout(() => { touchHandled = false; }, 300);
+          
+          console.log(`✅ Touch nav: ${sectionId} [${index}]`);
+          
+          // เพิ่ม micro-delay เพื่อ Service Worker cleanup
+          setTimeout(() => {
+            navigateToSection(sectionId, loadBooking);
+          }, 10);
+        }
+      }, { passive: false, once: false });
     
     // CLICK - Desktop fallback
     item.addEventListener('click', function(e) {
@@ -2276,14 +2281,17 @@ function navigateToSection(sectionId, loadBooking = false) {
   // Scroll to section
   const section = document.getElementById(sectionId);
   if (section) {
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // ใช้ requestAnimationFrame เพื่อ smooth performance
+    requestAnimationFrame(() => {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
     
     // Load booking list if needed
     if (loadBooking && typeof updateBookingList === 'function') {
       setTimeout(() => {
         console.log('  📋 Loading booking list...');
         updateBookingList();
-      }, 300);
+      }, 500); // เพิ่มเวลารอให้ scroll เสร็จก่อน
     }
   } else {
     console.error('  ❌ Section not found:', sectionId);
@@ -3340,10 +3348,19 @@ function updateBookingList() {
       snapshot.forEach((childSnapshot) => {
         const booking = childSnapshot.val();
         booking.id = childSnapshot.key;
-        bookings.push(booking);
+        
+        // กรอง: ไม่แสดงรายการที่ถูกปฏิเสธ
+        if (booking.bookingStatus !== 'rejected') {
+          bookings.push(booking);
+        }
       });
 
       debugLog('📋 Total bookings:', bookings.length);
+
+      if (bookings.length === 0) {
+        bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">ยังไม่มีรายการจอง</p>';
+        return;
+      }
 
       // เรียงตามวันที่ล่าสุด
       bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -3358,113 +3375,107 @@ function updateBookingList() {
       bookingListDiv.innerHTML = '<p style="text-align: center; color: red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
     });
 }
-function updateBookingList() {
-  const bookingList = document.getElementById("bookingList");
 
-  if (!currentUser) {
-    bookingList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">กรุณาเข้าสู่ระบบ</p>';
-    return;
+function generateBookingCard(booking) {
+  // กำหนดสถานะและสี
+  let statusColor = '#f59e0b';
+  let statusText = 'รอตรวจสอบ';
+  let statusBg = '#fef3c7';
+  
+  if (booking.bookingStatus === 'approved') {
+    statusColor = '#10b981';
+    statusText = 'อนุมัติแล้ว ✅';
+    statusBg = '#d1fae5';
+  } else if (booking.bookingStatus === 'pending_payment' || booking.bookingStatus === 'pending') {
+    statusColor = '#f59e0b';
+    statusText = 'รอตรวจสอบ ⏳';
+    statusBg = '#fef3c7';
+  } else if (booking.bookingStatus === 'confirmed') {
+    statusColor = '#3b82f6';
+    statusText = 'ยืนยันแล้ว';
+    statusBg = '#dbeafe';
+  } else if (booking.bookingStatus === 'completed') {
+    statusColor = '#10b981';
+    statusText = 'เสร็จสิ้น';
+    statusBg = '#d1fae5';
+  } else if (booking.bookingStatus === 'cancelled') {
+    statusColor = '#6b7280';
+    statusText = 'ยกเลิกแล้ว';
+    statusBg = '#f3f4f6';
   }
 
-  bookingList.innerHTML = `
-    <div style="text-align: center; padding: 40px;">
-      <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 20px; border: 4px solid #e5e7eb; border-top-color: #22c55e;"></div>
-      <p style="color: #6b7280;">กำลังโหลดรายการจอง...</p>
-    </div>
-  `;
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('th-TH', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
 
-  database.ref('bookings')
-    .orderByChild('userId')
-    .equalTo(currentUser.uid)
-    .once('value')
-    .then((snapshot) => {
-      if (!snapshot.exists()) {
-        bookingList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">ยังไม่มีรายการจอง</p>';
-        return;
-      }
+  const formatDateTime = (dateStr) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleString('th-TH', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
-      let html = "";
-      let index = 0;
-      snapshot.forEach((child) => {
-        const booking = child.val();
-        const bookingId = child.key;
-        
-        let statusColor = '#22c55e';
-        let statusText = 'รอตรวจสอบ';
+  return `
+    <div class="booking-card" style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid ${statusColor};">
       
-        if (booking.bookingStatus === 'confirmed') {
-          statusColor = '#3b82f6';
-          statusText = 'ยืนยันแล้ว';
-        } else if (booking.bookingStatus === 'completed') {
-          statusColor = '#10b981';
-          statusText = 'เสร็จสิ้น';
-        } else if (booking.bookingStatus === 'no_show') {
-          statusColor = '#ef4444';
-          statusText = 'ไม่มาตามนัด';
-        } else if (booking.bookingStatus === 'cancelled') {
-          statusColor = '#6b7280';
-          statusText = 'ยกเลิก';
-        }
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="margin: 0; color: #1f2937; font-size: 18px;">📋 ${booking.field || 'ไม่ระบุสนาม'}</h3>
+        <span style="background: ${statusBg}; color: ${statusColor}; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 14px;">
+          ${statusText}
+        </span>
+      </div>
 
-        html += `
-          <div class="booking-card" style="border-left-color: ${statusColor}">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-              <h3 style="margin: 0; flex: 1; text-align: center;">รายการที่ ${index + 1}</h3>
-              <span style="background: ${statusColor}; color: white; padding: 6px 14px; border-radius: 12px; font-size: 0.9em; font-weight: bold; white-space: nowrap;">
-                ${statusText}
-              </span>
-            </div>
-            
-            <p><strong>📍 สนาม:</strong> <span>${booking.field}</span></p>
-            <p><strong>📅 วันที่:</strong> <span>${booking.date}</span></p>
-            <p><strong>⏰ เวลา:</strong> <span>${booking.time}</span></p>
-            
-            <div style="background: #f3f4f6; padding: 15px; border-radius: 10px; margin: 15px 0;">
-              <p><strong>💰 ราคาทั้งหมด:</strong> <span>${booking.totalPrice ? booking.totalPrice.toLocaleString() : 'N/A'} บาท</span></p>
-              <p><strong>💵 มัดจำ 30%:</strong> 
-                <span style="color: ${booking.depositStatus === 'pending' ? '#f59e0b' : '#10b981'};">
-                  ${booking.depositAmount ? booking.depositAmount.toLocaleString() : 'N/A'} บาท 
-                  ${booking.depositStatus === 'pending' ? '🟡' : '✅'}
-                </span>
-              </p>
-              <p><strong>💸 ค่าบริการคงเหลือ:</strong> <span>${booking.remainingAmount ? booking.remainingAmount.toLocaleString() : 'N/A'} บาท</span></p>
-            </div>
-            
-            ${booking.depositRefunded ? '<p style="color: #10b981; font-weight: bold; text-align: center;">✅ คืนเงินมัดจำแล้ว</p>' : ''}
-            ${booking.depositForfeited ? '<p style="color: #ef4444; font-weight: bold; text-align: center;">❌ ริบเงินมัดจำแล้ว</p>' : ''}
-            
-            <p><strong>📞 เบอร์ติดต่อ:</strong> <span>${booking.phone}</span></p>
-            <p style="color: #6b7280; font-size: 0.9em; margin-top: 10px; text-align: center;">
-              จองเมื่อ: ${new Date(booking.createdAt).toLocaleString('th-TH')}
-            </p>
-            
-            ${booking.bookingStatus === 'pending_payment' || booking.bookingStatus === 'confirmed' ? `
-             <button class="cancel-btn" onclick="cancelBooking('${bookingId}')" id="cancel-btn-${bookingId}">
-  ❌ ยกเลิก
-</button>
-            ` : ''}
-          </div>
-        `;
-        
-        index++;
-      });
+      <!-- Info Grid -->
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
+        <div>
+          <p style="margin: 0; color: #6b7280; font-size: 13px;">📅 วันที่เล่น</p>
+          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${formatDate(booking.date)}</p>
+        </div>
+        <div>
+          <p style="margin: 0; color: #6b7280; font-size: 13px;">⏰ เวลา</p>
+          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${booking.time || '-'}</p>
+        </div>
+        <div>
+          <p style="margin: 0; color: #6b7280; font-size: 13px;">💰 ราคารวม</p>
+          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">฿${(booking.totalPrice || 0).toLocaleString()}</p>
+        </div>
+        <div>
+          <p style="margin: 0; color: #6b7280; font-size: 13px;">💵 มัดจำ</p>
+          <p style="margin: 5px 0 0 0; color: #10b981; font-weight: 600;">฿${(booking.depositAmount || 0).toLocaleString()}</p>
+        </div>
+      </div>
 
-      bookingList.innerHTML = html;
-      debugLog(`✅ Loaded ${index} bookings`);
-    })
-    .catch((error) => {
-      console.error("❌ Error loading bookings:", error);
-      bookingList.innerHTML = `
-        <div style="text-align: center; padding: 40px;">
-          <p style="color: #ef4444; margin-bottom: 15px;">❌ เกิดข้อผิดพลาดในการโหลดข้อมูล</p>
-          <p style="color: #6b7280; font-size: 0.9em; margin-bottom: 20px;">${error.message}</p>
-          <button onclick="updateBookingList()" style="padding: 12px 24px; background: #22c55e; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
-            🔄 ลองอีกครั้ง
+      <!-- Created At -->
+      <p style="margin: 10px 0 0 0; color: #9ca3af; font-size: 12px;">
+        📝 จองเมื่อ: ${formatDateTime(booking.createdAt)}
+      </p>
+
+      <!-- Actions -->
+      ${booking.bookingStatus !== 'cancelled' && booking.bookingStatus !== 'completed' ? `
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+          <button onclick="cancelBooking('${booking.id}')" 
+                  style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            ❌ ยกเลิกการจอง
           </button>
         </div>
-      `;
-    });
+      ` : ''}
+    </div>
+  `;
 }
+
+
 function cancelBooking(bookingId) {
 
   if (isCancelling) {
@@ -3807,6 +3818,38 @@ function initializeFirebase() {
     alert("⚠️ ไม่สามารถเชื่อมต่อระบบได้\n\nError: " + error.message);
   }
 }
+
+// ========================================
+// SERVICE WORKER ERROR HANDLING
+// ========================================
+// จัดการ Service Worker errors จาก Firebase Hosting
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      if (registrations.length > 0) {
+        console.log('🔧 Firebase Service Worker detected');
+        
+        // Disable navigation preload เพื่อป้องกัน errors
+        registrations.forEach(registration => {
+          if (registration.navigationPreload) {
+            registration.navigationPreload.disable()
+              .then(() => console.log('✅ Navigation preload disabled'))
+              .catch(() => {}); // Ignore errors
+          }
+        });
+      }
+    }).catch(() => {}); // Ignore errors
+  });
+}
+
+// ป้องกัน unhandled promise rejections จาก Service Worker
+window.addEventListener('unhandledrejection', (event) => {
+  if (event.reason && event.reason.message && 
+      event.reason.message.includes('service worker')) {
+    console.log('⚠️ Service Worker error caught and ignored');
+    event.preventDefault();
+  }
+});
 
 initializeFirebase();
     </script>

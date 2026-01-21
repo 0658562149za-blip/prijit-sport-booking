@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIJIT SPORT - ระบบพนักงาน</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: linear-gradient(135deg, #033f12 0%, #0bb33d 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    .staff-header {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .staff-header h1 {
+      color: #000000;
+      font-size: 28px;
+    }
+
+    .staff-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .staff-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .logout-btn {
+      background: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card h3 {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .stat-pending { color: #f59e0b; }
+    .stat-approved { color: #10b981; }
+    .stat-rejected { color: #ef4444; }
+    .stat-total { color: #667eea; }
+
+    /* Filter Section */
+    .filter-section {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .filter-section h2 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-group label {
+      margin-bottom: 5px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      padding: 10px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    /* Bookings Table */
+    .bookings-section {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .bookings-section h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .bookings-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
+    }
+
+    .bookings-table thead {
+      background: #f3f4f6;
+    }
+
+    .bookings-table th,
+    .bookings-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .bookings-table th {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .bookings-table tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    /* Status Badge */
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Payment Status */
+    .payment-pending {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .payment-verified {
+      color: #10b981;
+      font-weight: 600;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-view {
+      background: #3b82f6;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-approve {
+      background: #10b981;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-view:hover { background: #2563eb; }
+    .btn-approve:hover { background: #059669; }
+    .btn-reject:hover { background: #dc2626; }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      color: #333;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s;
+    }
+
+    .close-modal:hover {
+      color: #333;
+    }
+
+    .booking-detail {
+      margin-bottom: 15px;
+    }
+
+    .booking-detail label {
+      font-weight: 600;
+      color: #666;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .booking-detail value {
+      color: #333;
+      font-size: 16px;
+    }
+
+    .slip-image {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .spinner {
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* No Data */
+    .no-data {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .no-data-icon {
+      font-size: 64px;
+      margin-bottom: 15px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bookings-table {
+        font-size: 14px;
+      }
+
+      .bookings-table th,
+      .bookings-table td {
+        padding: 10px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .staff-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="staff-header">
+      <div>
+        <h1>🏟️ PRIJIT SPORT - ระบบพนักงาน</h1>
+        <p style="color: #666; margin-top: 5px;">จัดการการจองและตรวจสอบการชำระเงิน</p>
+      </div>
+      <div class="staff-info">
+        <div>
+          <div style="font-size: 12px; color: #999;">พนักงาน</div>
+          <div class="staff-name" id="staffName">Admin User</div>
+        </div>
+        <button class="logout-btn" onclick="handleStaffLogout()">ออกจากระบบ</button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>รอตรวจสอบ</h3>
+        <div class="stat-value stat-pending" id="statPending">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>อนุมัติแล้ว</h3>
+        <div class="stat-value stat-approved" id="statApproved">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>ปฏิเสธ</h3>
+        <div class="stat-value stat-rejected" id="statRejected">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>ทั้งหมด</h3>
+        <div class="stat-value stat-total" id="statTotal">0</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section">
+      <h2>🔍 กรองข้อมูล</h2>
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label>สถานะการจอง</label>
+          <select id="filterStatus" onchange="filterBookings()">
+            <option value="all">ทั้งหมด</option>
+            <option value="pending">รอตรวจสอบ</option>
+            <option value="approved">อนุมัติแล้ว</option>
+            <option value="rejected">ปฏิเสธ</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>สนาม</label>
+          <select id="filterField" onchange="filterBookings()">
+            <option value="all">ทั้งหมด</option>
+            <option value="สนาม 1">สนาม 1</option>
+            <option value="สนาม 2">สนาม 2</option>
+            <option value="สนาม 3">สนาม 3</option>
+            <option value="สนาม 4">สนาม 4</option>
+            <option value="สนาม 5">สนาม 5</option>
+            <option value="สนาม 6">สนาม 6</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>วันที่</label>
+          <input type="date" id="filterDate" onchange="filterBookings()">
+        </div>
+        <div class="filter-group">
+          <label>ค้นหา</label>
+          <input type="text" id="filterSearch" placeholder="ชื่อผู้จอง, เบอร์โทร..." oninput="filterBookings()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="bookings-section">
+      <h2>📋 รายการจองทั้งหมด</h2>
+      <div id="bookingsContainer">
+        <div class="loading">
+          <div class="spinner"></div>
+          <div>กำลังโหลดข้อมูล...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Detail Modal -->
+  <div class="modal" id="bookingModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>รายละเอียดการจอง</h2>
+        <button class="close-modal" onclick="closeBookingModal()">×</button>
+      </div>
+      <div id="bookingDetailContent">
+        <!-- Content will be loaded dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // Firebase Configuration (ใช้อันเดียวกับระบบหลัก)
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
+      authDomain: "prijit-sport.firebaseapp.com",
+      databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "prijit-sport",
+      storageBucket: "prijit-sport.firebasestorage.app",
+      messagingSenderId: "19782245186",
+      appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    let allBookings = [];
+    let filteredBookings = [];
+    let currentBooking = null;
+
+    // Check Staff Authentication
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // ตรวจสอบว่าเป็น staff หรือไม่
+        database.ref('users/' + user.uid).once('value').then(snapshot => {
+          const userData = snapshot.val();
+          if (userData && userData.role === 'staff') {
+            document.getElementById('staffName').textContent = userData.fullname || 'Staff';
+            loadAllBookings();
+          } else {
+            alert('⛔ คุณไม่มีสิทธิ์เข้าถึงระบบพนักงาน');
+            window.location.href = 'index.html';
+          }
+        });
+      } else {
+        window.location.href = 'staff-login.html';
+      }
+    });
+
+    // Load All Bookings
+    function loadAllBookings() {
+      database.ref('bookings').on('value', (snapshot) => {
+        allBookings = [];
+        
+        snapshot.forEach((child) => {
+          const booking = child.val();
+          booking.id = child.key;
+          allBookings.push(booking);
+        });
+
+        // เรียงตามวันที่ล่าสุด
+        allBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        updateStats();
+        filteredBookings = [...allBookings];
+        renderBookings();
+      });
+    }
+
+    // Update Statistics
+    function updateStats() {
+      // นับการจองที่รอตรวจสอบ (ยังไม่ได้ตรวจสอบการชำระเงิน)
+      const pending = allBookings.filter(b => 
+        !b.paymentVerified || 
+        b.bookingStatus === 'pending' || 
+        b.bookingStatus === 'pending_payment'
+      ).length;
+      
+      const approved = allBookings.filter(b => b.bookingStatus === 'approved').length;
+      const rejected = allBookings.filter(b => b.bookingStatus === 'rejected').length;
+      
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statApproved').textContent = approved;
+      document.getElementById('statRejected').textContent = rejected;
+      document.getElementById('statTotal').textContent = allBookings.length;
+    }
+
+    // Filter Bookings
+    function filterBookings() {
+      const status = document.getElementById('filterStatus').value;
+      const field = document.getElementById('filterField').value;
+      const date = document.getElementById('filterDate').value;
+      const search = document.getElementById('filterSearch').value.toLowerCase();
+
+      filteredBookings = allBookings.filter(booking => {
+        const matchStatus = status === 'all' || booking.bookingStatus === status;
+        const matchField = field === 'all' || booking.field === field;
+        const matchDate = !date || booking.date === date;
+        const matchSearch = !search || 
+          booking.fullname.toLowerCase().includes(search) ||
+          booking.phone.includes(search);
+
+        return matchStatus && matchField && matchDate && matchSearch;
+      });
+
+      renderBookings();
+    }
+
+    // Render Bookings Table
+    function renderBookings() {
+      const container = document.getElementById('bookingsContainer');
+
+      if (filteredBookings.length === 0) {
+        container.innerHTML = `
+          <div class="no-data">
+            <div class="no-data-icon">📭</div>
+            <div>ไม่พบข้อมูลการจอง</div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>วันที่จอง</th>
+              <th>ผู้จอง</th>
+              <th>เบอร์โทร</th>
+              <th>สนาม</th>
+              <th>วันที่เล่น</th>
+              <th>เวลา</th>
+              <th>ราคา</th>
+              <th>สถานะ</th>
+              <th>การชำระเงิน</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      filteredBookings.forEach(booking => {
+        const statusClass = `status-${booking.bookingStatus || 'pending'}`;
+        const statusText = {
+          'pending': 'รอตรวจสอบ',
+          'pending_payment': 'รอตรวจสอบ',
+          'approved': 'อนุมัติแล้ว',
+          'rejected': 'ปฏิเสธ'
+        }[booking.bookingStatus] || 'รอตรวจสอบ';
+
+        const paymentClass = booking.paymentVerified ? 'payment-verified' : 'payment-pending';
+        const paymentText = booking.paymentVerified ? '✅ ตรวจสอบแล้ว' : '⏳ รอตรวจสอบ';
+
+        html += `
+          <tr>
+            <td>${formatDateTime(booking.createdAt)}</td>
+            <td>${booking.fullname}</td>
+            <td>${booking.phone}</td>
+            <td>${booking.field}</td>
+            <td>${formatDate(booking.date)}</td>
+            <td>${booking.time}</td>
+            <td>฿${booking.totalPrice?.toLocaleString()}</td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+            <td class="${paymentClass}">${paymentText}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-view" onclick="viewBooking('${booking.id}')">ดู</button>
+                ${(!booking.paymentVerified || booking.bookingStatus === 'pending' || booking.bookingStatus === 'pending_payment') ? `
+                  <button class="btn-approve" onclick="approveBooking('${booking.id}')">อนุมัติ</button>
+                  <button class="btn-reject" onclick="rejectBooking('${booking.id}')">ปฏิเสธ</button>
+                ` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // View Booking Details
+    function viewBooking(bookingId) {
+      currentBooking = allBookings.find(b => b.id === bookingId);
+      if (!currentBooking) return;
+
+      const paymentStatus = currentBooking.paymentVerified ? 
+        '<span style="color: #10b981;">✅ ตรวจสอบแล้ว</span>' : 
+        '<span style="color: #f59e0b;">⏳ รอตรวจสอบ</span>';
+
+      let html = `
+        <div class="booking-detail">
+          <label>ผู้จอง:</label>
+          <value>${currentBooking.fullname}</value>
+        </div>
+        <div class="booking-detail">
+          <label>เบอร์โทร:</label>
+          <value>${currentBooking.phone}</value>
+        </div>
+        <div class="booking-detail">
+          <label>สนาม:</label>
+          <value>${currentBooking.field}</value>
+        </div>
+        <div class="booking-detail">
+          <label>วันที่เล่น:</label>
+          <value>${formatDate(currentBooking.date)}</value>
+        </div>
+        <div class="booking-detail">
+          <label>เวลา:</label>
+          <value>${currentBooking.time}</value>
+        </div>
+        <div class="booking-detail">
+          <label>ราคารวม:</label>
+          <value>฿${currentBooking.totalPrice?.toLocaleString()}</value>
+        </div>
+        <div class="booking-detail">
+          <label>สถานะการชำระเงิน:</label>
+          <value>${paymentStatus}</value>
+        </div>
+      `;
+
+      if (currentBooking.depositSlipUrl) {
+        html += `
+          <div class="booking-detail">
+            <label>สลิปการโอนเงิน:</label>
+            <div style="text-align: center; margin-top: 10px;">
+              <img src="${currentBooking.depositSlipUrl}" 
+                   alt="Payment Slip" 
+                   class="slip-image"
+                   onclick="window.open('${currentBooking.depositSlipUrl}', '_blank')"
+                   style="cursor: pointer; max-width: 100%; border: 2px solid #e5e7eb; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+              <p style="font-size: 12px; color: #666; margin-top: 5px;">คลิกเพื่อดูขนาดเต็ม</p>
+            </div>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="booking-detail">
+            <label>สลิปการโอนเงิน:</label>
+            <value style="color: #ef4444;">❌ ยังไม่ได้อัพโหลดสลิป</value>
+          </div>
+        `;
+      }
+
+      if (!currentBooking.paymentVerified || currentBooking.bookingStatus === 'pending' || currentBooking.bookingStatus === 'pending_payment') {
+        html += `
+          <div class="modal-actions">
+            <button class="btn-approve" onclick="approveBookingFromModal()" style="background: #10b981;">
+              ✅ อนุมัติการจอง
+            </button>
+            <button class="btn-reject" onclick="rejectBookingFromModal()" style="background: #ef4444;">
+              ❌ ปฏิเสธการจอง
+            </button>
+          </div>
+        `;
+      }
+
+      document.getElementById('bookingDetailContent').innerHTML = html;
+      document.getElementById('bookingModal').classList.add('active');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.remove('active');
+      currentBooking = null;
+    }
+
+    // Approve Booking
+    function approveBooking(bookingId) {
+      if (!confirm('ยืนยันการอนุมัติการจองนี้?')) return;
+
+      database.ref('bookings/' + bookingId).update({
+        bookingStatus: 'approved',
+        paymentVerified: true,
+        approvedAt: new Date().toISOString(),
+        approvedBy: auth.currentUser.uid
+      }).then(() => {
+        alert('✅ อนุมัติการจองเรียบร้อยแล้ว');
+      }).catch(error => {
+        alert('❌ เกิดข้อผิดพลาด: ' + error.message);
+      });
+    }
+
+    function approveBookingFromModal() {
+      if (currentBooking) {
+        approveBooking(currentBooking.id);
+        closeBookingModal();
+      }
+    }
+
+    // Reject Booking
+    function rejectBooking(bookingId) {
+      const reason = prompt('กรุณาระบุเหตุผลในการปฏิเสธ:');
+      if (!reason) return;
+
+      database.ref('bookings/' + bookingId).update({
+        bookingStatus: 'rejected',
+        rejectedAt: new Date().toISOString(),
+        rejectedBy: auth.currentUser.uid,
+        rejectionReason: reason
+      }).then(() => {
+        alert('✅ ปฏิเสธการจองเรียบร้อยแล้ว');
+      }).catch(error => {
+        alert('❌ เกิดข้อผิดพลาด: ' + error.message);
+      });
+    }
+
+    function rejectBookingFromModal() {
+      if (currentBooking) {
+        rejectBooking(currentBooking.id);
+        closeBookingModal();
+      }
+    }
+
+    // Logout
+    function handleStaffLogout() {
+      if (confirm('ต้องการออกจากระบบ?')) {
+        auth.signOut().then(() => {
+          window.location.href = 'staff-login.html';
+        });
+      }
+    }
+
+    // Format Date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('th-TH', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+
+    function formatDateTime(isoString) {
+      if (!isoString) return '-';
+      const date = new Date(isoString);
+      return date.toLocaleDateString('th-TH', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Close modal on outside click
+    document.getElementById('bookingModal').addEventListener('click', (e) => {
+      if (e.target.id === 'bookingModal') {
+        closeBookingModal();
+      }
+    });
+  </script>
+</body>
+</html

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIJIT SPORT - เข้าสู่ระบบพนักงาน</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: linear-gradient(135deg, #033f12 0%, #0bb33d 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 450px;
+      width: 100%;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+      color: #000000;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .login-header p {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .staff-badge {
+      background: #11c730;
+      color: rgb(255, 255, 255);
+      padding: 8px 20px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0cc01b;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: #068117;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+
+    .login-btn:hover {
+      background: #0cc515;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .login-btn:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #000000;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .back-link a:hover {
+      color: #11b811;
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Loading */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .spinner {
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 30px 20px;
+      }
+
+      .login-header h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <div class="staff-badge">👤 พนักงาน</div>
+      <h1>🏟️ PRIJIT SPORT</h1>
+      <p>ระบบจัดการการจองสำหรับพนักงาน</p>
+    </div>
+
+    <div class="error-message" id="errorMessage">
+      เกิดข้อผิดพลาด
+    </div>
+
+    <div class="loading" id="loadingIndicator">
+      <div class="spinner"></div>
+      <div>กำลังเข้าสู่ระบบ...</div>
+    </div>
+
+    <form id="staffLoginForm" onsubmit="handleStaffLogin(event)">
+      <div class="form-group">
+        <label>ชื่อผู้ใช้พนักงาน</label>
+        <input 
+          type="text" 
+          id="staffUsername" 
+          placeholder="กรอกชื่อผู้ใช้"
+          required
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>รหัสผ่าน</label>
+        <div class="input-wrapper">
+          <input 
+            type="password" 
+            id="staffPassword" 
+            placeholder="กรอกรหัสผ่าน"
+            required
+            autocomplete="current-password"
+          >
+          <button 
+            type="button" 
+            class="toggle-password" 
+            onclick="togglePassword('staffPassword', this)"
+          >👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" class="login-btn" id="loginBtn">
+        เข้าสู่ระบบ
+      </button>
+    </form>
+
+    <div class="back-link">
+      <a href="index.html">← กลับหน้าหลัก</a>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
+      authDomain: "prijit-sport.firebaseapp.com",
+      databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "prijit-sport",
+      storageBucket: "prijit-sport.firebasestorage.app",
+      messagingSenderId: "19782245186",
+      appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // Check if already logged in
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // ตรวจสอบว่าเป็น staff หรือไม่
+        database.ref('users/' + user.uid).once('value').then(snapshot => {
+          const userData = snapshot.val();
+          if (userData && userData.role === 'staff') {
+            window.location.href = 'staff-panel.html';
+          }
+        });
+      }
+    });
+
+    // Toggle Password Visibility
+    function togglePassword(inputId, button) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        button.textContent = '👁️';
+      }
+    }
+
+    // Show Error
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+      setTimeout(() => {
+        errorDiv.classList.remove('show');
+      }, 5000);
+    }
+
+    // Handle Staff Login
+    async function handleStaffLogin(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('staffUsername').value.trim();
+      const password = document.getElementById('staffPassword').value;
+
+      if (!username || !password) {
+        showError('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
+        return;
+      }
+
+      // Show loading
+      document.getElementById('loadingIndicator').classList.add('show');
+      document.getElementById('staffLoginForm').style.display = 'none';
+      document.getElementById('loginBtn').disabled = true;
+
+      try {
+        // Login with Firebase Auth
+        const email = username + '@staff.prijitsport.com';
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        
+        // ตรวจสอบว่าเป็น staff หรือไม่
+        const snapshot = await database.ref('users/' + userCredential.user.uid).once('value');
+        const userData = snapshot.val();
+
+        if (userData && userData.role === 'staff') {
+          console.log('✅ Staff login successful');
+          window.location.href = 'staff-panel.html';
+        } else {
+          // ไม่ใช่ staff
+          await auth.signOut();
+          showError('⛔ คุณไม่มีสิทธิ์เข้าถึงระบบพนักงาน');
+          document.getElementById('loadingIndicator').classList.remove('show');
+          document.getElementById('staffLoginForm').style.display = 'block';
+          document.getElementById('loginBtn').disabled = false;
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        
+        let errorMessage = 'เข้าสู่ระบบไม่สำเร็จ';
+        
+        if (error.code === 'auth/user-not-found') {
+          errorMessage = '❌ ไม่พบชื่อผู้ใช้นี้ในระบบ';
+        } else if (error.code === 'auth/wrong-password') {
+          errorMessage = '❌ รหัสผ่านไม่ถูกต้อง';
+        } else if (error.code === 'auth/too-many-requests') {
+          errorMessage = '⚠️ พยายามเข้าสู่ระบบหลายครั้งเกินไป กรุณารอสักครู่';
+        } else if (error.code === 'auth/network-request-failed') {
+          errorMessage = '🌐 ไม่สามารถเชื่อมต่ออินเทอร์เน็ตได้';
+        }
+
+        showError(errorMessage);
+        document.getElementById('loadingIndicator').classList.remove('show');
+        document.getElementById('staffLoginForm').style.display = 'block';
+        document.getElementById('loginBtn').disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
