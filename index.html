@@ -170,51 +170,6 @@ textarea.error {
       }
 
       /* Loading Overlay */
-      .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 10001;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-      /* Toast */
-      .toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 15px 20px;
-  background: #22c55e;
-  color: white;
-  border-radius: 8px;
-  transform: translateX(400px);
-  transition: transform 0.3s ease;
-  z-index: 10000;
-}
-.toast.show { transform: translateX(0); }
-.toast-error { background: #ef4444; }
-.toast-warning { background: #f59e0b; }
-.toast-info { background: #3b82f6; }
-
 
       /* Global Loading Overlay */  
 #global-loading {
@@ -1423,10 +1378,6 @@ textarea.error {
       }
 
       /* Spinner */
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-
       .spinner {
         display: inline-block;
         width: 12px;
@@ -1619,48 +1570,95 @@ textarea.error {
         <button class="modal-close-btn" onclick="closeLoginModal()">&times;</button>
         
         <div id="modalLoginForm">
-          <h1 class="auth-title">⚽ เข้าสู่ระบบ</h1>
-          <form onsubmit="handleLogin(event)">
-            <div class="form-group">
-              <label class="form-label">ชื่อผู้ใช้</label>
-              <input type="text" id="modalLoginUsername" class="form-input" placeholder="กรอกชื่อผู้ใช้" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">รหัสผ่าน</label>
-              <input type="password" id="modalLoginPassword" class="form-input" placeholder="กรอกรหัสผ่าน" required />
-            </div>
-            <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
-          </form>
-          <div class="auth-switch">
-            ยังไม่มีบัญชี? <a onclick="showRegisterInModal()">สมัครสมาชิก</a>
-          </div>
-        </div>
+  <h1 class="auth-title">⚽ เข้าสู่ระบบ</h1>
+  <form onsubmit="handleLogin(event)">
+    <div class="form-group">
+      <label class="form-label">ชื่อผู้ใช้</label>
+      <input type="text" id="modalLoginUsername" class="form-input" 
+             placeholder="กรอกชื่อผู้ใช้" 
+             autocomplete="username" 
+             required />
+    </div>  <!-- ✅ ปิด form-group ของ username -->
+    
+    <div class="form-group">  <!-- ✅ form-group ใหม่สำหรับ password -->
+      <label class="form-label">รหัสผ่าน</label>
+      <div style="position: relative;">
+        <input type="password" id="modalLoginPassword" class="form-input" 
+               placeholder="กรอกรหัสผ่าน" 
+               autocomplete="current-password" 
+               required 
+               style="padding-right: 45px;" />
+        
+        <button type="button" 
+                onclick="togglePassword('modalLoginPassword', this)" 
+                style="position: absolute; right: 10px; top: 50%; 
+                       transform: translateY(-50%); background: none; 
+                       border: none; cursor: pointer; font-size: 1.2em; 
+                       padding: 5px;">
+          👁️
+        </button>
+      </div>
+    </div>  
+    
+    <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
+  </form>
+  <div class="auth-switch">
+    ยังไม่มีบัญชี? <a onclick="showRegisterInModal()">สมัครสมาชิก</a>
+  </div>
+</div>
 
         <div id="modalRegisterForm" style="display: none;">
-          <h1 class="auth-title">📝 สมัครสมาชิก</h1>
-          <form onsubmit="handleRegister(event)">
-            <div class="form-group">
-              <label class="form-label">ชื่อผู้ใช้</label>
-              <input type="text" id="modalRegUsername" class="form-input" placeholder="กรอกชื่อผู้ใช้" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">ชื่อ-นามสกุล</label>
-              <input type="text" id="modalRegFullname" class="form-input" placeholder="กรอกชื่อ-นามสกุล" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">เบอร์โทร</label>
-              <input type="tel" id="modalRegPhone" class="form-input" placeholder="กรอกเบอร์โทรศัพท์" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">รหัสผ่าน</label>
-              <input type="password" id="modalRegPassword" class="form-input" placeholder="กรอกรหัสผ่าน" required />
-            </div>
-            <button type="submit" class="submit-btn">สมัครสมาชิก</button>
-          </form>
-          <div class="auth-switch">
-            มีบัญชีแล้ว? <a onclick="showLoginInModal()">เข้าสู่ระบบ</a>
-          </div>
-        </div>
+  <h1 class="auth-title">📝 สมัครสมาชิก</h1>
+  <form onsubmit="handleRegister(event)">
+    <div class="form-group">
+      <label class="form-label">ชื่อผู้ใช้</label>
+      <input type="text" id="modalRegUsername" class="form-input" 
+             placeholder="กรอกชื่อผู้ใช้" 
+             autocomplete="username" 
+             required />
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">ชื่อ-นามสกุล</label>
+      <input type="text" id="modalRegFullname" class="form-input" 
+             placeholder="กรอกชื่อ-นามสกุล" 
+             autocomplete="name" 
+             required />
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">เบอร์โทร</label>
+      <input type="tel" id="modalRegPhone" class="form-input" 
+             placeholder="กรอกเบอร์โทรศัพท์" 
+             autocomplete="tel" 
+             required />
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">รหัสผ่าน</label>
+      <div style="position: relative;">
+        <input type="password" id="modalRegPassword" class="form-input" 
+               placeholder="กรอกรหัสผ่าน" 
+               autocomplete="new-password" 
+               required 
+               style="padding-right: 45px;" />
+        
+        <button type="button" 
+                onclick="togglePassword('modalRegPassword', this)" 
+                style="position: absolute; right: 10px; top: 50%; 
+                       transform: translateY(-50%); background: none; 
+                       border: none; cursor: pointer; font-size: 1.2em; 
+                       padding: 5px;">
+          👁️
+        </button>
+      </div>
+    </div>
+    <button type="submit" class="submit-btn">สมัครสมาชิก</button>
+  </form>
+  <div class="auth-switch">
+    มีบัญชีแล้ว? <a onclick="showLoginInModal()">เข้าสู่ระบบ</a>
+  </div>
+</div>
       </div>
     </div>
 
@@ -1742,8 +1740,8 @@ textarea.error {
       
         <div class="slider-welcome-text">
           <h2>⚽ Welcome ⚽</h2>
-          <p>สู่สนามฟุตบอล PRIJIT SPORT</p>
-          <p style="margin-top: 10px; color: #ffffff;">สนามหญ้าเทียมคุณภาพ มาตรฐาน และ ปลอดภัย</p>
+          <p>สนามฟุตบอล PRIJIT SPORT</p>
+          <p style="margin-top: 10px; color: #ffffff;">สนามฟุตบอลไพรจิตรทุกสนามใช้หญ้าเทียมคุณภาพดี ทำให้การเล่นฟุตบอลของคุณมีความรู้สึกไม่แตกต่างจากสนา มหญ้า อีกทั้งยังมีสิ่งอำนวยความสะดวกต่างๆและที่จอดรถกว้าง เหมาะสำหรับนัดหมายเพื่อนๆมาเล่นฟุตบอลเพื่อออกกำลังกาย</p>
         </div>
       </div>
     </section>
@@ -2004,9 +2002,9 @@ let currentAvailabilityCheck = null;
 
 // Navigation & Menu
 let lastMenuToggleTime = 0;
-const MENU_TOGGLE_DELAY = 150;
+const MENU_TOGGLE_DELAY = 300;
 let lastNavigationTime = 0;
-const NAVIGATION_DELAY = 150; 
+const NAVIGATION_DELAY = 300; 
 
 // Slider
 let currentSlideIndex = 0;
@@ -2033,7 +2031,7 @@ debugLog('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
 // ========================================
 // 3️⃣ INIT NAVIGATION (bind events)
 // ========================================
-(function initNavigation() {
+function initNavigation() {
   debugLog('🎯 [3/3] Initializing navigation...');
   
   function bindEvents() {
@@ -2073,85 +2071,70 @@ debugLog('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
         }
         
         // Debounce
-        if (now - lastNavigationTime > 200) {
-          lastNavigationTime = now;
-          touchHandled = true;
-          
-          // Clear visual feedback
-          setTimeout(() => { 
-            this.style.backgroundColor = ''; 
-            touchHandled = false;
-          }, 300);
-          
-          debugLog(`✅ Touch END: ${sectionId} [${index}] - navigating`);
-          navigateToSection(sectionId, loadBooking);
-        } else {
-          debugLog('  ⚠️ Debounced touch');
-        }
-      }, { passive: false });
-      
-      // ✅ CLICK EVENT (Desktop fallback)
-      item.addEventListener('click', function(e) {
-        // ป้องกัน ghost click หลัง touch
-        if (touchHandled || (Date.now() - lastNavigationTime) < 500) {
-          e.preventDefault();
-          debugLog('  ⚠️ Blocked ghost click');
-          return;
-        }
+         if (now - lastNavigationTime > NAVIGATION_DELAY) {
+        lastNavigationTime = now;
+        touchHandled = true;
         
-        const now = Date.now();
-        if (now - lastNavigationTime > 200) {
-          lastNavigationTime = now;
-          debugLog(`🖱️ Click nav: ${sectionId} [${index}]`);
-          navigateToSection(sectionId, loadBooking);
-        }
-      });
-    });  
+        // Clear visual feedback
+        this.style.backgroundColor = '';
+        setTimeout(() => { touchHandled = false; }, 300);
+        
+        console.log(`✅ Touch nav: ${sectionId} [${index}]`);
+        navigateToSection(sectionId, loadBooking);
+      }
+    }, { passive: false, once: false });
+    
+    // CLICK - Desktop fallback
+    item.addEventListener('click', function(e) {
+      // ป้องกัน ghost click
+      if (touchHandled || (Date.now() - lastNavigationTime) < 500) {
+        e.preventDefault();
+        return;
+      }
+      
+      const now = Date.now();
+      if (now - lastNavigationTime > NAVIGATION_DELAY) {
+        lastNavigationTime = now;
+        console.log(`🖱️ Click nav: ${sectionId} [${index}]`);
+        navigateToSection(sectionId, loadBooking);
+      }
+    }, { once: false });
+  }); 
       
     // ✅ HAMBURGER MENU
-    const hamburger = document.getElementById('hamburgerBtn');
-    if (hamburger) {
-      let hamTouchStart = 0;
-      let hamTouchHandled = false;
-      
-      hamburger.addEventListener('touchstart', function(e) {
-        hamTouchStart = Date.now();
-        this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
-      }, { passive: true });
-      
-      hamburger.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const now = Date.now();
-        const duration = now - hamTouchStart;
-        
-        if (duration >= 50 && now - lastMenuToggleTime > 200) {
-          lastMenuToggleTime = now;
-          hamTouchHandled = true;
-          
-          this.style.backgroundColor = '';
-          setTimeout(() => { hamTouchHandled = false; }, 300);
-          
-          debugLog('  🍔 Hamburger toggled');
-          toggleMobileMenu();
-        }
-      }, { passive: false });
-      
-      hamburger.addEventListener('click', function(e) {
-        if (hamTouchHandled || (Date.now() - lastMenuToggleTime) < 500) {
-          e.preventDefault();
-          return;
-        }
-        
-        const now = Date.now();
-        if (now - lastMenuToggleTime > 200) {
-          lastMenuToggleTime = now;
-          toggleMobileMenu();
-        }
-      });
-    }
+   const hamburger = document.getElementById('hamburgerBtn');
+  if (hamburger) {
+    let hamTouchHandled = false;
+    let hamTouchStart = 0;
     
+    hamburger.addEventListener('touchstart', function(e) {
+      hamTouchStart = Date.now();
+      this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+    }, { passive: true });
+    
+    hamburger.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const now = Date.now();
+      const duration = now - hamTouchStart;
+      
+      if (duration >= 50 && now - lastMenuToggleTime > MENU_TOGGLE_DELAY) {
+        hamTouchHandled = true;
+        this.style.backgroundColor = '';
+        setTimeout(() => { hamTouchHandled = false; }, 300);
+        toggleMobileMenu();
+      }
+    }, { passive: false });
+    
+    hamburger.addEventListener('click', function(e) {
+      if (hamTouchHandled || (Date.now() - lastMenuToggleTime) < 500) {
+        e.preventDefault();
+        return;
+      }
+      toggleMobileMenu();
+    });
+  }
     // ✅ LOGIN/LOGOUT BUTTONS (same pattern)
     const loginBtn = document.getElementById('loginNavBtn');
     if (loginBtn) {
@@ -2194,49 +2177,111 @@ debugLog('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
         handleLogout();
       });
     }
-    
-    
+
     // ✅ FIELD และ DATE SELECT - เพิ่มการเช็คสถานะสนาม
-    const fieldSelect = document.getElementById('fieldSelect');
-    const dateSelect = document.getElementById('dateSelect');
+   function setupFieldDateListeners() {
+  const fieldSelect = document.getElementById('fieldSelect');
+  const dateSelect = document.getElementById('dateSelect');
+  
+  if (fieldSelect && dateSelect && typeof checkAvailability === 'function') {
+    let checkTimeout = null;
     
-    if (fieldSelect && dateSelect) {
-      fieldSelect.addEventListener('change', function() {
-        debugLog('🏟️ Field changed:', this.value);
+    const debouncedCheck = () => {
+      clearTimeout(checkTimeout);
+      checkTimeout = setTimeout(() => {
+        console.log('🔍 Checking availability...');
         checkAvailability();
-      });
-      
-      dateSelect.addEventListener('change', function() {
-        debugLog('📅 Date changed:', this.value);
-        checkAvailability();
-      });
-      
-      debugLog('✅ Field/Date select listeners bound');
-    }
-    debugLog('✅ [3/3] Navigation initialized with touchstart + touchend pattern');
+      }, 300);
+    };
+    
+    fieldSelect.addEventListener('change', debouncedCheck);
+    dateSelect.addEventListener('change', debouncedCheck);
+    
+    console.log('✅ Field/Date listeners bound with debounce');
   }
+}
+
   
   // ✅ เรียก bindEvents() เพียงครั้งเดียว
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindEvents);
-  } else {
-    bindEvents();
+ if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupFieldDateListeners);
+} else {
+  setupFieldDateListeners();
+} 
+   
+    debugLog('✅ [3/3] Navigation initialized');
   }
-})();
+  bindEvents();
+}
+
+
+function togglePassword(inputId, button) {
+  const input = document.getElementById(inputId);
+  
+  if (input.type === 'password') {
+    input.type = 'text';       
+    button.textContent = '🙈';  
+  } else {
+    input.type = 'password';    
+    button.textContent = '👁️';  
+  }
+}
 
 // ========================================
 // NAVIGATION FUNCTIONS
 // ========================================
-function navigateToSection(sectionId, loadBooking = false) {
-  debugLog('📍 Navigate to:', sectionId);
-  closeMobileMenu();
+function closeMobileMenu() {
+  const overlay = document.getElementById('menuOverlay');
+  const hamburger = document.getElementById('hamburgerBtn');
   
+  if (overlay) overlay.classList.remove('active');
+  if (hamburger) hamburger.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function toggleMobileMenu() {
+  const now = Date.now();
+  
+  if (now - lastMenuToggleTime < MENU_TOGGLE_DELAY) {
+    debugLog('⚠️ Menu toggle debounced');
+    return;
+  }
+  
+  lastMenuToggleTime = now;
+  
+  const overlay = document.getElementById('menuOverlay');
+  const hamburger = document.getElementById('hamburgerBtn');
+  
+  if (!overlay || !hamburger) return;
+  
+  const isActive = overlay.classList.contains('active');
+  
+  if (isActive) {
+    closeMobileMenu();
+    console.log('🔒 Menu closed');
+  } else {
+    overlay.classList.add('active');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    console.log('📱 Menu opened');
+  }
+}
+
+function navigateToSection(sectionId, loadBooking = false) {
+  debugLog('🔗 Navigate to:', sectionId);
+  
+  // Close mobile menu first
+  closeMobileMenu();
+
+  // Scroll to section
   const section = document.getElementById(sectionId);
   if (section) {
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (loadBooking) {
+    
+    // Load booking list if needed
+    if (loadBooking && typeof updateBookingList === 'function') {
       setTimeout(() => {
-        debugLog('  📋 Loading booking list...');
+        console.log('  📋 Loading booking list...');
         updateBookingList();
       }, 300);
     }
@@ -2244,35 +2289,7 @@ function navigateToSection(sectionId, loadBooking = false) {
     console.error('  ❌ Section not found:', sectionId);
   }
 }
- 
-function navigateToSection(sectionId) {
-  const overlay = document.getElementById('menuOverlay');
-  const hamburger = document.getElementById('hamburgerBtn');
-  overlay.classList.remove('active');
-  hamburger.classList.remove('active');
-  document.body.style.overflow = '';
-  
-  const section = document.getElementById(sectionId);
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
 
-function toggleMobileMenu() {
-  const overlay = document.getElementById('menuOverlay');
-  const hamburger = document.getElementById('hamburgerBtn');
-  const isActive = overlay.classList.contains('active');
-  
-  if (isActive) {
-    overlay.classList.remove('active');
-    hamburger.classList.remove('active');
-    document.body.style.overflow = '';
-  } else {
-    overlay.classList.add('active');
-    hamburger.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-}
 // ========================================
 // MODAL FUNCTIONS
 // ========================================
@@ -2291,26 +2308,6 @@ function showRegisterInModal() {
   document.getElementById('modalLoginForm').style.display = 'none';
   document.getElementById('modalRegisterForm').style.display = 'block';
 }
-// ========================================
-// LOADING FUNCTIONS  
-// ========================================
-function showLoading(message = 'กำลังโหลด...') {
-  const loading = document.createElement('div');
-  loading.id = 'globalLoading';
-  loading.innerHTML = `
-    <div class="loading-overlay">
-      <div class="spinner"></div>
-      <p>${message}</p>
-    </div>
-  `;
-  document.body.appendChild(loading);
-}
-
-function hideLoading() {
-  const loading = document.getElementById('globalLoading');
-  if (loading) loading.remove();
-}
-
 // ========================================
 // GLOBAL LODING EXAMPLE
 // ========================================
@@ -2591,24 +2588,6 @@ function showValidationErrors(errors) {
       input.addEventListener('focus', () => input.classList.remove('error'), { once: true });
     }
   });
-}
-
-// ========================================
-// TOAST FUNCTIONS
-// ========================================
-function showToast(message, type = 'success') {
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  
-  setTimeout(() => {
-    toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-  }, 100);
 }
 // ========================================
 // SLIDER FUNCTIONS
@@ -3560,49 +3539,55 @@ function cancelBooking(bookingId) {
 // ========================================
 // iNITIALIZATION
 // ========================================
-let isNavInitialized = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log('🎯 DOM ready - initializing...');
   
-  // ป้องกันการผูก event listeners ซ้ำ
-  if (isNavInitialized) {
-    console.log("⚠️ Navigation already initialized, skipping...");
-    return;
-  }
-  isNavInitialized = true;
-// ========================================
-  // Close overlay on background click
-  document.getElementById('menuOverlay').addEventListener('click', (e) => {
-    if (e.target.id === 'menuOverlay') toggleMobileMenu();
-  });
+  // ✅ CRITICAL: Initialize navigation
+  initNavigation();
+  
+  // ✅ Start slider
+  startSlider();
   
   // Close modal on background click
-  document.getElementById('loginModal').addEventListener('click', (e) => {
-    if (e.target.id === 'loginModal') closeLoginModal();
-  });
+  const loginModal = document.getElementById('loginModal');
+  if (loginModal) {
+    loginModal.addEventListener('click', (e) => {
+      if (e.target.id === 'loginModal' && typeof closeLoginModal === 'function') {
+        closeLoginModal();
+      }
+    });
+  }
   
   // ESC key
-  document.addEventListener('keydown', (e) => {
+ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      closeLoginModal();
-      if (document.getElementById('menuOverlay').classList.contains('active')) {
+      if (typeof closeLoginModal === 'function') closeLoginModal();
+      
+      const overlay = document.getElementById('menuOverlay');
+      if (overlay && overlay.classList.contains('active')) {
         toggleMobileMenu();
       }
     }
   });
+// ========================================
+// MOBILE MENU TOGGLE WITH DEBOUNCE
+// ========================================
 
 // ========================================
 // window RESIZE HANDLER
 // ========================================
-window.addEventListener('resize', () => {
+ window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
-      document.getElementById('menuOverlay').classList.remove('active');
-      document.getElementById('hamburgerBtn').classList.remove('active');
+      const overlay = document.getElementById('menuOverlay');
+      const hamburger = document.getElementById('hamburgerBtn');
+      
+      if (overlay) overlay.classList.remove('active');
+      if (hamburger) hamburger.classList.remove('active');
       document.body.style.overflow = '';
     }
   });
-   });
+});
 
 // ========================================
 // TOAST NOTIFICATION SYSTEM
@@ -3739,6 +3724,7 @@ function showLoading(message) {
 function hideLoading() {
   LoadingSystem.hide();
 }
+
 
 
 
