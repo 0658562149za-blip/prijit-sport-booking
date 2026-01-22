@@ -258,12 +258,12 @@ textarea.error {
     z-index: 1002;
   }
     .nav-container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 20px;
+      padding: 20px;
     }
     .nav-links {
       display: flex;
@@ -271,56 +271,54 @@ textarea.error {
       flex-wrap: wrap;
     }
     .nav-item {
-      color:  #ffffff;
+      color:  #fffefe;
       font-weight: bold;
       font-size: 1em;
       padding: 10px 20px;
-      border-radius: 8px;
+      border-radius: 50px;
       cursor: pointer;
-      background: #000000;
-      border: none;
+      background:  #000000;
+      border: 3px solid #d6d301;
       font-family: inherit;
       transition: background 0.2s ease;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
-    
-        
       /* Hover เฉพาะ Desktop */
       @media (hover: hover) and (pointer: fine) {
         .nav-item:hover {
-          background:  #22c55e;
+          background: rgb(17, 207, 10);
         }
       .logout-btn:hover {
-          background: rgba(255, 255, 255, 0.7) !important;
+          background:  rgb(199, 6, 6) !important;
         }
         
      .login-btn:hover {
-          background: rgba(255, 255, 255, 0.7) !important;
+          background:  rgb(17, 207, 10) !important;
         }
       }
 
       .user-section {
-        color: rgb(0, 0, 0);
+        color: rgb(255, 255, 255);
         font-weight: bold;
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 5px;
       }
 
       .logout-btn {
-        background: rgba(122, 120, 120, 0.527);
-        border: 2px solid white;
+        background: #4b4b4b !important;
+        border: 2px solid rgb(252, 255, 54) !important;
         padding: 8px 16px;
         border-radius: 8px;
         cursor: pointer;
       }
 
       .login-btn {
-      background: rgba(122, 120, 120, 0.527) !important;
-      color: #000000 !important;
+      background: #4b4b4b !important;
+      color: #ffffff !important;
       font-weight: bold;
-      border: 2px solid white;
+      border: 2px solid  rgb(252, 255, 54) !important;
       padding: 10px 25px;
       border-radius: 25px;
       cursor: pointer;
@@ -369,7 +367,7 @@ textarea.error {
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, rgba(34,197,94,0.98), rgba(16,185,129,0.98));
+      background: linear-gradient(135deg, rgba(45, 235, 39, 0.98), rgba(12, 77, 6, 0.98));
       backdrop-filter: blur(20px);
       z-index: 1000;
       display: flex;
@@ -393,9 +391,9 @@ textarea.error {
       margin: 8px 0;
       border-radius: 15px;
       font-size: 1.3em;
-      background: rgba(255,255,255,0.15);
+      background: rgb(0, 0, 0);
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(255,255,255,0.2);
+      border: 2px solid #d6d301;
       min-width: 280px;
       text-align: center;
       opacity: 0;
@@ -419,8 +417,9 @@ textarea.error {
     }
     .menu-overlay .nav-item:active {
       transform: scale(0.95);
-      background: rgba(255,255,255,0.3);
+      background: rgb(46, 196, 0);
     }
+
 
       /* Modal */
         .modal-overlay {
@@ -485,9 +484,9 @@ textarea.error {
     }
     .submit-btn {
       width: 100%;
-      background: #0f531a;
+      background: hsl(142, 92%, 38%);
       color: white;
-      border: none;
+      border-color: #fafd22;
       padding: 18px;
       border-radius: 10px;
       font-size: 1.2em;
@@ -816,7 +815,8 @@ textarea.error {
   padding: 15px;
   border: 2px solid #d1d5db;
   border-radius: 10px;
-  background: white;
+  background: #000000;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.3s;
   font-size: 1em;
@@ -828,25 +828,51 @@ textarea.error {
 }
   @media (hover: hover) and (pointer: fine) {
       .time-slot-btn:hover {
-        border-color: #d2f027;
-        background: #f0fdf4;
+        border-color: #71eb1f;
+        background: #050505;
+        color:  #e2cc09;
         transform: translateY(-2px);
       }
       }
       .time-slot-btn.selected {
-        background: #22c55e;
-        color: white;
-        border-color: #22c55e;
+        background:  #07b815;
+        color:  #ffffff;
+        border-color: #e2cc09;
       }
 
       .time-slot-btn.available {
-        background: #f0fdf4;
-        border-color: #22c55e;
+        padding: 15px;
+       border: 2px solid #d1d5db;
+    border-radius: 10px;
+    background: #000000;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1em;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+  @media (hover: hover) and (pointer: fine) {
+      .time-slot-btn:hover {
+        border-color: #71eb1f;
+        background: #050505;
+        color:  #e2cc09;
+        transform: translateY(-2px);
+      }
+      }
+      .time-slot-btn.selected {
+        background:  #07b815;
+        color:  #ffffff;
+        border-color: #e2cc09;
       }
 
+ 
       .time-slot-btn.booked {
-        background: #fee2e2;
-        border-color: #ef4444;
+        background:  #e62a2a;
+        border-color: hsl(40, 100%, 99%);
         cursor: not-allowed;
         opacity: 0.7;
       }
@@ -862,13 +888,14 @@ textarea.error {
       }
 
       .time-slot-btn.available .status-badge {
-        background: #22c55e;
-        color: white;
+        background: #07c44c;
+        color: rgb(255, 255, 255);
+         
       }
 
       .time-slot-btn.booked .status-badge {
         background: #ef4444;
-        color: white;
+        color: rgb(255, 251, 251);
       }
     
       .availability-legend {
@@ -3897,13 +3924,17 @@ window.addEventListener('unhandledrejection', (event) => {
 
 initializeFirebase();
     </script>
+    
+    <!-- Toast Container -->
     <div id="toast-container"></div>
+    
     <!-- Global Loading Overlay -->
-<div id="global-loading" style="display: none;">
-  <div class="loading-overlay">
-    <div class="spinner"></div>
-    <p class="loading-text">กำลังโหลด...</p>
-  </div>
-</div>
+    <div id="global-loading">
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <p class="loading-text">กำลังโหลด...</p>
+      </div>
+    </div>
+    
   </body>
-</html> 
+</html>
