@@ -168,9 +168,6 @@ textarea.error {
         background-repeat: no-repeat;
         line-height: 1.6;
       }
-
-      /* Loading Overlay */
-
       /* Global Loading Overlay */  
 #global-loading {
   position: fixed;
@@ -292,7 +289,7 @@ textarea.error {
       /* Hover เฉพาะ Desktop */
       @media (hover: hover) and (pointer: fine) {
         .nav-item:hover {
-          background: #033f12;
+          background:  #22c55e;
         }
       .logout-btn:hover {
           background: rgba(255, 255, 255, 0.7) !important;
@@ -321,7 +318,7 @@ textarea.error {
 
       .login-btn {
       background: rgba(122, 120, 120, 0.527) !important;
-      color: #eef3f0 !important;
+      color: #000000 !important;
       font-weight: bold;
       border: 2px solid white;
       padding: 10px 25px;
@@ -464,30 +461,31 @@ textarea.error {
       font-size: 2.5em;
       text-align: center;
       margin-bottom: 30px;
-      color: #1f2937;
+      color: #ffffff;
     }
     .form-group { margin-bottom: 25px; }
     .form-label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
-      color: #374151;
+      color: #ffffff;
       font-size: 1.1em;
     }
     .form-input {
       width: 100%;
       padding: 15px;
-      border: 2px solid #d1d5db;
+      border: 2px solid #000000;
       border-radius: 10px;
       font-size: 1.1em;
     }
     .form-input:focus {
       outline: none;
-      border-color: #22c55e;
+      border-color:#0a0a0a; 
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.3);
     }
     .submit-btn {
       width: 100%;
-      background: #22c55e;
+      background: #0f531a;
       color: white;
       border: none;
       padding: 18px;
@@ -568,13 +566,13 @@ textarea.error {
         font-size: 2.5em;
         text-align: center;
         margin-bottom: 20px;
-        color: white;
+        color: rgb(252, 250, 250);
         font-weight: bold;
         text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
       }
 
       .content-card {
-        background: #22c55e;
+        background: #033f12;
         border-radius: 15px;
         padding: 20px 15px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -582,7 +580,7 @@ textarea.error {
       }
 
       .section-header {
-        background: #033f12;
+        background: #00aa3e;
         padding: 12px 20px;
         border-radius: 10px;
         font-size: 1.3em;
@@ -728,7 +726,7 @@ textarea.error {
       /* Field Info */
       .field-details {
         line-height: 2;
-        color: #374151;
+        color: #ffffff;
         font-size: 1.1em;
       }
 
@@ -830,7 +828,7 @@ textarea.error {
 }
   @media (hover: hover) and (pointer: fine) {
       .time-slot-btn:hover {
-        border-color: #22c55e;
+        border-color: #d2f027;
         background: #f0fdf4;
         transform: translateY(-2px);
       }
@@ -872,7 +870,7 @@ textarea.error {
         background: #ef4444;
         color: white;
       }
-
+    
       .availability-legend {
         display: flex;
         justify-content: center;
@@ -882,6 +880,7 @@ textarea.error {
       }
 
       .legend-item {
+        color: #ffffff;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -933,7 +932,7 @@ textarea.error {
       }
 
       .booking-card h3 {
-        color: #1f2937;
+        color: #ffffff;
         margin-bottom: 15px;
         text-align: center;
         font-size: 1.3em;
@@ -947,7 +946,7 @@ textarea.error {
       }
 
       .booking-card p strong {
-        color: #1f2937;
+        color: #ffffff;
       }
 
       .cancel-btn {
@@ -975,7 +974,7 @@ textarea.error {
         width: 100%;
         height: 500px;
         margin-bottom: 30px;
-        background: #000;
+        background: #000000;
         border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -993,7 +992,7 @@ textarea.error {
         top: 50%;
         transform: translateY(-50%);
         background: rgba(34, 197, 94, 0.9);
-        color: white;
+        color: rgb(253, 253, 253);
         border: none;
         font-size: 2.5rem;
         padding: 20px 25px;
@@ -1058,7 +1057,7 @@ textarea.error {
         text-align: center;
         margin-top: 20px;
         font-size: 1.2em;
-        color: #1f2937;
+        color: #ffffff;
         font-weight: bold;
       }
 
@@ -1087,7 +1086,7 @@ textarea.error {
         height: 100%;
         object-fit: contain;
         border-radius: 15px;
-        filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.15));
+        filter: drop-shadow(0 8px 20px rgba(255, 254, 254, 0.15));
         transition: transform 0.3s;
       }
 
@@ -1096,6 +1095,7 @@ textarea.error {
       }
 
       .contact-info {
+        color: #dcfce7;
         text-align: center;
       }
 
@@ -1117,7 +1117,7 @@ textarea.error {
         font-weight: bold;
         letter-spacing: 10px;
         margin-top: 60px;
-        color: #1f2937;
+        color: #ffffff;
         text-align: center;
       }
 
@@ -1879,7 +1879,7 @@ textarea.error {
             <button class="time-slot-btn" type="button" data-time="18:00 - 19:00">18:00 - 19:00</button>
             <button class="time-slot-btn" type="button" data-time="19:00 - 20:00">19:00 - 20:00</button>
           </div> 
-
+        </div>
           <button class="submit-btn" onclick="confirmBooking()">ยืนยันการจอง
           </button>
         </div>
@@ -1892,7 +1892,7 @@ textarea.error {
         <div class="section-header">รายการจองของคุณ</div>
 
         <div id="bookingList" style="min-height: 200px">
-          <p style="text-align: center; color: #6b7280; padding: 40px">ยังไม่มีรายการจอง</p>
+          <p style="text-align: center; color: #ffffff; padding: 40px">ยังไม่มีรายการจอง</p>
         </div>
       </div>
     </section>
@@ -1954,7 +1954,7 @@ textarea.error {
         </div>
 
         <div class="thank-you-text">thank you</div>
-        <p style="text-align: center;">⚽PRIJIT SPORT⚽</p>
+        <p style="text-align: center;color: #ffffff;">⚽PRIJIT SPORT⚽</p>
       </div>
     </section>
     
