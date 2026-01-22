@@ -1117,16 +1117,33 @@
       const reason = prompt('กรุณาระบุเหตุผลในการปฏิเสธ:');
       if (!reason) return;
 
-      database.ref('bookings/' + bookingId).update({
-        bookingStatus: 'rejected',
-        rejectedAt: new Date().toISOString(),
-        rejectedBy: auth.currentUser.uid,
-        rejectionReason: reason
-      }).then(() => {
-        alert('✅ ปฏิเสธการจองเรียบร้อยแล้ว');
-      }).catch(error => {
-        alert('❌ เกิดข้อผิดพลาด: ' + error.message);
-      });
+      if (!confirm('⚠️ ยืนยันการปฏิเสธและลบการจองนี้?\n\nการดำเนินการนี้จะ:\n✓ ลบข้อมูลการจองออกจากระบบ\n✓ ปลดล็อคช่วงเวลาให้ผู้อื่นจองได้\n✗ ไม่สามารถยกเลิกได้')) {
+        return;
+      }
+
+      // หาข้อมูล booking ก่อน
+      const booking = allBookings.find(b => b.id === bookingId);
+      if (!booking) {
+        alert('❌ ไม่พบข้อมูลการจอง');
+        return;
+      }
+
+      // สร้าง unique key สำหรับปลดล็อค timeslot
+      const uniqueKey = `${booking.field}_${booking.date}_${booking.time}`;
+
+      // ลบ booking lock ก่อน
+      database.ref('booking_locks/' + uniqueKey).remove()
+        .then(() => {
+          // จากนั้นลบ booking data
+          return database.ref('bookings/' + bookingId).remove();
+        })
+        .then(() => {
+          alert(`✅ ปฏิเสธและลบการจองเรียบร้อยแล้ว\n\nเหตุผล: ${reason}\n\nช่วงเวลา ${booking.field} วันที่ ${booking.date} เวลา ${booking.time} สามารถจองใหม่ได้แล้ว`);
+        })
+        .catch(error => {
+          console.error('Error rejecting booking:', error);
+          alert('❌ เกิดข้อผิดพลาด: ' + error.message);
+        });
     }
 
     function rejectBookingFromModal() {
