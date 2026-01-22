@@ -394,32 +394,275 @@
       margin-bottom: 15px;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
+    /* ========================================
+       MOBILE CARD LAYOUT STYLES
+       ======================================== */
+    .mobile-bookings {
+      display: none; /* Hidden by default, shown on mobile */
+      flex-direction: column;
+      gap: 15px;
+    }
 
-      .filter-grid {
-        grid-template-columns: 1fr;
+    .booking-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: box-shadow 0.3s;
+    }
+
+    .booking-card:active {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .booking-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .booking-card-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: #111827;
+      flex: 1;
+    }
+
+    .booking-card-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .booking-card-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .booking-card-label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .booking-card-value {
+      font-size: 14px;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .booking-card-full {
+      grid-column: 1 / -1;
+    }
+
+    .booking-card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .booking-card-actions button {
+      flex: 1;
+      padding: 10px 8px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    /* ========================================
+       RESPONSIVE DESIGN
+       ======================================== */
+    
+    /* Tablet */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 15px;
       }
 
       .bookings-table {
-        font-size: 14px;
+        font-size: 13px;
       }
 
       .bookings-table th,
       .bookings-table td {
+        padding: 12px 8px;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .container {
         padding: 10px;
       }
 
-      .action-buttons {
-        flex-direction: column;
-      }
-
+      /* Header */
       .staff-header {
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
+        padding: 15px;
+      }
+
+      .staff-header h1 {
+        font-size: 20px;
+        text-align: center;
+      }
+
+      .staff-info {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .staff-name {
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .logout-btn {
+        width: 100%;
+        padding: 12px;
+      }
+
+      /* Stats */
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .stat-card h3 {
+        font-size: 12px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      /* Filter */
+      .filter-section {
+        padding: 15px;
+      }
+
+      .filter-section h2 {
+        font-size: 18px;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .filter-group select,
+      .filter-group input {
+        font-size: 16px; /* Prevent zoom on iOS */
+      }
+
+      /* Bookings Section */
+      .bookings-section {
+        padding: 15px;
+      }
+
+      .bookings-section h2 {
+        font-size: 18px;
+      }
+
+      /* Hide desktop table on mobile */
+      .bookings-table {
+        display: none;
+      }
+
+      /* Show mobile cards */
+      .mobile-bookings {
+        display: flex;
+      }
+
+      /* Modal */
+      .modal-content {
+        width: 95%;
+        max-width: 95%;
+        max-height: 85vh;
+        overflow-y: auto;
+        padding: 20px;
+        margin: 20px 10px;
+      }
+
+      .modal-content h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+
+      .booking-detail {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 12px 0;
+      }
+
+      .booking-detail label {
+        font-size: 13px;
+      }
+
+      .booking-detail value {
+        font-size: 14px;
+      }
+
+      .slip-image {
+        max-width: 100% !important;
+      }
+
+      .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .modal-actions button {
+        width: 100%;
+        padding: 14px;
+      }
+
+      /* Action Buttons */
+      .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .btn-view, .btn-approve, .btn-reject {
+        width: 100%;
+        padding: 10px;
+      }
+
+      /* No Data */
+      .no-data {
+        padding: 30px 15px;
+      }
+
+      .no-data-icon {
+        font-size: 48px;
+      }
+    }
+
+    /* Extra Small Mobile */
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .booking-card-info {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-value {
+        font-size: 28px;
       }
     }
   </style>
@@ -639,7 +882,8 @@
         return;
       }
 
-      let html = `
+      // Desktop Table Layout
+      let tableHtml = `
         <table class="bookings-table">
           <thead>
             <tr>
@@ -658,6 +902,9 @@
           <tbody>
       `;
 
+      // Mobile Card Layout
+      let mobileHtml = '<div class="mobile-bookings">';
+
       filteredBookings.forEach(booking => {
         const statusClass = `status-${booking.bookingStatus || 'pending'}`;
         const statusText = {
@@ -670,7 +917,8 @@
         const paymentClass = booking.paymentVerified ? 'payment-verified' : 'payment-pending';
         const paymentText = booking.paymentVerified ? '✅ ตรวจสอบแล้ว' : '⏳ รอตรวจสอบ';
 
-        html += `
+        // Desktop Table Row
+        tableHtml += `
           <tr>
             <td>${formatDateTime(booking.createdAt)}</td>
             <td>${booking.fullname}</td>
@@ -692,10 +940,68 @@
             </td>
           </tr>
         `;
+
+        // Mobile Card
+        mobileHtml += `
+          <div class="booking-card">
+            <div class="booking-card-header">
+              <div class="booking-card-name">${booking.fullname}</div>
+              <span class="status-badge ${statusClass}">${statusText}</span>
+            </div>
+            
+            <div class="booking-card-info">
+              <div class="booking-card-row">
+                <div class="booking-card-label">เบอร์โทร</div>
+                <div class="booking-card-value">${booking.phone}</div>
+              </div>
+              
+              <div class="booking-card-row">
+                <div class="booking-card-label">สนาม</div>
+                <div class="booking-card-value">${booking.field}</div>
+              </div>
+              
+              <div class="booking-card-row">
+                <div class="booking-card-label">วันที่เล่น</div>
+                <div class="booking-card-value">${formatDate(booking.date)}</div>
+              </div>
+              
+              <div class="booking-card-row">
+                <div class="booking-card-label">เวลา</div>
+                <div class="booking-card-value">${booking.time}</div>
+              </div>
+              
+              <div class="booking-card-row">
+                <div class="booking-card-label">ราคา</div>
+                <div class="booking-card-value">฿${booking.totalPrice?.toLocaleString()}</div>
+              </div>
+              
+              <div class="booking-card-row">
+                <div class="booking-card-label">การชำระเงิน</div>
+                <div class="booking-card-value ${paymentClass}">${paymentText}</div>
+              </div>
+              
+              <div class="booking-card-row booking-card-full">
+                <div class="booking-card-label">วันที่จอง</div>
+                <div class="booking-card-value" style="font-size: 13px;">${formatDateTime(booking.createdAt)}</div>
+              </div>
+            </div>
+            
+            <div class="booking-card-actions">
+              <button class="btn-view" onclick="viewBooking('${booking.id}')">ดูรายละเอียด</button>
+              ${(!booking.paymentVerified || booking.bookingStatus === 'pending' || booking.bookingStatus === 'pending_payment') ? `
+                <button class="btn-approve" onclick="approveBooking('${booking.id}')">อนุมัติ</button>
+                <button class="btn-reject" onclick="rejectBooking('${booking.id}')">ปฏิเสธ</button>
+              ` : ''}
+            </div>
+          </div>
+        `;
       });
 
-      html += '</tbody></table>';
-      container.innerHTML = html;
+      tableHtml += '</tbody></table>';
+      mobileHtml += '</div>';
+
+      // Render both layouts (CSS will handle which one to show)
+      container.innerHTML = tableHtml + mobileHtml;
     }
 
     // View Booking Details

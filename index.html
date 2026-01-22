@@ -253,14 +253,13 @@ textarea.error {
   animation: spin 0.6s linear infinite;
 }
       /* Navigation Bar */
-         .navbar {
-      background: #22c55e;
-      padding: 15px 0;
-      position: sticky;
-      top: 0;
-      z-index: 1002;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+  .navbar {
+    width: 100%;
+    padding: 15px 0;
+   position: sticky;
+    top: 0;
+    z-index: 1002;
+  }
     .nav-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -275,13 +274,13 @@ textarea.error {
       flex-wrap: wrap;
     }
     .nav-item {
-      color: white;
+      color:  #ffffff;
       font-weight: bold;
       font-size: 1em;
       padding: 10px 20px;
       border-radius: 8px;
       cursor: pointer;
-      background: none;
+      background: #000000;
       border: none;
       font-family: inherit;
       transition: background 0.2s ease;
@@ -293,19 +292,19 @@ textarea.error {
       /* Hover เฉพาะ Desktop */
       @media (hover: hover) and (pointer: fine) {
         .nav-item:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: #033f12;
         }
       .logout-btn:hover {
-          background: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.7) !important;
         }
         
      .login-btn:hover {
-          background: rgba(122, 120, 120, 0.7) !important;
+          background: rgba(255, 255, 255, 0.7) !important;
         }
       }
 
       .user-section {
-        color: white;
+        color: rgb(0, 0, 0);
         font-weight: bold;
         display: flex;
         align-items: center;
@@ -335,11 +334,12 @@ textarea.error {
       display: none;
       width: 44px;
       height: 44px;
-      background: rgba(255,255,255,0.15);
-      border: 2px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.0);
+      border: 2px solid rgba(255,255,255,0.0);
       border-radius: 10px;
       cursor: pointer;
       position: relative;
+      
     }
     .hamburger span {
       display: block;
@@ -574,7 +574,7 @@ textarea.error {
       }
 
       .content-card {
-        background: rgba(255, 255, 255, 0.97);
+        background: #22c55e;
         border-radius: 15px;
         padding: 20px 15px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -582,13 +582,13 @@ textarea.error {
       }
 
       .section-header {
-        background: #e5e7eb;
+        background: #033f12;
         padding: 12px 20px;
         border-radius: 10px;
         font-size: 1.3em;
         font-weight: bold;
         margin-bottom: 20px;
-        color: #1f2937;
+        color: #ffffff;
         text-align: center;
       }
 
@@ -1599,7 +1599,6 @@ textarea.error {
         </button>
       </div>
     </div>  
-    
     <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
   </form>
   <div class="auth-switch">
@@ -1796,7 +1795,7 @@ textarea.error {
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.519192244568!2d100.42645637479106!3d13.68697489879167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2bd50acd08fd7%3A0x9ec98b477706a73!2z4Liq4LiZ4Liy4Lih4Lif4Li44LiV4Lia4Lit4Lil4LmE4Lie4Lij4LiI4Li04LiV4Lij4Liq4Lib4Lit4Lij4LmM4LiV!5e0!3m2!1sth!2sth!4v1767945226405!5m2!1sth!2sth" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
 
-        <div style="text-align: center; margin-top: 20px; padding: 20px; background: #f0fdf4; border-radius: 10px;">
+        <div style="text-align: center; margin-top: 20px; padding: 20px; background: #d1e94b; border-radius: 10px;">
           <p style="color: #16a34a; font-weight: bold; font-size: 1.1em;">📌 จุดสังเกต: ก่อนสี่แยกบางบอน 1 และ บางแค</p>
           <p style="color: #020202; margin-top: 10px;">🚗 มีที่จอดรถกว้างขวาง สะดวกสบาย</p>
         </div>
@@ -1821,7 +1820,7 @@ textarea.error {
           <div class="rule-item">
             การรักษาความสะอาด กรุณาทิ้งขยะลงถังขยะ เก็บของใช้ส่วนตัวให้เรียบร้อยหลังการใช้งาน
           </div>
-          <div class="rule-item" style="background: #dcfce7; border-left: 5px solid #22c55e">
+          <div class="rule-item" style="background:#d1e94b; border-left: 5px solid #033f12;">
             ⚠️ ข้อสำคัญ: ผู้เช่าต้องรับผิดชอบความเสียหายที่เกิดขึ้นจากการกระทำของตนเอง ทางสนามไม่รับผิดชอบต่อความสูญหายหรือความเสียหายของทรัพย์สินส่วนบุคคล
           </div>
         </div>
@@ -2753,10 +2752,10 @@ function resetTimeSlots() {
 }
 
 function checkAvailability() {
-  // ยกเลิก request เก่า (ถ้ามี) โดยไม่ต้องใช้ .off()
-  if (currentAvailabilityCheck) {
-    currentAvailabilityCheck = null;
+  if (currentAvailabilityCheck && typeof currentAvailabilityCheck.off === 'function') {
+    currentAvailabilityCheck.off();
   }
+  currentAvailabilityCheck = null;
 
   const field = document.getElementById('fieldSelect').value;
   const date = document.getElementById('dateSelect').value;
@@ -2812,6 +2811,7 @@ function checkAvailability() {
 
 function updateTimeSlotAvailability(bookedTimes) {
   const timeSlots = document.querySelectorAll('.time-slot-btn');
+  const bookedTimesSet = new Set(bookedTimes); // ✅ O(1) lookup
   
   timeSlots.forEach(btn => {
     const time = btn.getAttribute('data-time');
@@ -2820,7 +2820,7 @@ function updateTimeSlotAvailability(bookedTimes) {
     const existingBadge = btn.querySelector('.status-badge');
     if (existingBadge) existingBadge.remove();
 
-    if (bookedTimes.includes(time)) {
+    if (bookedTimesSet.has(time)) { 
       btn.classList.add('booked');
       btn.disabled = true;
       const badge = document.createElement('span');
@@ -2858,16 +2858,16 @@ function handleLogin(e) {
     .then(userCredential => {
       return database.ref('users/' + userCredential.user.uid).once('value');
     })
-    .then(snapshot => {
+   .then(snapshot => {
       currentUser = { uid: auth.currentUser.uid, ...snapshot.val() };
       document.getElementById("currentUser").textContent = currentUser.fullname;
       document.getElementById("loginNavBtn").style.display = "none";
       document.getElementById("userInfo").style.display = "flex";
       closeLoginModal();
-      alert("✅ เข้าสู่ระบบสำเร็จ!");
+      showToast("✅ เข้าสู่ระบบสำเร็จ!", 'success');
     })
     .catch(error => {
-      alert("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+      showToast("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", 'error');
     });
 }
 
@@ -2886,27 +2886,27 @@ function handleRegister(e) {
         createdAt: new Date().toISOString()
       });
     })
-    .then(() => {
-      alert("✅ สมัครสมาชิกสำเร็จ!");
+ .then(() => {
+      showToast("✅ สมัครสมาชิกสำเร็จ!", 'success');
       e.target.reset();
       showLoginInModal();
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
-        alert("❌ ชื่อผู้ใช้นี้มีอยู่แล้ว");
+        showToast("❌ ชื่อผู้ใช้นี้มีอยู่แล้ว", 'error');
       } else {
-        alert("❌ เกิดข้อผิดพลาด: " + error.message);
+        showToast("❌ เกิดข้อผิดพลาด: " + error.message, 'error');
       }
     });
 }
 
 function handleLogout() {
-  if (confirm("ต้องการออกจากระบบ?")) {
+  if (confirm("ต้องการออกจากระบบใช่หรือไม่?")) {
     auth.signOut().then(() => {
       currentUser = null;
       document.getElementById("loginNavBtn").style.display = "inline-block";
       document.getElementById("userInfo").style.display = "none";
-      alert("✅ ออกจากระบบเรียบร้อย");
+      showToast("✅ ออกจากระบบเรียบร้อย", 'success');
     });
   }
 }
@@ -2916,14 +2916,19 @@ function handleLogout() {
 // BOOKING FUNCTIONS
 // ========================================
 function confirmBooking() {
+  if (!currentUser) {
+    showToast('กรุณา Login ก่อนจองสนาม', 'warning', 4000);
+    setTimeout(() => openLoginModal(), 500);
+    return;
+  }
+
   const field = document.getElementById("fieldSelect").value;
   const date = document.getElementById("dateSelect").value;
 
   if (!field || !date || !selectedTimeSlot) {
-    alert("❌ กรุณากรอกข้อมูลให้ครบถ้วน");
+    showToast("❌ กรุณากรอกข้อมูลให้ครบถ้วน", 'error');
     return;
   }
-
   const selectedDate = new Date(date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -3197,6 +3202,7 @@ function closePaymentModal() {
     uploadArea.removeEventListener('dragover', uploadArea._dragHandlers.handleDragOver);
     uploadArea.removeEventListener('dragleave', uploadArea._dragHandlers.handleDragLeave);
     uploadArea.removeEventListener('drop', uploadArea._dragHandlers.handleDrop);
+    delete uploadArea._dragHandlers;
   }
 
   const modal = document.getElementById('paymentModal');
@@ -3321,29 +3327,49 @@ function uploadSlipAndCreateBooking() {
 function updateBookingList() {
   debugLog('🔄 Updating booking list...');
   
-  const user = auth.currentUser;
-  if (!user) {
-    console.log('❌ No user logged in');
-    return;
-  }
-
   const bookingListDiv = document.getElementById('bookingList');
   if (!bookingListDiv) {
     console.log('❌ bookingList element not found');
     return;
   }
 
+  const user = auth.currentUser;
+  if (!user) {
+    // ✅ แสดงข้อความให้ผู้ใช้ login
+    bookingListDiv.innerHTML = `
+      <div style="text-align: center; padding: 40px;">
+        <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">
+          กรุณา Login เพื่อดูรายการจอง
+        </p>
+        <button onclick="openLoginModal()" 
+                style="background: #22c55e; color: white; padding: 12px 24px; 
+                       border: none; border-radius: 8px; font-weight: 600; 
+                       cursor: pointer; font-size: 1em;">
+          🔐 เข้าสู่ระบบ
+        </button>
+      </div>
+    `;
+    return;
+  }
   bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">⏳ กำลังโหลดข้อมูล...</p>';
-
   database.ref('bookings')
     .orderByChild('userId')
     .equalTo(user.uid)
     .once('value')
-    .then((snapshot) => {
+     .then((snapshot) => {
       debugLog('📊 Snapshot exists:', snapshot.exists());
       
       if (!snapshot.exists()) {
-        bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">ไม่มีรายการจอง</p>';
+        bookingListDiv.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <p style="color: #6b7280; font-size: 1.1em;">
+              ⚽ ยังไม่มีรายการจอง
+            </p>
+            <p style="color: #9ca3af; margin-top: 10px;">
+              เริ่มจองสนามได้เลย!
+            </p>
+          </div>
+        `;
         return;
       }
 
@@ -3373,11 +3399,26 @@ function updateBookingList() {
         return generateBookingCard(booking);
       }).join('');
     })
-    .catch((error) => {
+      .catch((error) => {
       console.error('❌ Error loading bookings:', error);
-      bookingListDiv.innerHTML = '<p style="text-align: center; color: red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
+      bookingListDiv.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: #ef4444;">
+          <p style="font-size: 1.1em; margin-bottom: 10px;">
+            ❌ เกิดข้อผิดพลาดในการโหลดข้อมูล
+          </p>
+          <p style="color: #6b7280; font-size: 0.9em;">
+            ${error.message}
+          </p>
+          <button onclick="updateBookingList()" 
+                  style="margin-top: 20px; background: #22c55e; color: white; 
+                         padding: 10px 20px; border: none; border-radius: 8px; 
+                         cursor: pointer;">
+            🔄 ลองใหม่
+          </button>
+        </div>
+      `;
     });
-}
+  }
 
 function generateBookingCard(booking) {
   // กำหนดสถานะและสี
