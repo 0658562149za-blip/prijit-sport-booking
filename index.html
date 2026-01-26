@@ -340,7 +340,7 @@ textarea.error {
       display: block;
       width: 24px;
       height: 2.5px;
-      background: white;
+      background: rgb(0, 0, 0);
       border-radius: 3px;
       position: absolute;
       left: 50%;
@@ -436,7 +436,7 @@ textarea.error {
     }
     .modal-overlay.active { display: flex; }
     .auth-modal {
-      background: white;
+      background: rgb(255, 255, 255);
       border-radius: 20px;
       padding: 50px;
       max-width: 450px;
@@ -460,14 +460,14 @@ textarea.error {
       font-size: 2.5em;
       text-align: center;
       margin-bottom: 30px;
-      color: #ffffff;
+      color: #000000;
     }
     .form-group { margin-bottom: 25px; }
     .form-label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
-      color: #ffffff;
+      color: #000000;
       font-size: 1.1em;
     }
     .form-input {
@@ -1588,6 +1588,155 @@ textarea.error {
           height: 90px;
         }
       }
+
+/* ========================================
+   STAFF GALLERY & ACTIVITIES STYLES
+   ======================================== */
+.staff-content-section {
+  background: none;
+  padding: 40px 20px;
+  margin: 40px auto;
+  max-width: 1200px;
+  border-radius: 20px;
+}
+
+.staff-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.staff-gallery-card {
+  background: none;
+  border-radius: 15px;
+  overflow: hidden;
+ 
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.staff-gallery-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.staff-gallery-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.staff-gallery-card-title {
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+  background: #f9fafb;
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.activity-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border-left: 5px solid #16a34a;
+}
+
+.activity-card:hover {
+  transform: translateX(10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.activity-title {
+  font-size: 1.5em;
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.activity-date {
+  color: #666;
+  font-size: 0.9em;
+  background: #f3f4f6;
+  padding: 6px 15px;
+  border-radius: 20px;
+}
+
+.activity-content {
+  color: #333;
+  font-size: 1.1em;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.content-loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 1.2em;
+}
+
+.staff-gallery-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
+}
+
+.staff-gallery-modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.staff-gallery-modal img {
+  max-width: 90%;
+  max-height: 90vh;
+  border-radius: 10px;
+}
+
+.staff-gallery-close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 50px;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .staff-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  .staff-gallery-card img {
+    height: 150px;
+  }
+  .activity-title {
+    font-size: 1.2em;
+  }
+}
+    </style>
     </style>
   </head>
   <body>
@@ -1958,6 +2107,35 @@ textarea.error {
     </section>
 
     <!-- Contact Section -->
+
+    <!-- Staff Gallery Section -->
+    <section id="staffGallerySection" class="staff-content-section">
+      <h2 class="section-title">📸 ภาพกิจกรรม</h2>
+      <div class="content-card">
+        <div class="section-header">รูปภาพจากพนักงาน PRIJIT SPORT</div>
+        <div id="staffGalleryContainer" class="staff-gallery-grid">
+          <div class="content-loading-state">🔄 กำลังโหลดรูปภาพ...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Activities Section -->
+    <section id="activitiesSection" class="staff-content-section">
+      <h2 class="section-title">📢 ข่าวสาร/กิจกรรม</h2>
+      <div class="content-card">
+        <div class="section-header">ประกาศและข่าวสารจาก PRIJIT SPORT</div>
+        <div id="activitiesContainer" class="activities-list">
+          <div class="content-loading-state">🔄 กำลังโหลดข่าวสาร...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Modal -->
+    <div id="staffGalleryModal" class="staff-gallery-modal" onclick="closeStaffModal()">
+      <span class="staff-gallery-close" onclick="closeStaffModal()">&times;</span>
+      <img id="staffGalleryModalImg" src="" alt="">
+    </div>
+
     <section id="contactSection">
       <h2 class="section-title">ติดต่อสอบถาม</h2>
       <div class="content-card">
@@ -3586,7 +3764,7 @@ function cancelBooking(bookingId) {
         throw new Error('กรุณา Login ก่อนยกเลิกการจอง');
       }
         
-      if (booking.userId !== currentUser.uid) {
+      if (booking.user !== currentUser.user) {
         throw new Error('คุณไม่มีสิทธิ์ยกเลิกการจองนี้');
       }
 
@@ -3883,6 +4061,138 @@ function initializeFirebase() {
         document.getElementById("userInfo").style.display = "none";
       }
     });
+    
+    // ========================================
+    // STAFF GALLERY FUNCTIONS
+    // ========================================
+    function loadStaffGallery() {
+      const container = document.getElementById('staffGalleryContainer');
+      if (!container) return;
+      
+      database.ref('gallery').orderByChild('order').on('value', (snapshot) => {
+        container.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+          container.innerHTML = '<div class="content-loading-state">📷 ยังไม่มีรูปภาพ</div>';
+          return;
+        }
+
+        const items = [];
+        snapshot.forEach((child) => {
+          items.push({ id: child.key, ...child.val() });
+        });
+
+        items.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        items.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'staff-gallery-card';
+          card.onclick = () => openStaffModal(item.url);
+          card.innerHTML = `
+            <img src="${item.url}" alt="${item.title}" loading="lazy">
+            <div class="staff-gallery-card-title">${item.title}</div>
+          `;
+          container.appendChild(card);
+        });
+      });
+    }
+
+    function openStaffModal(url) {
+      document.getElementById('staffGalleryModalImg').src = url;
+      document.getElementById('staffGalleryModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeStaffModal() {
+      const modal = document.getElementById('staffGalleryModal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none'; // เพิ่มการบังคับปิดด้วย style
+        document.body.style.overflow = '';
+        console.log('✅ Modal ปิดแล้ว');
+      } else {
+        console.error('❌ ไม่พบ Modal');
+      }
+    }
+
+
+    // เพิ่มการปิด Modal ด้วย ESC key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const modal = document.getElementById('staffGalleryModal');
+        if (modal && modal.classList.contains('show')) {
+          closeStaffModal();
+        }
+      }
+    });
+
+    // ป้องกันการคลิกข้างในรูปภาพแล้ว Modal ปิด
+    const modalContent = document.querySelector('.staff-gallery-modal img');
+    if (modalContent) {
+      modalContent.addEventListener('click', function(event) {
+        event.stopPropagation();
+      });
+    }
+
+    // ========================================
+    // ACTIVITIES FUNCTIONS
+    // ========================================
+    function loadActivities() {
+      const container = document.getElementById('activitiesContainer');
+      if (!container) return;
+      
+      database.ref('activities').orderByChild('createdAt').on('value', (snapshot) => {
+        container.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+          container.innerHTML = '<div class="content-loading-state">📝 ยังไม่มีข่าวสาร</div>';
+          return;
+        }
+
+        const items = [];
+        snapshot.forEach((child) => {
+          items.push({ id: child.key, ...child.val() });
+        });
+
+        items.reverse();
+
+        items.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'activity-card';
+          card.innerHTML = `
+            <div class="activity-header">
+              <div class="activity-title">${escapeHtml(item.title)}</div>
+              <div class="activity-date">${formatDate(item.createdAt)}</div>
+            </div>
+            <div class="activity-content">${escapeHtml(item.content)}</div>
+          `;
+          container.appendChild(card);
+        });
+      });
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso);
+      return d.toLocaleDateString('th-TH', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Initialize
+    loadStaffGallery();
+    loadActivities();
+
     
   } catch (error) {
     console.error("❌ Firebase initialization failed:", error);

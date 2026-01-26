@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สร้างบัญชีพนักงาน - PRIJIT SPORT</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .warning {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .result.success {
+      background: #d1fae5;
+      color: #065f46;
+      border-left: 4px solid #10b981;
+      display: block;
+    }
+
+    .result.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border-left: 4px solid #ef4444;
+      display: block;
+    }
+
+    .info {
+      background: #f3f4f6;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .info-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #666;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>👤 สร้างบัญชีพนักงาน</h1>
+    <p style="color: #666; margin-bottom: 20px;">PRIJIT SPORT Admin Tool</p>
+
+    <div class="warning">
+      <strong>⚠️ คำเตือน:</strong> หน้านี้สำหรับ Admin เท่านั้น! ห้ามแชร์ลิงก์นี้กับบุคคลภายนอก
+    </div>
+
+    <form id="createStaffForm" onsubmit="handleCreateStaff(event)">
+      <div class="form-group">
+        <label>ชื่อผู้ใช้ (Username) *</label>
+        <input 
+          type="text" 
+          id="staffUsername" 
+          placeholder="เช่น: staff1"
+          required
+          pattern="[a-zA-Z0-9_-]{3,20}"
+          title="ใช้ได้เฉพาะตัวอักษร ตัวเลข - _ และต้องมี 3-20 ตัวอักษร"
+        >
+        <small style="color: #666;">ใช้ได้เฉพาะตัวอักษร ตัวเลข - _</small>
+      </div>
+
+      <div class="form-group">
+        <label>ชื่อ-นามสกุล *</label>
+        <input 
+          type="text" 
+          id="staffFullname" 
+          placeholder="เช่น: สมชาย ใจดี"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>เบอร์โทรศัพท์ *</label>
+        <input 
+          type="tel" 
+          id="staffPhone" 
+          placeholder="เช่น: 0812345678"
+          required
+          pattern="[0-9]{10}"
+          title="กรอกเบอร์โทร 10 หลัก"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>รหัสผ่าน *</label>
+        <input 
+          type="password" 
+          id="staffPassword" 
+          placeholder="อย่างน้อย 6 ตัวอักษร"
+          required
+          minlength="6"
+        >
+        <small style="color: #666;">ควรใช้รหัสที่ปลอดภัย (ตัวอักษร + ตัวเลข + สัญลักษณ์)</small>
+      </div>
+
+      <button type="submit" class="btn" id="createBtn">
+        สร้างบัญชีพนักงาน
+      </button>
+    </form>
+
+    <div class="result" id="resultMessage"></div>
+
+    <div class="info" id="staffInfo" style="display: none;">
+      <div class="info-title">ℹ️ ข้อมูลบัญชีที่สร้าง</div>
+      <div class="info-item">
+        <span class="info-label">Username:</span>
+        <span class="info-value" id="infoUsername">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Email:</span>
+        <span class="info-value" id="infoEmail">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">ชื่อ-นามสกุล:</span>
+        <span class="info-value" id="infoFullname">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">เบอร์โทร:</span>
+        <span class="info-value" id="infoPhone">-</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
+      authDomain: "prijit-sport.firebaseapp.com",
+      databaseURL: "https://prijit-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "prijit-sport",
+      storageBucket: "prijit-sport.firebasestorage.app",
+      messagingSenderId: "19782245186",
+      appId: "1:19782245186:web:8ff3e2e17a214edc3546db"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // Show Result Message
+    function showResult(message, type) {
+      const resultDiv = document.getElementById('resultMessage');
+      resultDiv.textContent = message;
+      resultDiv.className = `result ${type}`;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          document.getElementById('createStaffForm').reset();
+        }, 3000);
+      }
+    }
+
+    // Handle Create Staff Account
+    async function handleCreateStaff(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('staffUsername').value.trim();
+      const fullname = document.getElementById('staffFullname').value.trim();
+      const phone = document.getElementById('staffPhone').value.trim();
+      const password = document.getElementById('staffPassword').value;
+
+      // Validation
+      if (!username || !fullname || !phone || !password) {
+        showResult('❌ กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+        return;
+      }
+
+      if (!/^[a-zA-Z0-9_-]{3,20}$/.test(username)) {
+        showResult('❌ Username ไม่ถูกต้อง (ใช้ได้เฉพาะ a-z, 0-9, -, _)', 'error');
+        return;
+      }
+
+      if (!/^[0-9]{10}$/.test(phone)) {
+        showResult('❌ เบอร์โทรไม่ถูกต้อง (ต้องเป็นตัวเลข 10 หลัก)', 'error');
+        return;
+      }
+
+      if (password.length < 6) {
+        showResult('❌ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', 'error');
+        return;
+      }
+
+      // Disable button
+      const createBtn = document.getElementById('createBtn');
+      createBtn.disabled = true;
+      createBtn.textContent = 'กำลังสร้างบัญชี...';
+
+      try {
+        // สร้าง Auth Account
+        const email = username + '@staff.prijitsport.com';
+        console.log('Creating account with email:', email);
+
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        console.log('✅ Auth account created:', userCredential.user.uid);
+
+        // บันทึกข้อมูลใน Database
+        await database.ref('users/' + userCredential.user.uid).set({
+          username: username,
+          fullname: fullname,
+          phone: phone,
+          role: 'staff', // สำคัญมาก!
+          createdAt: new Date().toISOString(),
+          createdBy: 'admin'
+        });
+        console.log('✅ Database entry created');
+
+        // แสดงผลสำเร็จ
+        showResult('✅ สร้างบัญชีพนักงานเรียบร้อยแล้ว!', 'success');
+
+        // แสดงข้อมูล
+        document.getElementById('infoUsername').textContent = username;
+        document.getElementById('infoEmail').textContent = email;
+        document.getElementById('infoFullname').textContent = fullname;
+        document.getElementById('infoPhone').textContent = phone;
+        document.getElementById('staffInfo').style.display = 'block';
+
+        // Sign out จาก staff account
+        await auth.signOut();
+        console.log('✅ Signed out from staff account');
+
+      } catch (error) {
+        console.error('❌ Error creating staff:', error);
+
+        let errorMessage = 'เกิดข้อผิดพลาด: ' + error.message;
+
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = '❌ Username นี้ถูกใช้งานแล้ว';
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = '❌ รหัสผ่านไม่ปลอดภัยพอ';
+        } else if (error.code === 'auth/network-request-failed') {
+          errorMessage = '🌐 ไม่สามารถเชื่อมต่ออินเทอร์เน็ตได้';
+        }
+
+        showResult(errorMessage, 'error');
+      } finally {
+        // Enable button
+        createBtn.disabled = false;
+        createBtn.textContent = 'สร้างบัญชีพนักงาน';
+      }
+    }
+  </script>
+</body>
+</html>

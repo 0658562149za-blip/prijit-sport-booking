@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PRIJIT SPORT - ระบบพนักงาน</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>⚽</text></svg>">
   <style>
     * {
       margin: 0;
@@ -33,6 +34,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .staff-header h1 {
@@ -65,6 +68,47 @@
     .logout-btn:hover {
       background: #dc2626;
       transform: translateY(-2px);
+    }
+
+    /* Tab Navigation */
+    .tab-navigation {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 24px;
+      border: none;
+      background: #f3f4f6;
+      color: #374151;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .tab-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
 
     /* Stats Cards */
@@ -150,7 +194,7 @@
       border-color: #667eea;
     }
 
-    /* Bookings Table */
+    /* Bookings Section */
     .bookings-section {
       background: white;
       padding: 20px;
@@ -163,6 +207,7 @@
       color: #333;
     }
 
+    /* Desktop Table */
     .bookings-table {
       width: 100%;
       border-collapse: collapse;
@@ -187,6 +232,72 @@
 
     .bookings-table tbody tr:hover {
       background: #f9fafb;
+    }
+
+    /* Mobile Cards */
+    .mobile-bookings {
+      display: none;
+    }
+
+    .booking-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .booking-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .booking-card-id {
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .booking-card-body {
+      margin-bottom: 10px;
+    }
+
+    .booking-card-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .booking-card-row:last-child {
+      border-bottom: none;
+    }
+
+    .booking-card-label {
+      color: #666;
+      font-weight: 600;
+    }
+
+    .booking-card-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .bookings-table {
+        display: none;
+      }
+      .mobile-bookings {
+        display: block;
+      }
+      .staff-header {
+        text-align: center;
+      }
+      .staff-header h1 {
+        font-size: 22px;
+      }
     }
 
     /* Status Badge */
@@ -228,6 +339,7 @@
     .action-buttons {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn-view {
@@ -304,12 +416,13 @@
 
     .modal-header h2 {
       color: #333;
+      font-size: 24px;
     }
 
     .close-modal {
       background: none;
       border: none;
-      font-size: 30px;
+      font-size: 32px;
       cursor: pointer;
       color: #999;
       transition: color 0.3s;
@@ -320,438 +433,450 @@
     }
 
     .booking-detail {
-      margin-bottom: 15px;
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 15px;
+      padding: 15px;
+      border-bottom: 1px solid #f3f4f6;
     }
 
     .booking-detail label {
       font-weight: 600;
       color: #666;
-      display: block;
-      margin-bottom: 5px;
     }
 
     .booking-detail value {
       color: #333;
-      font-size: 16px;
     }
 
     .slip-image {
-      width: 100%;
-      max-width: 400px;
+      max-width: 100%;
       border-radius: 10px;
-      margin-top: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .modal-actions {
       display: flex;
-      gap: 15px;
-      margin-top: 25px;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
     }
 
     .modal-actions button {
       flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
+      padding: 12px 20px;
       font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
+      min-width: 150px;
     }
 
-    /* Loading */
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #666;
+    /* Loading Overlay */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-overlay.active {
+      display: flex;
     }
 
     .spinner {
-      border: 4px solid #f3f4f6;
-      border-top: 4px solid #667eea;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
       animation: spin 1s linear infinite;
-      margin: 0 auto 15px;
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
     }
 
-    /* No Data */
-    .no-data {
+    /* Image Management Section */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .image-card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .image-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .image-preview {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .image-info {
       text-align: center;
-      padding: 60px 20px;
-      color: #999;
     }
 
-    .no-data-icon {
-      font-size: 64px;
+    .image-name {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .image-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .btn-upload {
+      background: #667eea;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-upload:hover {
+      background: #5568d3;
+    }
+
+    .btn-delete {
+      background: #ef4444;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+    }
+
+    /* Activity Management */
+    .activity-list {
+      margin-top: 20px;
+    }
+
+    .activity-item {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 20px;
       margin-bottom: 15px;
     }
 
-    /* ========================================
-       MOBILE CARD LAYOUT STYLES
-       ======================================== */
-    .mobile-bookings {
-      display: none; /* Hidden by default, shown on mobile */
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .booking-card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: box-shadow 0.3s;
-    }
-
-    .booking-card:active {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .booking-card-header {
+    .activity-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #e5e7eb;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
-    .booking-card-name {
-      font-weight: bold;
-      font-size: 16px;
-      color: #111827;
-      flex: 1;
+    .activity-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
     }
 
-    .booking-card-info {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .booking-card-row {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .booking-card-label {
-      font-size: 12px;
-      color: #6b7280;
-      font-weight: 500;
-    }
-
-    .booking-card-value {
+    .activity-date {
       font-size: 14px;
-      color: #111827;
+      color: #666;
+    }
+
+    .activity-content {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .activity-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-edit {
+      background: #3b82f6;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-edit:hover {
+      background: #2563eb;
+    }
+
+    .btn-add {
+      background: #10b981;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+
+    .btn-add:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #374151;
       font-weight: 600;
     }
 
-    .booking-card-full {
-      grid-column: 1 / -1;
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
     }
 
-    .booking-card-actions {
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-actions {
       display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #e5e7eb;
+      gap: 10px;
+      justify-content: flex-end;
     }
 
-    .booking-card-actions button {
-      flex: 1;
-      padding: 10px 8px;
-      font-size: 13px;
-      white-space: nowrap;
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
     }
 
-    /* ========================================
-       RESPONSIVE DESIGN
-       ======================================== */
-    
-    /* Tablet */
-    @media (max-width: 1024px) {
-      .container {
-        padding: 15px;
-      }
-
-      .bookings-table {
-        font-size: 13px;
-      }
-
-      .bookings-table th,
-      .bookings-table td {
-        padding: 12px 8px;
-      }
+    .btn-primary:hover {
+      background: #5568d3;
     }
 
-    /* Mobile */
-    @media (max-width: 768px) {
-      .container {
-        padding: 10px;
-      }
-
-      /* Header */
-      .staff-header {
-        flex-direction: column;
-        gap: 12px;
-        padding: 15px;
-      }
-
-      .staff-header h1 {
-        font-size: 20px;
-        text-align: center;
-      }
-
-      .staff-info {
-        width: 100%;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .staff-name {
-        font-size: 14px;
-        text-align: center;
-      }
-
-      .logout-btn {
-        width: 100%;
-        padding: 12px;
-      }
-
-      /* Stats */
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .stat-card {
-        padding: 15px;
-      }
-
-      .stat-card h3 {
-        font-size: 12px;
-      }
-
-      .stat-value {
-        font-size: 24px;
-      }
-
-      /* Filter */
-      .filter-section {
-        padding: 15px;
-      }
-
-      .filter-section h2 {
-        font-size: 18px;
-      }
-
-      .filter-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .filter-group select,
-      .filter-group input {
-        font-size: 16px; /* Prevent zoom on iOS */
-      }
-
-      /* Bookings Section */
-      .bookings-section {
-        padding: 15px;
-      }
-
-      .bookings-section h2 {
-        font-size: 18px;
-      }
-
-      /* Hide desktop table on mobile */
-      .bookings-table {
-        display: none;
-      }
-
-      /* Show mobile cards */
-      .mobile-bookings {
-        display: flex;
-      }
-
-      /* Modal */
-      .modal-content {
-        width: 95%;
-        max-width: 95%;
-        max-height: 85vh;
-        overflow-y: auto;
-        padding: 20px;
-        margin: 20px 10px;
-      }
-
-      .modal-content h2 {
-        font-size: 18px;
-        margin-bottom: 15px;
-      }
-
-      .booking-detail {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-        padding: 12px 0;
-      }
-
-      .booking-detail label {
-        font-size: 13px;
-      }
-
-      .booking-detail value {
-        font-size: 14px;
-      }
-
-      .slip-image {
-        max-width: 100% !important;
-      }
-
-      .modal-actions {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .modal-actions button {
-        width: 100%;
-        padding: 14px;
-      }
-
-      /* Action Buttons */
-      .action-buttons {
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .btn-view, .btn-approve, .btn-reject {
-        width: 100%;
-        padding: 10px;
-      }
-
-      /* No Data */
-      .no-data {
-        padding: 30px 15px;
-      }
-
-      .no-data-icon {
-        font-size: 48px;
-      }
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
     }
 
-    /* Extra Small Mobile */
-    @media (max-width: 480px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
 
-      .booking-card-info {
-        grid-template-columns: 1fr;
-      }
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.3s ease;
+    }
 
-      .stat-value {
-        font-size: 28px;
+    .toast.show {
+      display: flex;
+    }
+
+    .toast.success {
+      border-left: 4px solid #10b981;
+    }
+
+    .toast.error {
+      border-left: 4px solid #ef4444;
+    }
+
+    .toast.warning {
+      border-left: 4px solid #f59e0b;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span id="toastMessage"></span>
+  </div>
+
   <div class="container">
     <!-- Header -->
     <div class="staff-header">
-      <div>
-        <h1>🏟️ PRIJIT SPORT - ระบบพนักงาน</h1>
-        <p style="color: #666; margin-top: 5px;">จัดการการจองและตรวจสอบการชำระเงิน</p>
-      </div>
+      <h1>🏟️ PRIJIT SPORT - ระบบจัดการพนักงาน</h1>
       <div class="staff-info">
-        <div>
-          <div style="font-size: 12px; color: #999;">พนักงาน</div>
-          <div class="staff-name" id="staffName">Admin User</div>
-        </div>
+        <span class="staff-name" id="staffName"></span>
         <button class="logout-btn" onclick="handleStaffLogout()">ออกจากระบบ</button>
       </div>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <h3>รอตรวจสอบ</h3>
-        <div class="stat-value stat-pending" id="statPending">0</div>
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" onclick="switchTab('bookings')">📋 จัดการการจอง</button>
+      <button class="tab-btn" onclick="switchTab('images')">🖼️ จัดการรูปภาพ</button>
+      <button class="tab-btn" onclick="switchTab('activities')">📢 จัดการกิจกรรม</button>
+    </div>  
+
+    <!-- Bookings Tab -->
+    <div class="tab-content active" id="bookingsTab">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>รอตรวจสอบ</h3>
+          <div class="stat-value stat-pending" id="statPending">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>อนุมัติแล้ว</h3>
+          <div class="stat-value stat-approved" id="statApproved">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>ปฏิเสธ</h3>
+          <div class="stat-value stat-rejected" id="statRejected">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>ทั้งหมด</h3>
+          <div class="stat-value stat-total" id="statTotal">0</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <h3>อนุมัติแล้ว</h3>
-        <div class="stat-value stat-approved" id="statApproved">0</div>
+
+      <!-- Filters -->
+      <div class="filter-section">
+        <h2>🔍 กรองข้อมูล</h2>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label>สถานะการจอง:</label>
+            <select id="filterStatus" onchange="applyFilters()">
+              <option value="all">ทั้งหมด</option>
+              <option value="pending">รอตรวจสอบ</option>
+              <option value="approved">อนุมัติแล้ว</option>
+              <option value="rejected">ปฏิเสธ</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>สนาม:</label>
+            <select id="filterField" onchange="applyFilters()">
+              <option value="all">ทุกสนาม</option>
+              <option value="F1">F1</option>
+              <option value="F2">F2</option>
+              <option value="F3">F3</option>
+              <option value="F4">F4</option>
+              <option value="F5">F5</option>
+              <option value="F6">F6</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>วันที่:</label>
+            <input type="date" id="filterDate" onchange="applyFilters()">
+          </div>
+        </div>
       </div>
-      <div class="stat-card">
-        <h3>ปฏิเสธ</h3>
-        <div class="stat-value stat-rejected" id="statRejected">0</div>
-      </div>
-      <div class="stat-card">
-        <h3>ทั้งหมด</h3>
-        <div class="stat-value stat-total" id="statTotal">0</div>
+
+      <!-- Bookings List -->
+      <div class="bookings-section">
+        <h2>📋 รายการจอง</h2>
+        <div id="bookingsContainer">
+          <p style="text-align: center; color: #666;">กำลังโหลดข้อมูล...</p>
+        </div>
       </div>
     </div>
-
-    <!-- Filters -->
-    <div class="filter-section">
-      <h2>🔍 กรองข้อมูล</h2>
-      <div class="filter-grid">
-        <div class="filter-group">
-          <label>สถานะการจอง</label>
-          <select id="filterStatus" onchange="filterBookings()">
-            <option value="all">ทั้งหมด</option>
-            <option value="pending">รอตรวจสอบ</option>
-            <option value="approved">อนุมัติแล้ว</option>
-            <option value="rejected">ปฏิเสธ</option>
-          </select>
+    <!-- Images Tab -->
+    <div class="tab-content" id="imagesTab">
+      <div class="bookings-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>🖼️ จัดการรูปภาพแกลเลอรี่</h2>
+          <button class="btn-add" onclick="openAddImageModal()">
+            ➕ เพิ่มรูปภาพ
+          </button>
         </div>
-        <div class="filter-group">
-          <label>สนาม</label>
-          <select id="filterField" onchange="filterBookings()">
-            <option value="all">ทั้งหมด</option>
-            <option value="สนาม 1">สนาม 1</option>
-            <option value="สนาม 2">สนาม 2</option>
-            <option value="สนาม 3">สนาม 3</option>
-            <option value="สนาม 4">สนาม 4</option>
-            <option value="สนาม 5">สนาม 5</option>
-            <option value="สนาม 6">สนาม 6</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label>วันที่</label>
-          <input type="date" id="filterDate" onchange="filterBookings()">
-        </div>
-        <div class="filter-group">
-          <label>ค้นหา</label>
-          <input type="text" id="filterSearch" placeholder="ชื่อผู้จอง, เบอร์โทร..." oninput="filterBookings()">
+        <div class="image-grid" id="imageGrid">
+          <!-- รูปภาพจะถูกโหลดที่นี่ -->
         </div>
       </div>
     </div>
-
-    <!-- Bookings Table -->
-    <div class="bookings-section">
-      <h2>📋 รายการจองทั้งหมด</h2>
-      <div id="bookingsContainer">
-        <div class="loading">
-          <div class="spinner"></div>
-          <div>กำลังโหลดข้อมูล...</div>
+    <div class="tab-content" id="activitiesTab">
+      <div class="bookings-section">
+        <h2>📢 จัดการกิจกรรม/ประกาศ</h2>
+        <button class="btn-add" onclick="openAddActivityModal()">➕ เพิ่มกิจกรรมใหม่</button>
+        <div class="activity-list" id="activityList">
+          <!-- กิจกรรมจะถูกโหลดที่นี่ -->
         </div>
       </div>
     </div>
-  </div>
-
   <!-- Booking Detail Modal -->
   <div class="modal" id="bookingModal">
     <div class="modal-content">
@@ -760,18 +885,70 @@
         <button class="close-modal" onclick="closeBookingModal()">×</button>
       </div>
       <div id="bookingDetailContent">
-        <!-- Content will be loaded dynamically -->
+        <!-- จะถูกเติมด้วย JavaScript -->
       </div>
     </div>
   </div>
 
+  <!-- Activity Modal -->
+  <div class="modal" id="activityModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="activityModalTitle">เพิ่มกิจกรรม</h2>
+        <button class="close-modal" onclick="closeActivityModal()">×</button>
+      </div>
+      <form id="activityForm" onsubmit="saveActivity(event)">
+        <div class="form-group">
+          <label>หัวข้อ:</label>
+          <input type="text" id="activityTitle" required>
+        </div>
+        <div class="form-group">
+          <label>รายละเอียด:</label>
+          <textarea id="activityContent" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeActivityModal()">ยกเลิก</button>
+          <button type="submit" class="btn-primary">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Image Upload Modal -->
+  <div class="modal" id="imageModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="imageModalTitle">เพิ่มรูปภาพใหม่</h2>
+        <button class="close-modal" onclick="closeImageModal()">×</button>
+      </div>
+      <form id="imageForm" onsubmit="saveImage(event)">
+        <div class="form-group">
+          <label>ชื่อรูปภาพ:</label>
+          <input type="text" id="imageTitle" placeholder="กรอกชื่อรูปภาพ" required>
+        </div>
+        <div class="form-group">
+          <label>ลำดับการแสดง:</label>
+          <input type="number" id="imageOrder" value="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>เลือกรูปภาพ:</label>
+          <input type="file" id="imageFile" accept="image/*" onchange="previewImage(event)">
+          <img id="imagePreview" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px; display: none; border: 2px solid #e5e7eb;" alt="Preview">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeImageModal()">ยกเลิก</button>
+          <button type="submit" class="btn-primary">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
   <script>
-    // Firebase Configuration (ใช้อันเดียวกับระบบหลัก)
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyB6jVc8qcyS9zIJvfi-E1BL7BaxrUorO7w",
       authDomain: "prijit-sport.firebaseapp.com",
@@ -785,59 +962,103 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const database = firebase.database();
-
+    
+    
+    const IMGBB_API_KEY = '945c86ce6da8961a5b136c8472251f41'; 
     let allBookings = [];
     let filteredBookings = [];
     let currentBooking = null;
+    let currentActivityId = null;
+    let currentImageName = null;
+    let currentImageId = null;
 
-    // Check Staff Authentication
+    // =========================
+    // AUTHENTICATION CHECK
+    // =========================
     auth.onAuthStateChanged((user) => {
       if (user) {
-        // ตรวจสอบว่าเป็น staff หรือไม่
-        database.ref('users/' + user.uid).once('value').then(snapshot => {
-          const userData = snapshot.val();
-          if (userData && userData.role === 'staff') {
-            document.getElementById('staffName').textContent = userData.fullname || 'Staff';
-            loadAllBookings();
-          } else {
-            alert('⛔ คุณไม่มีสิทธิ์เข้าถึงระบบพนักงาน');
-            window.location.href = 'index.html';
-          }
-        });
+        console.log('👤 User logged in:', user.uid);
+        // ตรวจสอบว่าเป็น staff หรือไม่จาก users/ node
+        database.ref('users/' + user.uid).once('value')
+          .then((snapshot) => {
+            const userData = snapshot.val();
+            console.log('📊 User data:', userData);
+            
+            if (userData && userData.role === 'staff') {
+              console.log('✅ Staff access granted');
+              const displayName = userData.fullname || userData.username || user.email;
+              document.getElementById('staffName').textContent = displayName;
+              loadBookings();
+              loadImages();
+              loadActivities();
+            } else {
+              console.error('❌ Not a staff member');
+              alert('⚠️ คุณไม่มีสิทธิ์เข้าถึงระบบพนักงาน');
+              auth.signOut();
+              window.location.href = 'staff-login.html';
+            }
+          })
+          .catch((error) => {
+            console.error('❌ Error checking user role:', error);
+            alert('⚠️ เกิดข้อผิดพลาดในการตรวจสอบสิทธิ์');
+            auth.signOut();
+            window.location.href = 'staff-login.html';
+          });
       } else {
+        console.log('❌ No user logged in');
         window.location.href = 'staff-login.html';
       }
     });
 
-    // Load All Bookings
-    function loadAllBookings() {
+    // =========================  
+    // TAB SWITCHING
+    // =========================
+   function switchTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Show selected tab
+  event.target.classList.add('active');
+  
+  if (tabName === 'bookings') {
+    document.getElementById('bookingsTab').classList.add('active');
+  } else if (tabName === 'images') {
+    document.getElementById('imagesTab').classList.add('active');
+    loadImages();
+  } else if (tabName === 'activities') {
+    document.getElementById('activitiesTab').classList.add('active');
+    loadActivities();
+  }
+}
+    // =========================
+    // BOOKINGS MANAGEMENT
+    // =========================
+    function loadBookings() {
+      showLoading();
       database.ref('bookings').on('value', (snapshot) => {
         allBookings = [];
-        
-        snapshot.forEach((child) => {
-          const booking = child.val();
-          booking.id = child.key;
-          allBookings.push(booking);
+        snapshot.forEach((childSnapshot) => {
+          allBookings.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          });
         });
-
-        // เรียงตามวันที่ล่าสุด
+    
         allBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        
         updateStats();
-        filteredBookings = [...allBookings];
-        renderBookings();
+        applyFilters();
+        checkAndDeleteExpiredBookings();
+        hideLoading();
       });
     }
-
-    // Update Statistics
+  
     function updateStats() {
-      // นับการจองที่รอตรวจสอบ (ยังไม่ได้ตรวจสอบการชำระเงิน)
-      const pending = allBookings.filter(b => 
-        !b.paymentVerified || 
-        b.bookingStatus === 'pending' || 
-        b.bookingStatus === 'pending_payment'
-      ).length;
-      
+      const pending = allBookings.filter(b => b.bookingStatus === 'pending' || b.bookingStatus === 'pending_payment').length;
       const approved = allBookings.filter(b => b.bookingStatus === 'approved').length;
       const rejected = allBookings.filter(b => b.bookingStatus === 'rejected').length;
       
@@ -847,80 +1068,72 @@
       document.getElementById('statTotal').textContent = allBookings.length;
     }
 
-    // Filter Bookings
-    function filterBookings() {
-      const status = document.getElementById('filterStatus').value;
-      const field = document.getElementById('filterField').value;
-      const date = document.getElementById('filterDate').value;
-      const search = document.getElementById('filterSearch').value.toLowerCase();
+    function applyFilters() {
+      const statusFilter = document.getElementById('filterStatus').value;
+      const fieldFilter = document.getElementById('filterField').value;
+      const dateFilter = document.getElementById('filterDate').value;
 
       filteredBookings = allBookings.filter(booking => {
-        const matchStatus = status === 'all' || booking.bookingStatus === status;
-        const matchField = field === 'all' || booking.field === field;
-        const matchDate = !date || booking.date === date;
-        const matchSearch = !search || 
-          booking.fullname.toLowerCase().includes(search) ||
-          booking.phone.includes(search);
-
-        return matchStatus && matchField && matchDate && matchSearch;
+        let match = true;
+        
+        if (statusFilter !== 'all') {
+          match = match && booking.bookingStatus === statusFilter;
+        }
+        
+        if (fieldFilter !== 'all') {
+          match = match && booking.field === fieldFilter;
+        }
+        
+        if (dateFilter) {
+          match = match && booking.date === dateFilter;
+        }
+        
+        return match;
       });
 
       renderBookings();
     }
 
-    // Render Bookings Table
     function renderBookings() {
       const container = document.getElementById('bookingsContainer');
-
+      
       if (filteredBookings.length === 0) {
-        container.innerHTML = `
-          <div class="no-data">
-            <div class="no-data-icon">📭</div>
-            <div>ไม่พบข้อมูลการจอง</div>
-          </div>
-        `;
+        container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px 0;">ไม่พบข้อมูลการจอง</p>';
         return;
       }
 
-      // Desktop Table Layout
+      // Desktop Table
       let tableHtml = `
         <table class="bookings-table">
           <thead>
             <tr>
-              <th>วันที่จอง</th>
+              <th>ID</th>
               <th>ผู้จอง</th>
               <th>เบอร์โทร</th>
               <th>สนาม</th>
-              <th>วันที่เล่น</th>
+              <th>วันที่</th>
               <th>เวลา</th>
               <th>ราคา</th>
               <th>สถานะ</th>
-              <th>การชำระเงิน</th>
               <th>จัดการ</th>
             </tr>
           </thead>
           <tbody>
       `;
 
-      // Mobile Card Layout
+      // Mobile Cards
       let mobileHtml = '<div class="mobile-bookings">';
 
       filteredBookings.forEach(booking => {
-        const statusClass = `status-${booking.bookingStatus || 'pending'}`;
-        const statusText = {
-          'pending': 'รอตรวจสอบ',
-          'pending_payment': 'รอตรวจสอบ',
-          'approved': 'อนุมัติแล้ว',
-          'rejected': 'ปฏิเสธ'
-        }[booking.bookingStatus] || 'รอตรวจสอบ';
+        const statusClass = booking.bookingStatus === 'approved' ? 'status-approved' : 
+                           booking.bookingStatus === 'rejected' ? 'status-rejected' : 'status-pending';
+        const statusText = booking.bookingStatus === 'approved' ? 'อนุมัติแล้ว' :
+                          booking.bookingStatus === 'rejected' ? 'ปฏิเสธ' : 'รอตรวจสอบ';
 
-        const paymentClass = booking.paymentVerified ? 'payment-verified' : 'payment-pending';
-        const paymentText = booking.paymentVerified ? '✅ ตรวจสอบแล้ว' : '⏳ รอตรวจสอบ';
-
-        // Desktop Table Row
+        // Desktop Row
         tableHtml += `
           <tr>
-            <td>${formatDateTime(booking.createdAt)}</td>
+            <td>#${booking.id.substring(0, 8)}</td>
             <td>${booking.fullname}</td>
             <td>${booking.phone}</td>
             <td>${booking.field}</td>
@@ -928,11 +1141,10 @@
             <td>${booking.time}</td>
             <td>฿${booking.totalPrice?.toLocaleString()}</td>
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-            <td class="${paymentClass}">${paymentText}</td>
             <td>
               <div class="action-buttons">
                 <button class="btn-view" onclick="viewBooking('${booking.id}')">ดู</button>
-                ${(!booking.paymentVerified || booking.bookingStatus === 'pending' || booking.bookingStatus === 'pending_payment') ? `
+                ${booking.bookingStatus !== 'approved' ? `
                   <button class="btn-approve" onclick="approveBooking('${booking.id}')">อนุมัติ</button>
                   <button class="btn-reject" onclick="rejectBooking('${booking.id}')">ปฏิเสธ</button>
                 ` : ''}
@@ -945,50 +1157,34 @@
         mobileHtml += `
           <div class="booking-card">
             <div class="booking-card-header">
-              <div class="booking-card-name">${booking.fullname}</div>
+              <span class="booking-card-id">#${booking.id.substring(0, 8)}</span>
               <span class="status-badge ${statusClass}">${statusText}</span>
             </div>
-            
-            <div class="booking-card-info">
+            <div class="booking-card-body">
               <div class="booking-card-row">
-                <div class="booking-card-label">เบอร์โทร</div>
-                <div class="booking-card-value">${booking.phone}</div>
+                <span class="booking-card-label">ผู้จอง:</span>
+                <span>${booking.fullname}</span>
               </div>
-              
               <div class="booking-card-row">
-                <div class="booking-card-label">สนาม</div>
-                <div class="booking-card-value">${booking.field}</div>
+                <span class="booking-card-label">สนาม:</span>
+                <span>${booking.field}</span>
               </div>
-              
               <div class="booking-card-row">
-                <div class="booking-card-label">วันที่เล่น</div>
-                <div class="booking-card-value">${formatDate(booking.date)}</div>
+                <span class="booking-card-label">วันที่:</span>
+                <span>${formatDate(booking.date)}</span>
               </div>
-              
               <div class="booking-card-row">
-                <div class="booking-card-label">เวลา</div>
-                <div class="booking-card-value">${booking.time}</div>
+                <span class="booking-card-label">เวลา:</span>
+                <span>${booking.time}</span>
               </div>
-              
               <div class="booking-card-row">
-                <div class="booking-card-label">ราคา</div>
-                <div class="booking-card-value">฿${booking.totalPrice?.toLocaleString()}</div>
-              </div>
-              
-              <div class="booking-card-row">
-                <div class="booking-card-label">การชำระเงิน</div>
-                <div class="booking-card-value ${paymentClass}">${paymentText}</div>
-              </div>
-              
-              <div class="booking-card-row booking-card-full">
-                <div class="booking-card-label">วันที่จอง</div>
-                <div class="booking-card-value" style="font-size: 13px;">${formatDateTime(booking.createdAt)}</div>
+                <span class="booking-card-label">ราคา:</span>
+                <span>฿${booking.totalPrice?.toLocaleString()}</span>
               </div>
             </div>
-            
             <div class="booking-card-actions">
               <button class="btn-view" onclick="viewBooking('${booking.id}')">ดูรายละเอียด</button>
-              ${(!booking.paymentVerified || booking.bookingStatus === 'pending' || booking.bookingStatus === 'pending_payment') ? `
+              ${booking.bookingStatus !== 'approved' ? `
                 <button class="btn-approve" onclick="approveBooking('${booking.id}')">อนุมัติ</button>
                 <button class="btn-reject" onclick="rejectBooking('${booking.id}')">ปฏิเสธ</button>
               ` : ''}
@@ -1000,11 +1196,9 @@
       tableHtml += '</tbody></table>';
       mobileHtml += '</div>';
 
-      // Render both layouts (CSS will handle which one to show)
       container.innerHTML = tableHtml + mobileHtml;
     }
 
-    // View Booking Details
     function viewBooking(bookingId) {
       currentBooking = allBookings.find(b => b.id === bookingId);
       if (!currentBooking) return;
@@ -1053,29 +1247,18 @@
                    alt="Payment Slip" 
                    class="slip-image"
                    onclick="window.open('${currentBooking.depositSlipUrl}', '_blank')"
-                   style="cursor: pointer; max-width: 100%; border: 2px solid #e5e7eb; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                   style="cursor: pointer; max-width: 100%; border: 2px solid #e5e7eb; border-radius: 10px;">
               <p style="font-size: 12px; color: #666; margin-top: 5px;">คลิกเพื่อดูขนาดเต็ม</p>
             </div>
           </div>
         `;
-      } else {
-        html += `
-          <div class="booking-detail">
-            <label>สลิปการโอนเงิน:</label>
-            <value style="color: #ef4444;">❌ ยังไม่ได้อัพโหลดสลิป</value>
-          </div>
-        `;
       }
 
-      if (!currentBooking.paymentVerified || currentBooking.bookingStatus === 'pending' || currentBooking.bookingStatus === 'pending_payment') {
+      if (currentBooking.bookingStatus !== 'approved') {
         html += `
           <div class="modal-actions">
-            <button class="btn-approve" onclick="approveBookingFromModal()" style="background: #10b981;">
-              ✅ อนุมัติการจอง
-            </button>
-            <button class="btn-reject" onclick="rejectBookingFromModal()" style="background: #ef4444;">
-              ❌ ปฏิเสธการจอง
-            </button>
+            <button class="btn-approve" onclick="approveBookingFromModal()">✅ อนุมัติการจอง</button>
+            <button class="btn-reject" onclick="rejectBookingFromModal()">❌ ปฏิเสธการจอง</button>
           </div>
         `;
       }
@@ -1089,19 +1272,38 @@
       currentBooking = null;
     }
 
-    // Approve Booking
     function approveBooking(bookingId) {
       if (!confirm('ยืนยันการอนุมัติการจองนี้?')) return;
-
+      
+      showLoading();
+      
+      const booking = allBookings.find(b => b.id === bookingId);
+      const deleteTime = calculateBookingEndTime(booking.date, booking.time);
+      
       database.ref('bookings/' + bookingId).update({
         bookingStatus: 'approved',
         paymentVerified: true,
         approvedAt: new Date().toISOString(),
-        approvedBy: auth.currentUser.uid
+        approvedBy: auth.currentUser.uid,
+        autoDeleteAt: deleteTime
       }).then(() => {
-        alert('✅ อนุมัติการจองเรียบร้อยแล้ว');
+        hideLoading();
+        const deleteDate = new Date(deleteTime);
+        const deleteTimeStr = deleteDate.toLocaleString('th-TH', {
+          year: 'numeric',
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        showToast('อนุมัติการจองเรียบร้อยแล้ว', 'success');
+        alert('✅ อนุมัติการจองเรียบร้อยแล้ว\n\n🕐 ระบบจะลบข้อมูลอัตโนมัติที่: ' + deleteTimeStr);
+        
+        scheduleAutoDelete(bookingId, deleteTime);
       }).catch(error => {
-        alert('❌ เกิดข้อผิดพลาด: ' + error.message);
+        hideLoading();
+        showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
       });
     }
 
@@ -1112,21 +1314,25 @@
       }
     }
 
-    // Reject Booking
     function rejectBooking(bookingId) {
-      const reason = prompt('กรุณาระบุเหตุผลในการปฏิเสธ:');
-      if (!reason) return;
+      const reason = prompt('กรุณาระบุเหตุผลในการปฏิเสธ:\n(เช่น: สลิปไม่ตรง, ข้อมูลไม่ถูกต้อง)');
+      
+      if (!reason || reason.trim().length === 0) {
+        showToast('กรุณาระบุเหตุผล', 'warning');
+        return;
+      }
 
-      database.ref('bookings/' + bookingId).update({
-        bookingStatus: 'rejected',
-        rejectedAt: new Date().toISOString(),
-        rejectedBy: auth.currentUser.uid,
-        rejectionReason: reason
-      }).then(() => {
-        alert('✅ ปฏิเสธการจองเรียบร้อยแล้ว');
-      }).catch(error => {
-        alert('❌ เกิดข้อผิดพลาด: ' + error.message);
-      });
+      if (!confirm('⚠️ การปฏิเสธจะลบรายการจองนี้ออกจากระบบทันที\nยืนยันการปฏิเสธ?')) return;
+
+      showLoading();
+      database.ref('bookings/' + bookingId).remove()
+        .then(() => {
+          hideLoading();
+          showToast('ปฏิเสธและลบการจองเรียบร้อยแล้ว', 'success');
+        }).catch(error => {
+          hideLoading();
+          showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
+        });
     }
 
     function rejectBookingFromModal() {
@@ -1136,16 +1342,417 @@
       }
     }
 
-    // Logout
-    function handleStaffLogout() {
-      if (confirm('ต้องการออกจากระบบ?')) {
-        auth.signOut().then(() => {
-          window.location.href = 'staff-login.html';
-        });
+    function calculateBookingEndTime(dateString, timeString) {
+      try {
+        const timeMatch = timeString.match(/(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})/);
+        if (!timeMatch) return null;
+        
+        const endTime = timeMatch[2];
+        const dateTime = new Date(dateString + 'T' + endTime + ':00');
+        dateTime.setMinutes(dateTime.getMinutes() + 30);
+        
+        return dateTime.toISOString();
+      } catch (error) {
+        console.error('Error calculating end time:', error);
+        return null;
       }
     }
 
-    // Format Date
+    function scheduleAutoDelete(bookingId, deleteTime) {
+      if (!deleteTime) return;
+      
+      const now = new Date();
+      const deleteDate = new Date(deleteTime);
+      const timeUntilDelete = deleteDate - now;
+
+      if (timeUntilDelete > 0) {
+        setTimeout(() => {
+          database.ref('bookings/' + bookingId).remove()
+            .then(() => console.log('✅ ลบการจองอัตโนมัติ: ' + bookingId))
+            .catch(err => console.error('❌ ไม่สามารถลบการจอง:', err));
+        }, timeUntilDelete);
+      } else {
+        database.ref('bookings/' + bookingId).remove();
+      }
+    }
+
+    function checkAndDeleteExpiredBookings() {
+      const now = new Date();
+      let expiredCount = 0;
+      let scheduledCount = 0;
+      
+      allBookings.forEach(booking => {
+        if (booking.autoDeleteAt && booking.bookingStatus === 'approved') {
+          const deleteTime = new Date(booking.autoDeleteAt);
+          
+          if (deleteTime <= now) {
+            expiredCount++;
+            database.ref('bookings/' + booking.id).remove();
+          } else {
+            scheduledCount++;
+            scheduleAutoDelete(booking.id, booking.autoDeleteAt);
+          }
+        }
+      });
+      
+      if (expiredCount > 0) {
+        console.log('📊 ลบการจองที่หมดเวลา: ' + expiredCount + ' รายการ');
+      }
+    }
+
+
+    // =========================
+    // IMAGE MANAGEMENT (DYNAMIC)
+    // =========================
+
+    function loadImages() {
+      const imageGrid = document.getElementById('imageGrid');
+      imageGrid.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">กำลังโหลดรูปภาพ...</p>';
+      
+      database.ref('gallery').orderByChild('order').on('value', (snapshot) => {
+        imageGrid.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+          imageGrid.innerHTML = `
+            <p style="text-align: center; color: #666; padding: 40px 0; grid-column: 1 / -1;">
+              ยังไม่มีรูปภาพในแกลเลอรี่<br><br>
+              <span style="font-size: 14px;">กดปุ่ม "เพิ่มรูปภาพ" เพื่อเพิ่มรูปภาพใหม่</span>
+            </p>
+          `;
+          return;
+        }
+
+        const images = [];
+        snapshot.forEach((childSnapshot) => {
+          images.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          });
+        });
+
+        images.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        images.forEach(image => {
+          imageGrid.innerHTML += `
+            <div class="image-card">
+              <img src="${image.url}" class="image-preview" alt="${image.title || 'รูปภาพ'}" 
+                   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22150%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22200%22 height=%22150%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3EError%3C/text%3E%3C/svg%3E'">
+              <div class="image-info">
+                <div class="image-name">${image.title || 'ไม่มีชื่อ'}</div>
+                <div style="font-size: 12px; color: #999; margin-top: 5px;">
+                  ลำดับ: ${image.order || 0} | ${formatDateTime(image.createdAt)}
+                </div>
+                <div class="image-actions">
+                  <button class="btn-edit" onclick="editImage('${image.id}')">✏️ แก้ไข</button>
+                  <button class="btn-delete" onclick="deleteImage('${image.id}', '${image.deleteUrl || ''}')">🗑️ ลบ</button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    function openAddImageModal() {
+      currentImageId = null;
+      document.getElementById('imageModalTitle').textContent = 'เพิ่มรูปภาพใหม่';
+      document.getElementById('imageForm').reset();
+      document.getElementById('imagePreview').style.display = 'none';
+      document.getElementById('imageModal').classList.add('active');
+    }
+
+    function editImage(imageId) {
+      currentImageId = imageId;
+      
+      database.ref('gallery/' + imageId).once('value', (snapshot) => {
+        const image = snapshot.val();
+        document.getElementById('imageModalTitle').textContent = 'แก้ไขรูปภาพ';
+        document.getElementById('imageTitle').value = image.title || '';
+        document.getElementById('imageOrder').value = image.order || 0;
+        
+        const preview = document.getElementById('imagePreview');
+        preview.src = image.url;
+        preview.style.display = 'block';
+        
+        document.getElementById('imageModal').classList.add('active');
+      });
+    }
+
+    function closeImageModal() {
+      document.getElementById('imageModal').classList.remove('active');
+      document.getElementById('imageForm').reset();
+      document.getElementById('imagePreview').style.display = 'none';
+      currentImageId = null;
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('imagePreview');
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function saveImage(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('imageTitle').value;
+      const order = parseInt(document.getElementById('imageOrder').value) || 0;
+      const fileInput = document.getElementById('imageFile');
+      const file = fileInput.files[0];
+      
+      if (!title) {
+        showToast('กรุณากรอกชื่อรูปภาพ', 'warning');
+        return;
+      }
+
+      // ถ้าเป็นการแก้ไขและไม่มีไฟล์ใหม่
+      if (currentImageId && !file) {
+        showLoading();
+        database.ref('gallery/' + currentImageId).update({
+          title: title,
+          order: order,
+          updatedAt: new Date().toISOString(),
+          updatedBy: auth.currentUser.uid
+        })
+        .then(() => {
+          hideLoading();
+          closeImageModal();
+          showToast('แก้ไขข้อมูลสำเร็จ', 'success');
+        })
+        .catch((error) => {
+          hideLoading();
+          showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
+        });
+        return;
+      }
+
+      if (!file) {
+        showToast('กรุณาเลือกไฟล์รูปภาพ', 'warning');
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        showToast('กรุณาเลือกไฟล์รูปภาพเท่านั้น', 'error');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('ไฟล์รูปภาพต้องมีขนาดไม่เกิน 5MB', 'error');
+        return;
+      }
+
+      showLoading();
+
+      try {
+        // อัพโหลดไปยัง ImgBB (ฟรี!)
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        console.log('📤 กำลังอัพโหลดไปยัง ImgBB...');
+        
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error?.message || 'อัพโหลดรูปภาพไม่สำเร็จ');
+        }
+
+        console.log('✅ อัพโหลดสำเร็จ:', result.data.url);
+
+        // บันทึกข้อมูลลง Realtime Database
+        const imageData = {
+          title: title,
+          order: order,
+          url: result.data.url,
+          thumbnailUrl: result.data.thumb.url,
+          deleteUrl: result.data.delete_url,
+          updatedAt: new Date().toISOString(),
+          updatedBy: auth.currentUser.uid
+        };
+
+        if (currentImageId) {
+          await database.ref('gallery/' + currentImageId).update(imageData);
+        } else {
+          imageData.createdAt = new Date().toISOString();
+          await database.ref('gallery').push(imageData);
+        }
+
+        hideLoading();
+        closeImageModal();
+        showToast(currentImageId ? 'แก้ไขรูปภาพสำเร็จ' : 'เพิ่มรูปภาพสำเร็จ', 'success');
+        
+      } catch (error) {
+        console.error('❌ เกิดข้อผิดพลาด:', error);
+        hideLoading();
+        showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
+      }
+    }
+
+    function deleteImage(imageId, deleteUrl) {
+      if (!confirm('ยืนยันการลบรูปภาพนี้?')) return;
+      
+      showLoading();
+
+      // ลบจาก Realtime Database
+      database.ref('gallery/' + imageId).remove()
+        .then(() => {
+          hideLoading();
+          showToast('ลบรูปภาพสำเร็จ', 'success');
+          
+          // พยายามลบจาก ImgBB (ถ้ามี deleteUrl)
+          if (deleteUrl) {
+            fetch(deleteUrl).catch(() => {
+              console.log('ℹ️ ไม่สามารถลบจาก ImgBB ได้');
+            });
+          }
+        })
+        .catch((error) => {
+          hideLoading();
+          showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
+        });
+    }
+
+    // =========================
+    // ACTIVITY MANAGEMENT
+    // =========================
+    function loadActivities() {
+      database.ref('activities').orderByChild('createdAt').on('value', (snapshot) => {
+        const activityList = document.getElementById('activityList');
+        activityList.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+          activityList.innerHTML = '<p style="text-align: center; color: #666; padding: 40px 0;">ยังไม่มีกิจกรรม</p>';
+          return;
+        }
+
+        const activities = [];
+        snapshot.forEach((childSnapshot) => {
+          activities.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          });
+        });
+
+        activities.reverse().forEach(activity => {
+          activityList.innerHTML += `
+            <div class="activity-item">
+              <div class="activity-header">
+                <div>
+                  <div class="activity-title">${activity.title}</div>
+                  <div class="activity-date">${formatDateTime(activity.createdAt)}</div>
+                </div>
+                <div class="activity-actions">
+                  <button class="btn-edit" onclick="editActivity('${activity.id}')">✏️ แก้ไข</button>
+                  <button class="btn-delete" onclick="deleteActivity('${activity.id}')">🗑️ ลบ</button>
+                </div>
+              </div>
+              <div class="activity-content">${activity.content}</div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    function openAddActivityModal() {
+      currentActivityId = null;
+      document.getElementById('activityModalTitle').textContent = 'เพิ่มกิจกรรมใหม่';
+      document.getElementById('activityForm').reset();
+      document.getElementById('activityModal').classList.add('active');
+    }
+
+    function editActivity(activityId) {
+      currentActivityId = activityId;
+      
+      database.ref('activities/' + activityId).once('value', (snapshot) => {
+        const activity = snapshot.val();
+        document.getElementById('activityModalTitle').textContent = 'แก้ไขกิจกรรม';
+        document.getElementById('activityTitle').value = activity.title;
+        document.getElementById('activityContent').value = activity.content;
+        document.getElementById('activityModal').classList.add('active');
+      });
+    }
+
+    function closeActivityModal() {
+      document.getElementById('activityModal').classList.remove('active');
+      document.getElementById('activityForm').reset();
+      currentActivityId = null;
+    }
+
+    function saveActivity(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('activityTitle').value;
+      const content = document.getElementById('activityContent').value;
+      
+      if (!title || !content) {
+        showToast('กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
+        return;
+      }
+
+      showLoading();
+
+      const activityData = {
+        title: title,
+        content: content,
+        updatedAt: new Date().toISOString(),
+        updatedBy: auth.currentUser.uid
+      };
+
+      if (currentActivityId) {
+        database.ref('activities/' + currentActivityId).update(activityData)
+          .then(() => {
+            hideLoading();
+            closeActivityModal();
+            showToast('แก้ไขกิจกรรมสำเร็จ', 'success');
+          })
+          .catch(error => {
+            hideLoading();
+            showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
+          });
+      } else {
+        activityData.createdAt = new Date().toISOString();
+        
+        database.ref('activities').push(activityData)
+          .then(() => {
+            hideLoading();
+            closeActivityModal();
+            showToast('เพิ่มกิจกรรมสำเร็จ', 'success');
+          })
+          .catch(error => {
+            hideLoading();
+            showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
+          });
+      }
+    }
+
+    function deleteActivity(activityId) {
+      if (!confirm('ยืนยันการลบกิจกรรมนี้?')) return;
+      
+      showLoading();
+      database.ref('activities/' + activityId).remove()
+        .then(() => {
+          hideLoading();
+          showToast('ลบกิจกรรมสำเร็จ', 'success');
+        })
+        .catch(error => {
+          hideLoading();
+          showToast('เกิดข้อผิดพลาด: ' + error.message, 'error');
+        });
+    }
+
+    // =========================
+    // UTILITY FUNCTIONS
+    // =========================
     function formatDate(dateString) {
       const date = new Date(dateString);
       return date.toLocaleDateString('th-TH', { 
@@ -1153,6 +1760,34 @@
         month: 'long', 
         day: 'numeric' 
       });
+    }
+
+    // =========================
+    // UTILITY FUNCTIONS
+    // =========================
+    function showLoading() {
+      const overlay = document.querySelector('.loading-overlay');
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function hideLoading() {
+      const overlay = document.querySelector('.loading-overlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      if (!toast || !toastMessage) return;
+      
+      toastMessage.textContent = message;
+      toast.className = 'toast';
+      toast.classList.add(type, 'show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
     }
 
     function formatDateTime(isoString) {
@@ -1167,12 +1802,26 @@
       });
     }
 
-    // Close modal on outside click
-    document.getElementById('bookingModal').addEventListener('click', (e) => {
-      if (e.target.id === 'bookingModal') {
-        closeBookingModal();
+    function handleStaffLogout() {
+      if (confirm('ต้องการออกจากระบบ?')) {
+        auth.signOut().then(() => {
+          window.location.href = 'staff-login.html';
+        });
       }
+    }
+
+    // Close modals on outside click
+    document.getElementById('bookingModal').addEventListener('click', (e) => {
+      if (e.target.id === 'bookingModal') closeBookingModal();
+    });
+
+    document.getElementById('activityModal').addEventListener('click', (e) => {
+      if (e.target.id === 'activityModal') closeActivityModal();
+    });
+
+    document.getElementById('imageModal').addEventListener('click', (e) => {
+      if (e.target.id === 'imageModal') closeImageModal();
     });
   </script>
 </body>
-</html
+</html>

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PRIJIT SPORT - เข้าสู่ระบบพนักงาน</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
   <style>
     * {
       margin: 0;
@@ -271,13 +272,22 @@
     // Check if already logged in
     auth.onAuthStateChanged((user) => {
       if (user) {
+        console.log('👤 User already logged in:', user.uid);
         // ตรวจสอบว่าเป็น staff หรือไม่
         database.ref('users/' + user.uid).once('value').then(snapshot => {
           const userData = snapshot.val();
+          console.log('📊 User data from database:', userData);
           if (userData && userData.role === 'staff') {
+            console.log('✅ User is staff, redirecting...');
             window.location.href = 'staff-panel.html';
+          } else {
+            console.log('❌ User is not staff');
           }
+        }).catch(error => {
+          console.error('❌ Error checking user data:', error);
         });
+      } else {
+        console.log('👤 No user logged in');
       }
     });
 
@@ -323,17 +333,27 @@
       try {
         // Login with Firebase Auth
         const email = username + '@staff.prijitsport.com';
+        console.log('🔐 Attempting login with:', email);
+        
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        console.log('✅ Firebase Auth successful');
+        console.log('👤 User UID:', userCredential.user.uid);
         
         // ตรวจสอบว่าเป็น staff หรือไม่
         const snapshot = await database.ref('users/' + userCredential.user.uid).once('value');
         const userData = snapshot.val();
 
+        console.log('📊 User data from database:', userData);
+
         if (userData && userData.role === 'staff') {
-          console.log('✅ Staff login successful');
+          console.log('✅ Staff role confirmed');
+          console.log('🚀 Redirecting to staff panel...');
+          // Redirect to staff panel
           window.location.href = 'staff-panel.html';
         } else {
           // ไม่ใช่ staff
+          console.error('❌ User does not have staff role');
+          console.error('❌ User data:', userData);
           await auth.signOut();
           showError('⛔ คุณไม่มีสิทธิ์เข้าถึงระบบพนักงาน');
           document.getElementById('loadingIndicator').classList.remove('show');
@@ -341,7 +361,9 @@
           document.getElementById('loginBtn').disabled = false;
         }
       } catch (error) {
-        console.error('Login error:', error);
+        console.error('❌ Login error:', error);
+        console.error('❌ Error code:', error.code);
+        console.error('❌ Error message:', error.message);
         
         let errorMessage = 'เข้าสู่ระบบไม่สำเร็จ';
         
@@ -353,6 +375,8 @@
           errorMessage = '⚠️ พยายามเข้าสู่ระบบหลายครั้งเกินไป กรุณารอสักครู่';
         } else if (error.code === 'auth/network-request-failed') {
           errorMessage = '🌐 ไม่สามารถเชื่อมต่ออินเทอร์เน็ตได้';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = '❌ รูปแบบชื่อผู้ใช้ไม่ถูกต้อง';
         }
 
         showError(errorMessage);
