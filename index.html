@@ -398,9 +398,17 @@ textarea.error {
       text-align: center;
       opacity: 0;
       transform: translateY(20px);
+      
+      /* 🔧 FIX: เพิ่ม will-change เพื่อ update clickable area */
+      will-change: transform, opacity;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      -webkit-transform-style: preserve-3d;
+      -webkit-backface-visibility: hidden;
     }
     .menu-overlay.active .nav-item {
       animation: slideIn 0.4s ease forwards;
+      pointer-events: auto !important; /* 🔧 FIX: บังคับให้ clickable */
     }
     .menu-overlay.active .nav-item:nth-child(1) { animation-delay: 0.1s; }
     .menu-overlay.active .nav-item:nth-child(2) { animation-delay: 0.15s; }
