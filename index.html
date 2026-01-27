@@ -270,14 +270,17 @@ textarea.error {
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
-      /* Navigation Bar */
+      /* Navigation menu */
   .navbar {
     width: 105%;
     padding: 15px 0;
-   position: sticky;
+    position: fixed;
     top: 0;
     z-index: 1002;
+    background: transparent;
+    pointer-events: none;
   }
+
     .nav-container {
       max-width: 1240px;
       margin: 0 auto;
@@ -285,6 +288,7 @@ textarea.error {
       justify-content: space-between;
       align-items: center;
       padding: 20px;
+      pointer-events: auto;
     }
     .nav-links {
       display: flex;
@@ -350,7 +354,7 @@ textarea.error {
       display: none;
       width: 44px;
       height: 44px;
-      background: rgba(255,255,255,0.0);
+      background: rgba(247, 246, 246, 0.603);
       border: 2px solid rgba(255,255,255,0.0);
       border-radius: 10px;
       cursor: pointer;
@@ -475,7 +479,7 @@ textarea.error {
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.7);
+      background: rgba(255, 255, 255, 0.7);
       z-index: 2000;
       justify-content: center;
       align-items: center;
@@ -1928,7 +1932,7 @@ textarea.error {
         <span></span>
         <span></span>
         <span></span>
-      </div>
+      </div> 
 
       <div class="nav-links" id="desktopNav">
         <button class="nav-item" data-section="homeSection">หน้าแรก</button>
