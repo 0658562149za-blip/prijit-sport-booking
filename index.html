@@ -144,6 +144,21 @@ textarea.error {
     max-width: none;
   }
 }
+
+  @media (max-width: 360px) {
+    #toast-container {
+      right: 8px;
+      left: 8px;
+      bottom: 8px;
+    }
+    
+    .toast {
+      min-width: 0;
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 14px;
+    }
+  }
       * {
         margin: 0;
         padding: 0;
@@ -151,9 +166,13 @@ textarea.error {
       }
       html {
         scroll-behavior: smooth;
+        overflow-x: hidden;
+        max-width: 100vw;
       }
       section {
         scroll-margin-top: 80px;
+        max-width: 100vw;
+        overflow-x: hidden;
       }
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -167,6 +186,8 @@ textarea.error {
         background-attachment: fixed;
         background-repeat: no-repeat;
         line-height: 1.6;
+        overflow-x: hidden;
+        max-width: 100vw;
       }
       /* Global Loading Overlay */  
 #global-loading {
@@ -405,6 +426,23 @@ textarea.error {
       backface-visibility: hidden;
       -webkit-transform-style: preserve-3d;
       -webkit-backface-visibility: hidden;
+    }
+
+    /* 🔧 FIX: Responsive สำหรับหน้าจอมือถือ */
+    @media (max-width: 360px) {
+      .menu-overlay .nav-item {
+        min-width: calc(100vw - 40px);
+        max-width: calc(100vw - 40px);
+        margin: 6px auto;
+      }
+    }
+    
+    @media (min-width: 361px) and (max-width: 480px) {
+      .menu-overlay .nav-item {
+        min-width: calc(100vw - 60px);
+        max-width: 320px;
+        margin: 6px auto;
+      }
     }
     .menu-overlay.active .nav-item {
       animation: slideIn 0.4s ease forwards;
