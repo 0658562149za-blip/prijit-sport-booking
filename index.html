@@ -3000,6 +3000,44 @@ function isInViewport(element) {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
+// ========================================
+// STAFF MODAL FUNCTIONS (GLOBAL)
+// ========================================
+function openStaffModal(url) {
+  const modal = document.getElementById('staffGalleryModal');
+  const modalImg = document.getElementById('staffGalleryModalImg');
+  
+  if (!modal || !modalImg) {
+    console.error('❌ ไม่พบ Modal elements');
+    return;
+  }
+  
+  const img = new Image();
+  img.onload = function() {
+    modalImg.src = url;
+  };
+  img.onerror = function() {
+    console.warn('⚠️ โหลดรูปภาพล้มเหลว, ลองอีกครั้ง');
+    modalImg.src = url;
+  };
+  img.src = url;
+  
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStaffModal() {
+  const modal = document.getElementById('staffGalleryModal');
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    console.log('✅ Modal ปิดแล้ว');
+  } else {
+    console.error('❌ ไม่พบ Modal');
+  }
+}
+
+
 
 // ========================================
 // TIME SLOTS FUNCTIONS
@@ -4219,40 +4257,7 @@ function initializeFirebase() {
       });
     }
 
-    function openStaffModal(url) {
-      const modal = document.getElementById('staffGalleryModal');
-      const modalImg = document.getElementById('staffGalleryModalImg');
-      
-      if (!modal || !modalImg) {
-        console.error('❌ ไม่พบ Modal elements');
-        return;
-      }
-      
-      // Preload image ก่อนแสดง เพื่อป้องกันการกระพริบ
-      const img = new Image();
-      img.onload = function() {
-        modalImg.src = url;
-      };
-      img.onerror = function() {
-        console.warn('⚠️ โหลดรูปภาพล้มเหลว, ลองอีกครั้ง');
-        modalImg.src = url; // ลองโหลดอีกครั้ง
-      };
-      img.src = url;
-      
-      modal.classList.add('show');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeStaffModal() {
-      const modal = document.getElementById('staffGalleryModal');
-      if (modal) {
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-        console.log('✅ Modal ปิดแล้ว');
-      } else {
-        console.error('❌ ไม่พบ Modal');
-      }
-    }
+    // ✅ Modal functions ถูกย้ายไปเป็น global แล้ว (ดูด้านบน)
 
 
     // เพิ่มการปิด Modal ด้วย ESC key
