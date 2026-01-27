@@ -475,7 +475,7 @@ textarea.error {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
-      color: #000000;
+      color: #ffffff;
       font-size: 1.1em;
     }
     .form-input {
@@ -483,7 +483,7 @@ textarea.error {
       padding: 15px;
       border: 2px solid #000000;
       border-radius: 10px;
-      font-size: 1.1em;
+      font-size: 1em;
     }
     .form-input:focus {
       outline: none;
@@ -1792,7 +1792,7 @@ textarea.error {
   <h1 class="auth-title">⚽ เข้าสู่ระบบ</h1>
   <form onsubmit="handleLogin(event)">
     <div class="form-group">
-      <label class="form-label">ชื่อผู้ใช้</label>
+      <label class="">ชื่อผู้ใช้</label>
       <input type="text" id="modalLoginUsername" class="form-input" 
              placeholder="กรอกชื่อผู้ใช้" 
              autocomplete="username" 
@@ -1800,7 +1800,7 @@ textarea.error {
     </div>  <!-- ✅ ปิด form-group ของ username -->
     
     <div class="form-group">  <!-- ✅ form-group ใหม่สำหรับ password -->
-      <label class="form-label">รหัสผ่าน</label>
+      <label class="">รหัสผ่าน</label>
       <div style="position: relative;">
         <input type="password" id="modalLoginPassword" class="form-input" 
                placeholder="กรอกรหัสผ่าน" 
