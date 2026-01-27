@@ -467,7 +467,7 @@ textarea.error {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
-      color: #000000;
+      color: #ffffff;
       font-size: 1.1em;
     }
     .form-input {
@@ -1714,6 +1714,8 @@ textarea.error {
   max-width: 90%;
   max-height: 90vh;
   border-radius: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .staff-gallery-close {
@@ -1723,6 +1725,23 @@ textarea.error {
   font-size: 50px;
   color: white;
   cursor: pointer;
+  z-index: 10001;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.staff-gallery-close:hover {
+  transform: scale(1.2);
+  color: #ef4444;
+}
+
+.staff-gallery-close:active {
+  transform: scale(0.9);
 }
 
 @media (max-width: 768px) {
@@ -1734,6 +1753,22 @@ textarea.error {
   }
   .activity-title {
     font-size: 1.2em;
+  }
+  
+  /* ปรับปุ่ม X ให้ใหญ่และคลิกง่ายขึ้นบน Mobile */
+  .staff-gallery-close {
+    top: 10px;
+    right: 10px;
+    font-size: 60px;
+    width: 70px;
+    height: 70px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+  }
+  
+  .staff-gallery-modal img {
+    max-width: 95%;
+    max-height: 85vh;
   }
 }
     </style>
@@ -2117,8 +2152,9 @@ textarea.error {
           <div class="content-loading-state">🔄 กำลังโหลดรูปภาพ...</div>
         </div>
       </div>
-    </section>
-
+    
+      
+    
     <!-- Activities Section -->
     <section id="activitiesSection" class="staff-content-section">
       <h2 class="section-title">📢 ข่าวสาร/กิจกรรม</h2>
@@ -2135,6 +2171,7 @@ textarea.error {
       <span class="staff-gallery-close" onclick="closeStaffModal()">&times;</span>
       <img id="staffGalleryModalImg" src="" alt="">
     </div>
+      </div>
 
     <section id="contactSection">
       <h2 class="section-title">ติดต่อสอบถาม</h2>
@@ -2235,6 +2272,25 @@ debugLog('✅ [2/3] Global variables initialized');
 debugLog('  ⚙️ NAVIGATION_DELAY:', NAVIGATION_DELAY, 'ms');
 debugLog('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
 
+
+// ========================================
+// UTILITY FUNCTIONS
+// ========================================
+/**
+ * Debounce utility function
+ * Delays execution until after wait milliseconds have elapsed since the last call
+ */
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 // ========================================
 // 3️⃣ INIT NAVIGATION (bind events)
 // ========================================
@@ -3240,11 +3296,23 @@ function showPaymentModal() {
         </div>
 
         <div class="qr-code-container">
-          <div class="qr-code-image">
+
+          <div class="qr-code-image" style="position: relative; min-height: 300px;">
+            <!-- Loading State -->
+            <div id="qrLoading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #6b7280;">
+              <div style="width: 40px; height: 40px; border: 3px solid #f3f4f6; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 10px;"></div>
+              <p style="font-size: 0.9em;">กำลังโหลด QR Code...</p>
+            </div>
+            <!-- QR Code Image -->
             <img id="qrCodeCanvas" src="qr-promptpay.png" alt="QR Code PromptPay" 
-                style="width: 100%; height: 100%; object-fit: contain;"
+                style="width: 100%; height: 100%; object-fit: contain; display: none;"
+                onload="this.style.display='block'; var loader = document.getElementById('qrLoading'); if (loader) loader.remove();"
                 onerror="handleQRError(this)">
           </div>
+
+
+
+
         </div>
         
         <div class="payment-info">
@@ -3313,7 +3381,7 @@ function handleQRError(img) {
       </p>
     </div>
   `;
-  console.error('QR Code image not found: qr-promptpay.png');
+  console.warn('⚠️ QR Code image not available, showing PromptPay details instead');
 }
 
 function handleSlipUpload(event) {
@@ -3372,9 +3440,11 @@ function setupDragDrop() {
     }
   };
   
-  uploadArea.addEventListener('dragover', handleDragOver);
-  uploadArea.addEventListener('dragleave', handleDragLeave);
-  uploadArea.addEventListener('drop', handleDrop);
+  // ✅ เพิ่ม { passive: false } เพราะต้องใช้ preventDefault()
+  // หมายเหตุ: dragover และ drop ต้องใช้ preventDefault() จริง ๆ
+  uploadArea.addEventListener('dragover', handleDragOver, { passive: false });
+  uploadArea.addEventListener('dragleave', handleDragLeave, { passive: true });
+  uploadArea.addEventListener('drop', handleDrop, { passive: false });
   
   uploadArea._dragHandlers = { handleDragOver, handleDragLeave, handleDrop };
 }
@@ -3835,18 +3905,20 @@ document.addEventListener("DOMContentLoaded", () => {
 // ========================================
 
 // ========================================
-// window RESIZE HANDLER
+// window RESIZE HANDLER (with debounce for better performance)
 // ========================================
- window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-      const overlay = document.getElementById('menuOverlay');
-      const hamburger = document.getElementById('hamburgerBtn');
-      
-      if (overlay) overlay.classList.remove('active');
-      if (hamburger) hamburger.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  });
+const handleResize = debounce(() => {
+  if (window.innerWidth > 768) {
+    const overlay = document.getElementById("menuOverlay");
+    const hamburger = document.getElementById("hamburgerBtn");
+    
+    if (overlay) overlay.classList.remove("active");
+    if (hamburger) hamburger.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+}, 150);
+
+window.addEventListener("resize", handleResize);
 });
 
 // ========================================
@@ -4098,8 +4170,26 @@ function initializeFirebase() {
     }
 
     function openStaffModal(url) {
-      document.getElementById('staffGalleryModalImg').src = url;
-      document.getElementById('staffGalleryModal').classList.add('show');
+      const modal = document.getElementById('staffGalleryModal');
+      const modalImg = document.getElementById('staffGalleryModalImg');
+      
+      if (!modal || !modalImg) {
+        console.error('❌ ไม่พบ Modal elements');
+        return;
+      }
+      
+      // Preload image ก่อนแสดง เพื่อป้องกันการกระพริบ
+      const img = new Image();
+      img.onload = function() {
+        modalImg.src = url;
+      };
+      img.onerror = function() {
+        console.warn('⚠️ โหลดรูปภาพล้มเหลว, ลองอีกครั้ง');
+        modalImg.src = url; // ลองโหลดอีกครั้ง
+      };
+      img.src = url;
+      
+      modal.classList.add('show');
       document.body.style.overflow = 'hidden';
     }
 
@@ -4107,7 +4197,6 @@ function initializeFirebase() {
       const modal = document.getElementById('staffGalleryModal');
       if (modal) {
         modal.classList.remove('show');
-        modal.style.display = 'none'; // เพิ่มการบังคับปิดด้วย style
         document.body.style.overflow = '';
         console.log('✅ Modal ปิดแล้ว');
       } else {
@@ -4126,13 +4215,50 @@ function initializeFirebase() {
       }
     });
 
-    // ป้องกันการคลิกข้างในรูปภาพแล้ว Modal ปิด
+    // ป้องกันการคลิกข้างในรูปภาพแล้ว Modal ปิด (เฉพาะรูปภาพเท่านั้น)
     const modalContent = document.querySelector('.staff-gallery-modal img');
     if (modalContent) {
       modalContent.addEventListener('click', function(event) {
         event.stopPropagation();
       });
     }
+
+    // ทำให้ปุ่ม X ทำงานได้แน่นอน
+    const closeButton = document.querySelector('.staff-gallery-close');
+    if (closeButton) {
+      closeButton.addEventListener('click', function(event) {
+        event.stopPropagation(); // ป้องกัน event bubble
+        closeStaffModal();
+      });
+    }
+
+    // เพิ่ม Touch Support สำหรับ Mobile
+    window.addEventListener('load', function() {
+      const modal = document.getElementById('staffGalleryModal');
+      const modalImg = document.getElementById('staffGalleryModalImg');
+      
+      if (modal && modalImg) {
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        // Swipe down เพื่อปิด Modal (Mobile UX)
+        modal.addEventListener('touchstart', function(e) {
+          touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        
+        modal.addEventListener('touchend', function(e) {
+          touchEndY = e.changedTouches[0].screenY;
+          const swipeDistance = touchEndY - touchStartY;
+          
+          // ถ้า swipe down มากกว่า 100px ให้ปิด Modal
+          if (swipeDistance > 100) {
+            closeStaffModal();
+          }
+        }, { passive: true });
+        
+        console.log('✅ Mobile touch events initialized');
+      }
+    });
 
     // ========================================
     // ACTIVITIES FUNCTIONS

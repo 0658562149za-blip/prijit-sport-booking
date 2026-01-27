@@ -145,7 +145,6 @@
 
     .stat-pending { color: #f59e0b; }
     .stat-approved { color: #10b981; }
-    .stat-rejected { color: #ef4444; }
     .stat-total { color: #667eea; }
 
     /* Filter Section */
@@ -805,10 +804,6 @@
           <div class="stat-value stat-approved" id="statApproved">0</div>
         </div>
         <div class="stat-card">
-          <h3>ปฏิเสธ</h3>
-          <div class="stat-value stat-rejected" id="statRejected">0</div>
-        </div>
-        <div class="stat-card">
           <h3>ทั้งหมด</h3>
           <div class="stat-value stat-total" id="statTotal">0</div>
         </div>
@@ -1060,11 +1055,9 @@
     function updateStats() {
       const pending = allBookings.filter(b => b.bookingStatus === 'pending' || b.bookingStatus === 'pending_payment').length;
       const approved = allBookings.filter(b => b.bookingStatus === 'approved').length;
-      const rejected = allBookings.filter(b => b.bookingStatus === 'rejected').length;
       
       document.getElementById('statPending').textContent = pending;
       document.getElementById('statApproved').textContent = approved;
-      document.getElementById('statRejected').textContent = rejected;
       document.getElementById('statTotal').textContent = allBookings.length;
     }
 
@@ -1498,6 +1491,76 @@
       }
     }
 
+    // ========================================
+    // IMAGE COMPRESSION UTILITY
+    // ========================================
+    async function compressImage(file, maxWidth = 1920, maxHeight = 1920, quality = 0.85) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onerror = () => reject(new Error('ไม่สามารถอ่านไฟล์ได้'));
+        
+        reader.onload = (e) => {
+          const img = new Image();
+          
+          img.onerror = () => reject(new Error('ไฟล์รูปภาพไม่ถูกต้อง'));
+          
+          img.onload = () => {
+            try {
+              // คำนวณขนาดใหม่ โดยรักษาสัดส่วน
+              let width = img.width;
+              let height = img.height;
+              
+              if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
+              }
+              
+              if (height > maxHeight) {
+                width = (width * maxHeight) / height;
+                height = maxHeight;
+              }
+              
+              // สร้าง canvas และบีบอัด
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              
+              const ctx = canvas.getContext('2d');
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              canvas.toBlob(
+                (blob) => {
+                  if (!blob) {
+                    reject(new Error('ไม่สามารถบีบอัดรูปภาพได้'));
+                    return;
+                  }
+                  
+                  const originalSizeMB = (file.size / 1024 / 1024).toFixed(2);
+                  const compressedSizeMB = (blob.size / 1024 / 1024).toFixed(2);
+                  const reduction = ((1 - blob.size / file.size) * 100).toFixed(1);
+                  
+                  console.log(`📊 บีบอัดรูปภาพ: ${originalSizeMB}MB → ${compressedSizeMB}MB (ลดลง ${reduction}%)`);
+                  
+                  resolve(blob);
+                },
+                'image/jpeg',
+                quality
+              );
+            } catch (error) {
+              reject(error);
+            }
+          };
+          
+          img.src = e.target.result;
+        };
+        
+        reader.readAsDataURL(file);
+      });
+    }
+
     async function saveImage(event) {
       event.preventDefault();
       
@@ -1550,9 +1613,27 @@
       showLoading();
 
       try {
+        let fileToUpload = file;
+        
+        // บีบอัดรูปภาพเฉพาะที่ใหญ่กว่า 500KB
+        if (file.size > 500 * 1024) {
+          console.log('🔄 กำลังบีบอัดรูปภาพ...');
+          
+          const compressed = await compressImage(file, 1920, 1920, 0.85);
+          
+          fileToUpload = new File([compressed], file.name, {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          });
+          
+          console.log('✅ บีบอัดเสร็จแล้ว');
+        } else {
+          console.log('ℹ️ ไฟล์มีขนาดเล็ก ไม่ต้องบีบอัด');
+        }
+        
         // อัพโหลดไปยัง ImgBB (ฟรี!)
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('image', fileToUpload);
         
         console.log('📤 กำลังอัพโหลดไปยัง ImgBB...');
         
