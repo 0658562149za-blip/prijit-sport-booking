@@ -1821,6 +1821,310 @@ textarea.error {
     max-height: 85vh;
   }
 }
+
+/* ========================================
+   EXTENSION SYSTEM - ระบบต่อเวลา
+   ======================================== */
+.extend-booking-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 12px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.extend-booking-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+}
+
+.extend-booking-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.7;
+}
+
+.next-slot-info {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(249, 250, 251, 0.8);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 13px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.extension-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.extension-modal.show {
+  display: flex;
+}
+
+.extension-modal-content {
+  background: rgba(249, 250, 251, 0.98);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUpModal 0.3s;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideUpModal {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.extension-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border: none;
+  font-size: 28px;
+  color: #ef4444;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.extension-modal-close:hover {
+  background: #ef4444;
+  color: white;
+  transform: rotate(90deg);
+}
+
+.extension-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.extension-modal-subtitle {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.extension-slot-status {
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 3px solid;
+}
+
+.slot-available {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  border-color: #22c55e;
+}
+
+.slot-booked {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border-color: #ef4444;
+}
+
+.slot-status-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.slot-status-text {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.slot-available .slot-status-text {
+  color: #065f46;
+}
+
+.slot-booked .slot-status-text {
+  color: #991b1b;
+}
+
+.extension-slot-time {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #111827;
+  text-align: center;
+}
+
+.extension-slot-price {
+  font-size: 20px;
+  font-weight: 600;
+  color: #16a34a;
+  text-align: center;
+}
+
+.extension-countdown-timer {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+  border: 2px solid #f59e0b;
+}
+
+.countdown-label {
+  color: #92400e;
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.countdown-value {
+  color: #78350f;
+  font-size: 42px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.extension-modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.extension-btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.extension-btn-cancel {
+  background: #f3f4f6;
+  color: #374151;
+  border: 2px solid #d1d5db;
+}
+
+.extension-btn-cancel:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.extension-btn-confirm {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.extension-btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+}
+
+.extension-btn-confirm:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.alternative-slots {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(249, 250, 251, 0.5);
+  border-radius: 12px;
+  border: 2px dashed #d1d5db;
+}
+
+.alternative-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.alternative-slot {
+  padding: 12px 16px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alternative-slot:hover {
+  border-color: #22c55e;
+  background: #f0fdf4;
+  transform: translateX(5px);
+}
+
+.alternative-slot-time {
+  font-weight: 600;
+  color: #111827;
+}
+
+.alternative-slot-price {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .extension-modal-content {
+    padding: 24px;
+    width: 95%;
+  }
+  
+  .extension-modal-title {
+    font-size: 20px;
+  }
+  
+  .countdown-value {
+    font-size: 36px;
+  }
+  
+  .extension-slot-time {
+    font-size: 24px;
+  }
+}
     </style>
     </style>
   </head>
@@ -2027,27 +2331,27 @@ textarea.error {
           <h3 style="margin-bottom: 20px; color: #000000; text-align: center;">💰 อัตราค่าบริการ</h3>
           <div class="price-item">
             <span class="field-name">สนาม 1 (35×54m)</span>
-            <span class="field-price">ก่อน 6 โมง = 1,000 บาท | หลัง 6 โมง = 1,200 บาท</span>
+            <span class="field-price">ก่อน 6 โมง = 1ชม. / 1,000 บาท | หลัง 6 โมง =  1ชม. / 1,200 บาท</span>
           </div>
           <div class="price-item">
             <span class="field-name">สนาม 2 (35×54m)</span>
-            <span class="field-price">ก่อน 6 โมง = 1,000 บาท | หลัง 6 โมง = 1,200 บาท</span>
+            <span class="field-price">ก่อน 6 โมง =  1ชม. / 1,000 บาท | หลัง 6 โมง =  1ชม. / 1,200 บาท</span>
           </div>
           <div class="price-item">
             <span class="field-name">สนาม 3 (35×52m)</span>
-            <span class="field-price">ก่อน 6 โมง = 1,000 บาท | หลัง 6 โมง = 1,200 บาท</span>
+            <span class="field-price">ก่อน 6 โมง =  1ชม. / 1,000 บาท | หลัง 6 โมง =  1ชม. / 1,200 บาท</span>
           </div>
           <div class="price-item">
             <span class="field-name">สนาม 4 (37×55m)</span>
-            <span class="field-price">ก่อน 6 โมง = 1,100 บาท | หลัง 6 โมง = 1,300 บาท</span>
+            <span class="field-price">ก่อน 6 โมง =  1ชม.  1,100 บาท | หลัง 6 โมง =  1ชม. / 1,300 บาท</span>
           </div>
           <div class="price-item">
             <span class="field-name">สนาม 5 (34×50m)</span>
-            <span class="field-price">ก่อน 6 โมง = 900 บาท | หลัง 6 โมง = 1,100 บาท</span>
+            <span class="field-price">ก่อน 6 โมง =  1ชม. / 900 บาท | หลัง 6 โมง =  1ชม. / 1,100 บาท</span>
           </div>
           <div class="price-item">
             <span class="field-name">สนาม 6 (27×45m)</span>
-            <span class="field-price">ก่อน 6 โมง = 700 บาท | หลัง 6 โมง = 900 บาท</span>
+            <span class="field-price">ก่อน 6 โมง =  1ชม. / 700 บาท | หลัง 6 โมง =  1ชม. / 900 บาท</span>
           </div>
         </div>
 
@@ -2126,14 +2430,21 @@ textarea.error {
           <strong>กำลังตรวจสอบสถานะสนาม...</strong>
         </div>
         
-        <div class="form-group">
+         <div class="form-group">
           <label class="form-label">เลือกช่วงเวลา</label>
-          <div class="time-slots-grid" id="timeSlotsContainer">
-            <button class="time-slot-btn" type="button" data-time="08:00 - 10:00">08:00 - 10:00</button>
-            <button class="time-slot-btn" type="button" data-time="10:00 - 12:00">10:00 - 12:00</button>
-            <button class="time-slot-btn" type="button" data-time="11:00 - 13:00">11:00 - 13:00</button>
+          <div class="time-slots-grid" id="timeSlotsContainer1"style="margin-top: 15px;">
+            <button class="time-slot-btn" type="button" data-time="07:00 - 08:00">07:00 - 08:00</button>
+            <button class="time-slot-btn" type="button" data-time="08:00 - 09:00">08:00 - 09:00</button>
+            <button class="time-slot-btn" type="button" data-time="09:00 - 10:00">09:00 - 10:00</button>
+            <button class="time-slot-btn" type="button" data-time="10:00 - 11:00">10:00 - 11:00</button>
+          </div>
+          <div class="time-slots-grid" id="timeSlotsContainer2" style="margin-top: 15px;">
+            <button class="time-slot-btn" type="button" data-time="11:00 - 12:00">11:00 - 12:00</button>
+            <button class="time-slot-btn" type="button" data-time="12:00 - 13:00">12:00 - 13:00</button>
             <button class="time-slot-btn" type="button" data-time="13:00 - 14:00">13:00 - 14:00</button>
-            <button class="time-slot-btn" type="button" data-time="14:00 - 16:00">14:00 - 16:00</button>
+            <button class="time-slot-btn" type="button" data-time="14:00 - 15:00">14:00 - 15:00</button>
+        </div>
+        <div class="time-slots-grid" id="timeSlotsContainer3" style="margin-top: 15px;">
             <button class="time-slot-btn" type="button" data-time="15:00 - 16:00">15:00 - 16:00</button>
             <button class="time-slot-btn" type="button" data-time="16:00 - 17:00">16:00 - 17:00</button>
             <button class="time-slot-btn" type="button" data-time="17:00 - 18:00">17:00 - 18:00</button>
@@ -3160,16 +3471,51 @@ function checkAvailability() {
 
 function updateTimeSlotAvailability(bookedTimes) {
   const timeSlots = document.querySelectorAll('.time-slot-btn');
-  const bookedTimesSet = new Set(bookedTimes); // ✅ O(1) lookup
+  const bookedTimesSet = new Set(bookedTimes);
+  
+  // เช็คว่าวันที่เลือกเป็นวันนี้หรือไม่
+  const selectedDate = document.getElementById('dateSelect').value;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const selectedDateObj = new Date(selectedDate + 'T00:00:00');
+  const isToday = selectedDateObj.getTime() === today.getTime();
+  
+  // เวลาปัจจุบัน
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
   
   timeSlots.forEach(btn => {
     const time = btn.getAttribute('data-time');
     
-    btn.classList.remove('available', 'booked', 'selected');
+    btn.classList.remove('available', 'booked', 'selected', 'past-time');
     const existingBadge = btn.querySelector('.status-badge');
     if (existingBadge) existingBadge.remove();
 
-    if (bookedTimesSet.has(time)) { 
+    // เช็คว่าเป็นเวลาที่ผ่านไปแล้วหรือไม่ (เฉพาะวันนี้)
+    let isPastTime = false;
+    if (isToday) {
+      const timeStart = time.split(' - ')[0]; // เช่น "13:00"
+      const [startHour, startMinute] = timeStart.split(':').map(Number);
+      
+      // ถ้าเวลาเริ่มน้อยกว่าเวลาปัจจุบัน = เวลาผ่านไปแล้ว
+      if (startHour < currentHour || (startHour === currentHour && startMinute <= currentMinute)) {
+        isPastTime = true;
+      }
+    }
+
+    if (isPastTime) {
+      // เวลาผ่านไปแล้ว
+      btn.classList.add('booked');
+      btn.disabled = true;
+      const badge = document.createElement('span');
+      badge.className = 'status-badge';
+      badge.textContent = 'ผ่านแล้ว';
+      badge.style.background = '#9ca3af';
+      btn.appendChild(badge);
+      btn.style.opacity = '0.5';
+    } else if (bookedTimesSet.has(time)) { 
+      // มีคนจองแล้ว
       btn.classList.add('booked');
       btn.disabled = true;
       const badge = document.createElement('span');
@@ -3177,6 +3523,7 @@ function updateTimeSlotAvailability(bookedTimes) {
       badge.textContent = 'ไม่ว่าง';
       btn.appendChild(badge);
     } else {
+      // ว่าง
       btn.classList.add('available');
       btn.disabled = false;
       const badge = document.createElement('span');
@@ -3281,6 +3628,21 @@ function confirmBooking() {
   const selectedDate = new Date(date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  
+  // เช็คว่าเป็นวันนี้และเวลาผ่านไปแล้วหรือไม่
+  if (selectedDate.getTime() === today.getTime()) {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    
+    const timeStart = selectedTimeSlot.split(' - ')[0];
+    const [startHour, startMinute] = timeStart.split(':').map(Number);
+    
+    if (startHour < currentHour || (startHour === currentHour && startMinute <= currentMinute)) {
+      showToast("❌ ไม่สามารถจองย้อนหลังได้ กรุณาเลือกช่วงเวลาอื่น", 'error');
+      return;
+    }
+  }
 
   if (selectedDate < today) {
     alert("❌ ไม่สามารถจองย้อนหลังได้");
@@ -3833,6 +4195,31 @@ function generateBookingCard(booking) {
     });
   };
 
+
+  // เพิ่มปุ่มต่อเวลา (เฉพาะการจองที่ approved)
+  let extensionButton = '';
+  if (booking.bookingStatus === 'approved') {
+    const bookingDate = new Date(booking.date + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (bookingDate.getTime() === today.getTime()) {
+      extensionButton = `
+        <button class="extend-booking-btn" 
+                onclick="requestBookingExtension('${booking.id}')"
+                id="extend-btn-${booking.id}">
+          <span>🔄</span>
+          <span>ต่อเวลา 1 ชั่วโมง</span>
+        </button>
+        <div class="next-slot-info" id="next-slot-${booking.id}">
+          กำลังตรวจสอบช่วงถัดไป...
+        </div>
+      `;
+      
+      setTimeout(() => checkNextSlotForBooking(booking), 100);
+    }
+  }
+
   return `
     <div class="booking-card" style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid ${statusColor};">
       
@@ -3872,8 +4259,10 @@ function generateBookingCard(booking) {
       <!-- Actions -->
       ${booking.bookingStatus !== 'cancelled' && booking.bookingStatus !== 'completed' ? `
         <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+          ${extensionButton}
           <button onclick="cancelBooking('${booking.id}')" 
-                  style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                  id="cancel-btn-${booking.id}"
+                  style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; ${extensionButton ? 'margin-top: 12px;' : ''}">
             ❌ ยกเลิกการจอง
           </button>
         </div>
@@ -4413,6 +4802,341 @@ window.addEventListener('unhandledrejection', (event) => {
   }
 });
 
+
+// ========================================
+// EXTENSION SYSTEM FUNCTIONS - ระบบต่อเวลา
+// ========================================
+
+let currentExtensionBooking = null;
+let extensionCountdownInterval = null;
+
+// ตรวจสอบช่วงเวลาถัดไป
+async function checkNextSlotForBooking(booking) {
+  const timeSlotParts = booking.time.split(' - ');
+  if (timeSlotParts.length < 2) return;
+  
+  const endTime = timeSlotParts[1];
+  const nextStartTime = endTime;
+  const nextEndTime = addOneHourToTime(endTime);
+  
+  try {
+    const snapshot = await database.ref('bookings')
+      .orderByChild('field_date_time')
+      .equalTo(`${booking.field}_${booking.date}_${nextStartTime} - ${nextEndTime}`)
+      .once('value');
+    
+    const nextSlotInfo = document.getElementById(`next-slot-${booking.id}`);
+    if (!nextSlotInfo) return;
+    
+    if (snapshot.exists()) {
+      nextSlotInfo.innerHTML = `
+        <span style="color: #ef4444;">❌ ช่วงถัดไป ${nextStartTime} - ${nextEndTime} ถูกจองแล้ว</span>
+      `;
+      const btn = document.getElementById(`extend-btn-${booking.id}`);
+      if (btn) btn.disabled = true;
+    } else {
+      nextSlotInfo.innerHTML = `
+        <span style="color: #22c55e;">✓ ช่วงถัดไป ${nextStartTime} - ${nextEndTime} ว่าง</span>
+      `;
+    }
+  } catch (error) {
+    console.error('Error checking next slot:', error);
+  }
+}
+
+// ขอต่อเวลา
+async function requestBookingExtension(bookingId) {
+  try {
+    const snapshot = await database.ref(`bookings/${bookingId}`).once('value');
+    const booking = snapshot.val();
+    
+    if (!booking) {
+      showToast('❌ ไม่พบข้อมูลการจอง', 'error');
+      return;
+    }
+    
+    currentExtensionBooking = { ...booking, id: bookingId };
+    
+    const timeSlotParts = booking.time.split(' - ');
+    const endTime = timeSlotParts[1];
+    const nextStartTime = endTime;
+    const nextEndTime = addOneHourToTime(endTime);
+    
+    // ตรวจสอบว่าช่วงถัดไปว่างหรือไม่
+    const nextSlotSnapshot = await database.ref('bookings')
+      .orderByChild('field_date_time')
+      .equalTo(`${booking.field}_${booking.date}_${nextStartTime} - ${nextEndTime}`)
+      .once('value');
+    
+    const modal = document.getElementById('extensionModal');
+    modal.classList.add('show');
+    
+    if (!nextSlotSnapshot.exists()) {
+      // ช่วงว่าง
+      document.getElementById('availableExtensionSlot').style.display = 'block';
+      document.getElementById('bookedExtensionSlot').style.display = 'none';
+      
+      document.getElementById('extensionSlotTime').textContent = `${nextStartTime} - ${nextEndTime}`;
+      
+      const hour = parseInt(nextStartTime.split(':')[0]);
+      let price = calculateFieldPrice(booking.field, hour);
+      document.getElementById('extensionSlotPrice').textContent = price;
+      
+      startExtensionCountdown(300);
+      
+    } else {
+      // ช่วงถูกจองแล้ว
+      document.getElementById('availableExtensionSlot').style.display = 'none';
+      document.getElementById('bookedExtensionSlot').style.display = 'block';
+      
+      document.getElementById('bookedExtensionSlotTime').textContent = `${nextStartTime} - ${nextEndTime}`;
+      
+      await findAlternativeSlots(booking);
+    }
+    
+  } catch (error) {
+    console.error('Error requesting extension:', error);
+    showToast('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+  }
+}
+
+// นับถอยหลัง 5 นาที
+function startExtensionCountdown(seconds) {
+  let remaining = seconds;
+  const countdownDisplay = document.getElementById('extensionCountdown');
+  const confirmBtn = document.getElementById('confirmExtensionBtn');
+  
+  if (extensionCountdownInterval) {
+    clearInterval(extensionCountdownInterval);
+  }
+  
+  extensionCountdownInterval = setInterval(() => {
+    remaining--;
+    
+    const minutes = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    countdownDisplay.textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
+    
+    if (remaining <= 60) {
+      countdownDisplay.style.color = '#dc2626';
+    }
+    
+    if (remaining <= 0) {
+      clearInterval(extensionCountdownInterval);
+      confirmBtn.disabled = true;
+      showToast('⏰ หมดเวลายืนยัน กรุณาลองใหม่อีกครั้ง', 'error');
+      setTimeout(() => closeExtensionModal(), 2000);
+    }
+  }, 1000);
+}
+
+// ยืนยันชำระเงิน
+async function confirmExtensionPayment() {
+  if (!currentExtensionBooking) return;
+  
+  const confirmBtn = document.getElementById('confirmExtensionBtn');
+  confirmBtn.textContent = 'กำลังดำเนินการ...';
+  confirmBtn.disabled = true;
+  
+  try {
+    const booking = currentExtensionBooking;
+    const timeSlotParts = booking.time.split(' - ');
+    const endTime = timeSlotParts[1];
+    const nextStartTime = endTime;
+    const nextEndTime = addOneHourToTime(endTime);
+    const timeSlot = `${nextStartTime} - ${nextEndTime}`;
+    
+    const hour = parseInt(nextStartTime.split(':')[0]);
+    const price = calculateFieldPrice(booking.field, hour);
+    
+    const newBookingRef = database.ref('bookings').push();
+    const uniqueKey = `${booking.field}_${booking.date}_${timeSlot}`;
+    
+    const extensionData = {
+      userId: booking.userId,
+      username: booking.username,
+      phone: booking.phone,
+      field: booking.field,
+      date: booking.date,
+      time: timeSlot,
+      totalPrice: price,
+      depositAmount: 0,
+      remainingAmount: price,
+      depositStatus: 'not_required',
+      remainingStatus: 'unpaid',
+      bookingStatus: 'approved',
+      extendedFrom: booking.id,
+      field_date_time: uniqueKey,
+      createdAt: new Date().toISOString()
+    };
+    
+    await newBookingRef.set(extensionData);
+    
+    await database.ref(`bookings/${booking.id}`).update({
+      extendedTo: newBookingRef.key
+    });
+    
+    showToast('✅ ต่อเวลาสำเร็จ! ขอบคุณที่ใช้บริการ', 'success');
+    closeExtensionModal();
+    updateBookingList();
+    
+  } catch (error) {
+    console.error('Error confirming extension:', error);
+    showToast('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+    confirmBtn.textContent = 'ยืนยันชำระเงิน';
+    confirmBtn.disabled = false;
+  }
+}
+
+// หาช่วงเวลาทางเลือก
+async function findAlternativeSlots(booking) {
+  const container = document.getElementById('alternativeSlotsList');
+  container.innerHTML = '<div class="alternative-title">💡 ช่วงเวลาอื่นที่ว่าง</div>';
+  
+  try {
+    const timeSlotParts = booking.time.split(' - ');
+    const endTime = timeSlotParts[1];
+    const allSlots = ['08:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+    const currentIndex = allSlots.findIndex(t => endTime.includes(t.split(':')[0]));
+    
+    const alternativesFound = [];
+    for (let i = currentIndex + 1; i < allSlots.length && alternativesFound.length < 3; i++) {
+      const start = allSlots[i];
+      const end = addOneHourToTime(start);
+      const timeSlot = `${start} - ${end}`;
+      
+      const snapshot = await database.ref('bookings')
+        .orderByChild('field_date_time')
+        .equalTo(`${booking.field}_${booking.date}_${timeSlot}`)
+        .once('value');
+      
+      if (!snapshot.exists()) {
+        const hour = parseInt(start.split(':')[0]);
+        const price = calculateFieldPrice(booking.field, hour);
+        
+        const slotDiv = document.createElement('div');
+        slotDiv.className = 'alternative-slot';
+        slotDiv.innerHTML = `
+          <span class="alternative-slot-time">${timeSlot}</span>
+          <span class="alternative-slot-price">${price} บาท</span>
+        `;
+        slotDiv.onclick = () => selectAlternativeSlot(timeSlot, price);
+        container.appendChild(slotDiv);
+        
+        alternativesFound.push(timeSlot);
+      }
+    }
+    
+    if (alternativesFound.length === 0) {
+      container.innerHTML += '<p style="text-align: center; color: #6b7280; padding: 20px;">ไม่มีช่วงเวลาอื่นที่ว่าง</p>';
+    }
+  } catch (error) {
+    console.error('Error finding alternatives:', error);
+  }
+}
+
+// เลือกช่วงเวลาทางเลือก
+function selectAlternativeSlot(timeSlot, price) {
+  if (confirm(`ต้องการจอง ${timeSlot} ในราคา ${price} บาทหรือไม่?`)) {
+    createAlternativeBooking(timeSlot, price);
+  }
+}
+
+// สร้างการจองทางเลือก
+async function createAlternativeBooking(timeSlot, price) {
+  try {
+    const booking = currentExtensionBooking;
+    const newBookingRef = database.ref('bookings').push();
+    const uniqueKey = `${booking.field}_${booking.date}_${timeSlot}`;
+    
+    const newBookingData = {
+      userId: booking.userId,
+      username: booking.username,
+      phone: booking.phone,
+      field: booking.field,
+      date: booking.date,
+      time: timeSlot,
+      totalPrice: price,
+      depositAmount: 0,
+      remainingAmount: price,
+      depositStatus: 'not_required',
+      remainingStatus: 'unpaid',
+      bookingStatus: 'approved',
+      field_date_time: uniqueKey,
+      createdAt: new Date().toISOString()
+    };
+    
+    await newBookingRef.set(newBookingData);
+    
+    showToast('✅ จองช่วงเวลาใหม่สำเร็จ!', 'success');
+    closeExtensionModal();
+    updateBookingList();
+    
+  } catch (error) {
+    console.error('Error creating alternative booking:', error);
+    showToast('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
+  }
+}
+
+// ปิด modal
+function closeExtensionModal() {
+  const modal = document.getElementById('extensionModal');
+  modal.classList.remove('show');
+  
+  if (extensionCountdownInterval) {
+    clearInterval(extensionCountdownInterval);
+  }
+  
+  const confirmBtn = document.getElementById('confirmExtensionBtn');
+  confirmBtn.textContent = 'ยืนยันชำระเงิน';
+  confirmBtn.disabled = false;
+  
+  currentExtensionBooking = null;
+}
+
+// Helper: เพิ่ม 1 ชั่วโมง
+function addOneHourToTime(timeStr) {
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  const newHours = (hours + 1) % 24;
+  return `${newHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+}
+
+// Helper: คำนวณราคาสนาม
+function calculateFieldPrice(field, hour) {
+  let price = 0;
+  
+  if (field.includes('สนาม 1') || field.includes('สนาม 2') || field.includes('สนาม 3')) {
+    price = hour >= 18 ? 1200 : 1000;
+  } else if (field.includes('สนาม 4')) {
+    price = hour >= 18 ? 1300 : 1100;
+  } else if (field.includes('สนาม 5')) {
+    price = hour >= 18 ? 1100 : 900;
+  } else if (field.includes('สนาม 6')) {
+    price = hour >= 18 ? 900 : 700;
+  }
+  
+  return price;
+}
+
+// ปิด modal เมื่อคลิกพื้นหลัง
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('extensionModal');
+  if (e.target === modal) {
+    closeExtensionModal();
+  }
+});
+
+// ปิด modal ด้วย ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('extensionModal');
+    if (modal && modal.classList.contains('show')) {
+      closeExtensionModal();
+    }
+  }
+});
+
+
 initializeFirebase();
     </script>
     
@@ -4427,5 +5151,62 @@ initializeFirebase();
       </div>
     </div>
     
-  </body>
+  
+
+<!-- Extension Modal - ระบบต่อเวลา -->
+<div class="extension-modal" id="extensionModal">
+  <div class="extension-modal-content">
+    <button class="extension-modal-close" onclick="closeExtensionModal()">✕</button>
+    
+    <h2 class="extension-modal-title">ต่อเวลาการใช้งาน</h2>
+    <p class="extension-modal-subtitle">ยืนยันการต่อเวลาของคุณ</p>
+
+    <!-- Available Slot Section -->
+    <div id="availableExtensionSlot" style="display: none;">
+      <div class="extension-slot-status slot-available">
+        <div class="slot-status-icon">✅</div>
+        <div class="slot-status-text">ช่วงเวลาว่าง!</div>
+      </div>
+
+      <div class="extension-slot-time" id="extensionSlotTime">14:00 - 15:00</div>
+      <div class="extension-slot-price">💰 ราคา: <span id="extensionSlotPrice">500</span> บาท</div>
+
+      <div class="extension-countdown-timer">
+        <div class="countdown-label">⏰ กรุณายืนยันภายใน</div>
+        <div class="countdown-value" id="extensionCountdown">5:00</div>
+      </div>
+
+      <div class="extension-modal-actions">
+        <button class="extension-btn extension-btn-cancel" onclick="closeExtensionModal()">
+          ยกเลิก
+        </button>
+        <button class="extension-btn extension-btn-confirm" id="confirmExtensionBtn" onclick="confirmExtensionPayment()">
+          ยืนยันชำระเงิน
+        </button>
+      </div>
+    </div>
+
+    <!-- Booked Slot Section -->
+    <div id="bookedExtensionSlot" style="display: none;">
+      <div class="extension-slot-status slot-booked">
+        <div class="slot-status-icon">❌</div>
+        <div class="slot-status-text">ช่วงเวลานี้ถูกจองแล้ว</div>
+      </div>
+
+      <div class="extension-slot-time" id="bookedExtensionSlotTime">14:00 - 15:00</div>
+      
+      <div class="alternative-slots" id="alternativeSlotsList">
+        <div class="alternative-title">💡 ช่วงเวลาอื่นที่ว่าง</div>
+      </div>
+
+      <div class="extension-modal-actions" style="margin-top: 20px;">
+        <button class="extension-btn extension-btn-cancel" onclick="closeExtensionModal()">
+          ปิด
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
 </html>
