@@ -489,7 +489,95 @@ textarea.error {
       transform: scale(0.95);
       background: rgb(46, 196, 0);
     }
+      /* Mobile Close Button */
+.mobile-close-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 3px solid #ffd700;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
 
+.mobile-close-btn .close-icon {
+  font-size: 40px;
+  font-weight: bold;
+  color: #000000;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.mobile-close-btn:hover {
+  background: #ef4444;
+  border-color: #ffffff;
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 6px 30px rgba(239, 68, 68, 0.5);
+}
+
+.mobile-close-btn:hover .close-icon {
+  color: #ffffff;
+}
+
+.mobile-close-btn:active {
+  transform: rotate(90deg) scale(0.95);
+}
+
+/* ซ่อนปุ่มเมื่อเมนูปิด */
+.menu-overlay:not(.active) .mobile-close-btn {
+  display: none;
+}
+
+/* Animation เมื่อเมนูเปิด */
+.menu-overlay.active .mobile-close-btn {
+  animation: fadeInScale 0.3s ease;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 480px) {
+  .mobile-close-btn {
+    width: 55px;
+    height: 55px;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .mobile-close-btn .close-icon {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-close-btn {
+    width: 50px;
+    height: 50px;
+    top: 12px;
+    right: 12px;
+  }
+  
+  .mobile-close-btn .close-icon {
+    font-size: 32px;
+  }
+}
 
       /* Modal */
         .modal-overlay {
@@ -2280,6 +2368,11 @@ textarea.error {
     
     <!-- Mobile Menu -->
   <div class="menu-overlay" id="menuOverlay">
+    
+     <button class="mobile-close-btn" onclick="closeMobileMenu()" aria-label="ปิดเมนู">
+      <span class="close-icon">✕</span>
+    </button>
+
     <div class="nav-links" id="mobileNav">
       <button class="nav-item" data-section="homeSection">🏠 หน้าแรก</button>
       <button class="nav-item" data-section="fieldInfoSection">ℹ️ ข้อมูลสนาม</button>
