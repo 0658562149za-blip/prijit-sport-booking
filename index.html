@@ -2688,7 +2688,18 @@ function debugLog(...args) {
   if (DEBUG_MODE) console.log(...args);
 }
 console.log("🐛 Debug mode:", DEBUG_MODE ? "ON" : "OFF");
-
+// ========================================
+// ⚙️ CONFIGURATION CONSTANTS
+// ========================================
+const CONFIG = {
+  DEBUG_MODE: false,
+  FIREBASE_RETRY_MAX: 50,
+  FIREBASE_RETRY_INTERVAL: 100,
+  AVAILABILITY_CHECK_TIMEOUT: 10000,
+  TOAST_DURATION: 3000,
+  DEBOUNCE_DELAY: 150,
+  SLIDER_INTERVAL: 4000
+};
 
 // ========================================
 // 1️⃣ CACHE CLEANUP
@@ -2704,11 +2715,133 @@ console.log("🐛 Debug mode:", DEBUG_MODE ? "ON" : "OFF");
 // 2️⃣ GLOBAL VARIABLES
 // ========================================
 debugLog('📦 [2/3] Declaring global variables...');
-
 // Firebase
 let auth, database, currentUser = null;
 let isCancelling = false;
+function initNavigation() {
+  console.log('🧭 Initializing navigation...');
+  
+  // Desktop navigation
+  const desktopNavItems = document.querySelectorAll('#desktopNav .nav-item');
+  desktopNavItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const sectionId = this.getAttribute('data-section');
+      scrollToSection(sectionId);
+    });
+  });
+  
+  // Mobile navigation
+  const mobileNavItems = document.querySelectorAll('#mobileNav .nav-item');
+  mobileNavItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const sectionId = this.getAttribute('data-section');
+      scrollToSection(sectionId);
+      closeMobileMenu();
+    });
+  });
+  
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburgerBtn');
+  if (hamburger) {
+    hamburger.addEventListener('click', toggleMobileMenu);
+  }
+  
+  // Logout button
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', handleLogout);
+  }
+  
+  // Login button
+  const loginBtn = document.getElementById('loginNavBtn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', openLoginModal);
+  }
+  
+  console.log('✅ Navigation initialized');
+}
 
+function scrollToSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+// Debounce utility
+function debounce(func, delay) {
+  let timeoutId;
+  return function(...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+// Toggle password visibility
+function togglePassword(inputId, button) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    button.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    button.textContent = '👁️';
+  }
+}
+
+// Modal functions
+function openLoginModal() {
+  const modal = document.getElementById('loginModal');
+  if (modal) {
+    modal.classList.add('active');
+    showLoginInModal();
+  }
+}
+
+function closeLoginModal() {
+  const modal = document.getElementById('loginModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+
+function showLoginInModal() {
+  document.getElementById('modalLoginForm').style.display = 'block';
+  document.getElementById('modalRegisterForm').style.display = 'none';
+}
+
+function showRegisterInModal() {
+  document.getElementById('modalLoginForm').style.display = 'none';
+  document.getElementById('modalRegisterForm').style.display = 'block';
+}
+
+// Mobile menu functions
+function toggleMobileMenu() {
+  const overlay = document.getElementById('menuOverlay');
+  const hamburger = document.getElementById('hamburgerBtn');
+  
+  if (!overlay || !hamburger) return;
+  
+  const isActive = overlay.classList.contains('active');
+  
+  if (isActive) {
+    closeMobileMenu();
+  } else {
+    overlay.classList.add('active');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeMobileMenu() {
+  const overlay = document.getElementById('menuOverlay');
+  const hamburger = document.getElementById('hamburgerBtn');
+  
+  if (overlay) overlay.classList.remove('active');
+  if (hamburger) hamburger.classList.remove('active');
+  document.body.style.overflow = '';
+}
 // Booking
 let selectedTimeSlot = null;
 let currentBookingData = null;
@@ -2744,313 +2877,6 @@ debugLog('  ⚙️ NAVIGATION_DELAY:', NAVIGATION_DELAY, 'ms');
 debugLog('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
 
 
-// ========================================
-// UTILITY FUNCTIONS
-// ========================================
-/**
- * Debounce utility function
- * Delays execution until after wait milliseconds have elapsed since the last call
- */
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-// ========================================
-// 3️⃣ INIT NAVIGATION (bind events)
-// ========================================
-function initNavigation() {
-  debugLog('🎯 [3/3] Initializing navigation...');
-  
-  function bindEvents() {
-    const navItems = document.querySelectorAll('.nav-item[data-section]');
-    debugLog('  🔧 Found', navItems.length, 'nav items');
-    
-    navItems.forEach((item, index) => {
-      const sectionId = item.getAttribute('data-section');
-      const loadBooking = item.getAttribute('data-load-booking') === 'true';
-      
-      let touchStartTime = 0;
-      let touchHandled = false;
-      
-      // ✅ TOUCHSTART EVENT (Immediate - ไม่มี delay)
-      item.addEventListener('touchstart', function(e) {
-        touchStartTime = Date.now();
-        
-        // Visual feedback ทันที
-        this.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
-        
-        debugLog(`📱 Touch START: ${sectionId} [${index}]`);
-      }, { passive: true });
-      
-      // ✅ TOUCHEND EVENT (Execute action)
-      // Note: passive: false จำเป็นเพื่อใช้ preventDefault() ป้องกัน ghost clicks
-      item.addEventListener('touchend', function(e) {
-        const now = Date.now();
-        const touchDuration = now - touchStartTime;
-        
-        // ป้องกัน accidental tap (เร็วเกินไป)
-        if (touchDuration < 50) {
-          debugLog('  ⚠️ Touch too fast, ignoring');
-          return;
-        }
-        
-        // Debounce check
-        if (now - lastNavigationTime > NAVIGATION_DELAY) {
-          // ป้องกัน ghost clicks ด้วย preventDefault
-          e.preventDefault();
-          e.stopPropagation();
-          
-          lastNavigationTime = now;
-          touchHandled = true;
-          
-          // Clear visual feedback
-          this.style.backgroundColor = '';
-          setTimeout(() => { touchHandled = false; }, 300);
-          
-          console.log(`✅ Touch nav: ${sectionId} [${index}]`);
-          
-          // เพิ่ม micro-delay เพื่อ Service Worker cleanup
-          setTimeout(() => {
-            navigateToSection(sectionId, loadBooking);
-          }, 10);
-        }
-      }, { passive: false, once: false });
-    
-    // CLICK - Desktop fallback
-    item.addEventListener('click', function(e) {
-      // ป้องกัน ghost click
-      if (touchHandled || (Date.now() - lastNavigationTime) < 500) {
-        e.preventDefault();
-        return;
-      }
-      
-      const now = Date.now();
-      if (now - lastNavigationTime > NAVIGATION_DELAY) {
-        lastNavigationTime = now;
-        console.log(`🖱️ Click nav: ${sectionId} [${index}]`);
-        navigateToSection(sectionId, loadBooking);
-      }
-    }, { once: false });
-  }); 
-      
-    // ✅ HAMBURGER MENU
-   const hamburger = document.getElementById('hamburgerBtn');
-  if (hamburger) {
-    let hamTouchHandled = false;
-    let hamTouchStart = 0;
-    
-    hamburger.addEventListener('touchstart', function(e) {
-      hamTouchStart = Date.now();
-      this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
-    }, { passive: true });
-    
-    hamburger.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const now = Date.now();
-      const duration = now - hamTouchStart;
-      
-      if (duration >= 50 && now - lastMenuToggleTime > MENU_TOGGLE_DELAY) {
-        hamTouchHandled = true;
-        this.style.backgroundColor = '';
-        setTimeout(() => { hamTouchHandled = false; }, 300);
-        toggleMobileMenu();
-      }
-    }, { passive: false });
-    
-    hamburger.addEventListener('click', function(e) {
-      if (hamTouchHandled || (Date.now() - lastMenuToggleTime) < 500) {
-        e.preventDefault();
-        return;
-      }
-      toggleMobileMenu();
-    });
-  }
-    // ✅ LOGIN/LOGOUT BUTTONS (same pattern)
-    const loginBtn = document.getElementById('loginNavBtn');
-    if (loginBtn) {
-      let loginTouchHandled = false;
-      
-      loginBtn.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        loginTouchHandled = true;
-        openLoginModal();
-        setTimeout(() => { loginTouchHandled = false; }, 300);
-      }, { passive: false });
-      
-      loginBtn.addEventListener('click', function(e) {
-        if (loginTouchHandled) {
-          e.preventDefault();
-          return;
-        }
-        openLoginModal();
-      });
-    }
-    
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      let logoutTouchHandled = false;
-      
-      logoutBtn.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        logoutTouchHandled = true;
-        handleLogout();
-        setTimeout(() => { logoutTouchHandled = false; }, 300);
-      }, { passive: false });
-      
-      logoutBtn.addEventListener('click', function(e) {
-        if (logoutTouchHandled) {
-          e.preventDefault();
-          return;
-        }
-        handleLogout();
-      });
-    }
-
-    // ✅ FIELD และ DATE SELECT - เพิ่มการเช็คสถานะสนาม
-   function setupFieldDateListeners() {
-  const fieldSelect = document.getElementById('fieldSelect');
-  const dateSelect = document.getElementById('dateSelect');
-  
-  if (fieldSelect && dateSelect && typeof checkAvailability === 'function') {
-    let checkTimeout = null;
-    
-    const debouncedCheck = () => {
-      clearTimeout(checkTimeout);
-      checkTimeout = setTimeout(() => {
-        console.log('🔍 Checking availability...');
-        checkAvailability();
-      }, 300);
-    };
-    
-    fieldSelect.addEventListener('change', debouncedCheck);
-    dateSelect.addEventListener('change', debouncedCheck);
-    
-    console.log('✅ Field/Date listeners bound with debounce');
-  }
-}
-
-  
-  // ✅ เรียก bindEvents() เพียงครั้งเดียว
- if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupFieldDateListeners);
-} else {
-  setupFieldDateListeners();
-} 
-   
-    debugLog('✅ [3/3] Navigation initialized');
-  }
-  bindEvents();
-}
-
-
-function togglePassword(inputId, button) {
-  const input = document.getElementById(inputId);
-  
-  if (input.type === 'password') {
-    input.type = 'text';       
-    button.textContent = '🙈';  
-  } else {
-    input.type = 'password';    
-    button.textContent = '👁️';  
-  }
-}
-
-// ========================================
-// NAVIGATION FUNCTIONS
-// ========================================
-function closeMobileMenu() {
-  const overlay = document.getElementById('menuOverlay');
-  const hamburger = document.getElementById('hamburgerBtn');
-  
-  if (overlay) overlay.classList.remove('active');
-  if (hamburger) hamburger.classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-function toggleMobileMenu() {
-  const now = Date.now();
-  
-  if (now - lastMenuToggleTime < MENU_TOGGLE_DELAY) {
-    debugLog('⚠️ Menu toggle debounced');
-    return;
-  }
-  
-  lastMenuToggleTime = now;
-  
-  const overlay = document.getElementById('menuOverlay');
-  const hamburger = document.getElementById('hamburgerBtn');
-  
-  if (!overlay || !hamburger) return;
-  
-  const isActive = overlay.classList.contains('active');
-  
-  if (isActive) {
-    closeMobileMenu();
-    console.log('🔒 Menu closed');
-  } else {
-    overlay.classList.add('active');
-    hamburger.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    console.log('📱 Menu opened');
-  }
-}
-
-function navigateToSection(sectionId, loadBooking = false) {
-  debugLog('🔗 Navigate to:', sectionId);
-  
-  // Close mobile menu first
-  closeMobileMenu();
-
-  // Scroll to section
-  const section = document.getElementById(sectionId);
-  if (section) {
-    // ใช้ requestAnimationFrame เพื่อ smooth performance
-    requestAnimationFrame(() => {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    
-    // Load booking list if needed
-    if (loadBooking && typeof updateBookingList === 'function') {
-      setTimeout(() => {
-        console.log('  📋 Loading booking list...');
-        updateBookingList();
-      }, 500); // เพิ่มเวลารอให้ scroll เสร็จก่อน
-    }
-  } else {
-    console.error('  ❌ Section not found:', sectionId);
-  }
-}
-
-// ========================================
-// MODAL FUNCTIONS
-// ========================================
-function openLoginModal() {
-  document.getElementById('loginModal').classList.add('active');
-  showLoginInModal();
-}
-function closeLoginModal() {
-  document.getElementById('loginModal').classList.remove('active');
-}
-function showLoginInModal() {
-  document.getElementById('modalLoginForm').style.display = 'block';
-  document.getElementById('modalRegisterForm').style.display = 'none';
-}
-function showRegisterInModal() {
-  document.getElementById('modalLoginForm').style.display = 'none';
-  document.getElementById('modalRegisterForm').style.display = 'block';
-}
-// ========================================
 // GLOBAL LODING EXAMPLE
 // ========================================
 async function submitBooking() {
@@ -4421,7 +4247,7 @@ function cancelBooking(bookingId) {
         throw new Error('กรุณา Login ก่อนยกเลิกการจอง');
       }
         
-      if (booking.user !== currentUser.user) {
+      if (booking.userId !== currentUser.uid) {
         throw new Error('คุณไม่มีสิทธิ์ยกเลิกการจองนี้');
       }
 
@@ -4483,14 +4309,14 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const overlay = document.getElementById('menuOverlay');
       if (overlay && overlay.classList.contains('active')) {
-        toggleMobileMenu();
+         closeMobileMenu();
       }
+      const extensionModal = document.getElementById('extensionModal');
+    if (extensionModal && extensionModal.classList.contains('show')) {
+      closeExtensionModal();
+    }
     }
   });
-// ========================================
-// MOBILE MENU TOGGLE WITH DEBOUNCE
-// ========================================
-
 // ========================================
 // window RESIZE HANDLER (with debounce for better performance)
 // ========================================
@@ -4727,7 +4553,12 @@ function initializeFirebase() {
         document.getElementById("userInfo").style.display = "none";
       }
     });
-    
+    // ตั้งค่าวันที่ขั้นต่ำใน date input เป็นวันนี้
+    const dateInput = document.getElementById('dateSelect');
+if (dateInput) {
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute('min', today);
+}
     // ========================================
     // STAFF GALLERY FUNCTIONS
     // ========================================
@@ -5113,7 +4944,7 @@ async function findAlternativeSlots(booking) {
   try {
     const timeSlotParts = booking.time.split(' - ');
     const endTime = timeSlotParts[1];
-    const allSlots = ['08:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+    const allSlots = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
     const currentIndex = allSlots.findIndex(t => endTime.includes(t.split(':')[0]));
     
     const alternativesFound = [];
@@ -5234,28 +5065,6 @@ function calculateFieldPrice(field, hour) {
   
   return price;
 }
-
-// ปิด modal เมื่อคลิกพื้นหลัง
-document.addEventListener('click', function(e) {
-  const modal = document.getElementById('extensionModal');
-  if (e.target === modal) {
-    closeExtensionModal();
-  }
-});
-
-// ปิด modal ด้วย ESC key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    const modal = document.getElementById('extensionModal');
-    if (modal && modal.classList.contains('show')) {
-      closeExtensionModal();
-    }
-  }
-});
-
-
-
-
 // ========================================
 // 🧹 CLEANUP: ป้องกัน Memory Leaks
 // ========================================
@@ -5281,7 +5090,7 @@ window.addEventListener('beforeunload', () => {
   // 3. Cleanup booking locks
   if (typeof currentBookingData !== 'undefined' && currentBookingData) {
     const uniqueKey = `${currentBookingData.field}_${currentBookingData.date}_${currentBookingData.time}`;
-    database.ref('lockSlots/' + uniqueKey).remove().catch(() => {});
+    database.ref('booking_locks/' + uniqueKey).remove().catch(() => {});
   }
 });
 
