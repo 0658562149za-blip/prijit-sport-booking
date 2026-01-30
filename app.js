@@ -2258,17 +2258,34 @@ async function confirmExtensionPayment() {
 
 // หาช่วงเวลาทางเลือก
 async function findAlternativeSlots(booking) {
+  console.log('🔍 Finding alternative slots for:', booking.time);
+  
   const container = document.getElementById('alternativeSlotsList');
   container.innerHTML = '<div class="alternative-title">💡 ช่วงเวลาอื่นที่ว่าง</div>';
   
   try {
     const timeSlotParts = booking.time.split(' - ');
-    const endTime = timeSlotParts[1];
+    const endTime = timeSlotParts[1]; // เช่น "16:00"
+    console.log('  Current end time:', endTime);
+    
     const allSlots = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
-    const currentIndex = allSlots.findIndex(t => endTime.includes(t.split(':')[0]));
+    
+    // แก้ไข: หา index ที่ตรงกับ endTime
+    const currentIndex = allSlots.indexOf(endTime);
+    console.log('  Current index:', currentIndex);
+    
+    // ถ้าหาไม่เจอ ให้หาจากชั่วโมง
+    let startIndex = currentIndex;
+    if (currentIndex === -1) {
+      const hour = parseInt(endTime.split(':')[0]);
+      startIndex = allSlots.findIndex(t => parseInt(t.split(':')[0]) === hour);
+      console.log('  Using hour-based index:', startIndex);
+    }
     
     const alternativesFound = [];
-    for (let i = currentIndex + 1; i < allSlots.length && alternativesFound.length < 3; i++) {
+    
+    // หาช่วงถัดไป (เพิ่มเป็น 5 ช่วง)
+    for (let i = startIndex + 1; i < allSlots.length && alternativesFound.length < 5; i++) {
       const start = allSlots[i];
       const end = addOneHourToTime(start);
       const timeSlot = `${start} - ${end}`;
