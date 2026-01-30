@@ -2268,7 +2268,7 @@ async function findAlternativeSlots(booking) {
     const endTime = timeSlotParts[1]; // เช่น "16:00"
     console.log('  Current end time:', endTime);
     
-    const allSlots = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+    const allSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
     
     // แก้ไข: หา index ที่ตรงกับ endTime
     const currentIndex = allSlots.indexOf(endTime);
@@ -2330,10 +2330,42 @@ function selectAlternativeSlot(timeSlot, price) {
 // สร้างการจองทางเลือก
 async function createAlternativeBooking(timeSlot, price) {
   try {
+    // ✅ ตรวจสอบว่ามี currentExtensionBooking หรือไม่
+    if (!currentExtensionBooking) {
+      showToast('❌ เกิดข้อผิดพลาด: ไม่พบข้อมูลการจอง', 'error');
+      return;
+    }
+    
     const booking = currentExtensionBooking;
-    const newBookingRef = database.ref('bookings').push();
     const uniqueKey = `${booking.field}_${booking.date}_${timeSlot}`;
     
+    // ✅ แสดง Loading
+    showLoading('กำลังตรวจสอบความว่าง...');
+    
+    // ✅ ตรวจสอบความว่างอีกครั้งก่อนจอง
+    const availabilityCheck = await database.ref('bookings')
+      .orderByChild('field_date_time')
+      .equalTo(uniqueKey)
+      .once('value');
+    
+    if (availabilityCheck.exists()) {
+      hideLoading();
+      showToast('❌ ช่วงเวลานี้ถูกจองไปแล้ว กรุณาเลือกช่วงเวลาอื่น', 'error');
+      return;
+    }
+    
+    // ✅ อัพเดท loading message
+    showLoading('กำลังสร้างการจอง...');
+    
+    // ✅ Lock slot ก่อนจอง
+    const lockRef = database.ref('booking_locks/' + uniqueKey);
+    await lockRef.set({
+      userId: booking.userId,
+      timestamp: Date.now()
+    });
+    
+    // ✅ สร้างการจอง
+    const newBookingRef = database.ref('bookings').push();
     const newBookingData = {
       userId: booking.userId,
       username: booking.username,
@@ -2348,20 +2380,35 @@ async function createAlternativeBooking(timeSlot, price) {
       remainingStatus: 'unpaid',
       bookingStatus: 'approved',
       field_date_time: uniqueKey,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      alternativeBooking: true // ✅ ทำเครื่องหมายว่าเป็นการจองทางเลือก
     };
     
     await newBookingRef.set(newBookingData);
     
-    showToast('✅ จองช่วงเวลาใหม่สำเร็จ!', 'success');
+    // ✅ ลบ lock
+    await lockRef.remove();
+    
+    hideLoading();
+    showToast('✅ จองช่วงเวลาใหม่สำเร็จ! กรุณาชำระเงิน', 'success');
     closeExtensionModal();
+    
+    // ✅ อัพเดทรายการจองและแสดงหน้า Dashboard
     updateBookingList();
+    setTimeout(() => {
+      const section = document.getElementById('checkBookingSection');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 500);
     
   } catch (error) {
     console.error('Error creating alternative booking:', error);
+    hideLoading();
     showToast('❌ เกิดข้อผิดพลาด: ' + error.message, 'error');
   }
 }
+
 
 // ปิด modal
 function closeExtensionModal() {
