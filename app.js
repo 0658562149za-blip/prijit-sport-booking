@@ -199,146 +199,138 @@ debugLog('  ⚙️ MENU_TOGGLE_DELAY:', MENU_TOGGLE_DELAY, 'ms');
 
 // GLOBAL LODING EXAMPLE
 // ========================================
-async function submitBooking() {
-  showLoading('กำลังจองสนาม...');
-  
-  try {
-    await bookingRef.set(bookingData);
-    hideLoading();
-    showToast('✅ จองสำเร็จ!');
-  } catch (error) {
-    hideLoading();
-    showToast('❌ เกิดข้อผิดพลาด', 'error');
-  }
-}
-
 // ========================================
 // bUTTON LOADING SYSTEM
 // ========================================
-async function handleLogin() {
-  const loginBtn = document.getElementById('loginBtn');
-  LoadingSystem.showButton(loginBtn, 'เข้าสู่ระบบ');
-  
-  try {
-    await auth.signInWithEmailAndPassword(email, password);
-    LoadingSystem.hideButton(loginBtn);
-    showToast('เข้าสู่ระบบสำเร็จ!', 'success');
-  } catch (error) {
-    LoadingSystem.hideButton(loginBtn);
-    showToast('เข้าสู่ระบบไม่สำเร็จ', 'error');
-  }
-}
+// ✅ วิธีที่ 2: ใช้ tryCall
+// ========================================
+// 🔒 SECURITY UTILITIES
+// ========================================
+// ไฟล์นี้รวม functions สำหรับ Input Validation และ XSS Protection
+// เพิ่มเข้าไปใน app.js ก่อน initializeFirebase()
 
-// ========================================
-// RATE LIMITER CLASS
-// ========================================
-class RateLimiter {
-  constructor(maxCalls, timeWindow, message = null) {
-    this.maxCalls = maxCalls;
-    this.timeWindow = timeWindow; // milliseconds
-    this.calls = [];
-    this.message = message || `กรุณารอ ${timeWindow/1000} วินาที ก่อนทำรายการอีกครั้ง`;
-  }
-  
-  canCall() {
-    const now = Date.now();
+const SecurityUtils = {
+  /**
+   * XSS Protection - Escape HTML characters
+   * ป้องกัน XSS โดยแปลง HTML tags ให้เป็น text
+   */
+  escapeHtml(text) {
+    if (typeof text !== 'string') return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  },
+
+  /**
+   * Sanitize Input - ลบ characters ที่อันตราย
+   * ใช้สำหรับ username, fullname, etc.
+   */
+  sanitizeInput(input, options = {}) {
+    if (typeof input !== 'string') return '';
     
-    // ลบ calls ที่เก่าเกินกว่า timeWindow
-    this.calls = this.calls.filter(timestamp => now - timestamp < this.timeWindow);
+    const defaults = {
+      maxLength: 500,
+      allowSpaces: true,
+      allowNumbers: true,
+      allowThai: true,
+      allowEnglish: true,
+      allowSpecialChars: false
+    };
     
-    if (this.calls.length >= this.maxCalls) {
-      return false;
+    const opts = { ...defaults, ...options };
+    
+    // Trim whitespace
+    let sanitized = input.trim();
+    
+    // Remove dangerous characters
+    sanitized = sanitized.replace(/[<>\"'`]/g, '');
+    
+    // Apply length limit
+    sanitized = sanitized.substring(0, opts.maxLength);
+    
+    // Build allowed pattern
+    let pattern = '';
+    if (opts.allowThai) pattern += 'ก-๙';
+    if (opts.allowEnglish) pattern += 'a-zA-Z';
+    if (opts.allowNumbers) pattern += '0-9';
+    if (opts.allowSpaces) pattern += '\\s';
+    if (opts.allowSpecialChars) pattern += '._-';
+    
+    // Remove characters not in pattern
+    if (pattern) {
+      const regex = new RegExp(`[^${pattern}]`, 'g');
+      sanitized = sanitized.replace(regex, '');
     }
     
-    this.calls.push(now);
-    return true;
-  }
-  
-  tryCall(callback) {
-    if (this.canCall()) {
-      return callback();
-    } else {
-      showToast(this.message, 'warning');
-      return null;
-    }
-  }
-  
-  reset() {
-    this.calls = [];
-  }
-  
-  getRemainingTime() {
-    if (this.calls.length === 0) return 0;
-    
-    const now = Date.now();
-    const oldestCall = Math.min(...this.calls);
-    const remaining = this.timeWindow - (now - oldestCall);
-    
-    return Math.max(0, Math.ceil(remaining / 1000)); // seconds
-  }
-}
+    return sanitized;
+  },
 
-// ========================================
-// RATE LIMITER INSTANCES
-const RateLimiters = {
-  booking: new RateLimiter(3, 10000, 'กรุณารอ 10 วินาที ก่อนจองอีกครั้ง'),
-  login: new RateLimiter(5, 60000, 'พยายาม login มากเกินไป กรุณารอ 1 นาที'),
-  payment: new RateLimiter(2, 5000, 'กรุณารอ 5 วินาที ก่อนอัปโหลดสลิปอีกครั้ง'),
-  cancel: new RateLimiter(3, 30000, 'กรุณารอ 30 วินาที ก่อนยกเลิกอีกครั้ง')
+  /**
+   * Sanitize Phone Number - เอาแต่ตัวเลข
+   */
+  sanitizePhone(phone) {
+    if (typeof phone !== 'string') return '';
+    return phone.replace(/[^0-9]/g, '').substring(0, 10);
+  },
+
+  /**
+   * Sanitize Username - เอาแต่ตัวอักษรและตัวเลข
+   */
+  sanitizeUsername(username) {
+    if (typeof username !== 'string') return '';
+    return username
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9_]/g, '')
+      .substring(0, 50);
+  }
 };
 
 // ========================================
-// RATE LIMITER EXAMPLES
+// 🔒 ENHANCED VALIDATOR
 // ========================================
+// เพิ่มความสามารถใน Validator object ที่มีอยู่แล้ว
 
-// ✅ วิธีที่ 1: ใช้ canCall
-async function submitBooking() {
-  if (!RateLimiters.booking.canCall()) {
-    const remaining = RateLimiters.booking.getRemainingTime();
-    showToast(`กรุณารอ ${remaining} วินาที ก่อนจองอีกครั้ง`, 'warning');
-    return;
-  }
-  
-  showLoading('กำลังจองสนาม...');
-  // ... proceed with booking
-}
-
-// ✅ วิธีที่ 2: ใช้ tryCall
-function handleLogin() {
-  RateLimiters.login.tryCall(async () => {
-    showLoading('กำลังเข้าสู่ระบบ...');
-    await auth.signInWithEmailAndPassword(email, password);
-    hideLoading();
-    showToast('เข้าสู่ระบบสำเร็จ!', 'success');
-  });
-}
-
-// ✅ วิธีที่ 3: รีเซ็ตหลังสำเร็จ
-async function submitBooking() {
-  if (!RateLimiters.booking.canCall()) return;
-  
-  try {
-    await bookingRef.set(bookingData);
-    RateLimiters.booking.reset(); // Reset หลังสำเร็จ
-    showToast('จองสำเร็จ!', 'success');
-  } catch (error) {
-    showToast('เกิดข้อผิดพลาด', 'error');
-  }
-}
+// เพิ่ม validation methods ใหม่
 
 // ========================================
-// VALIDATION FUNCTIONS
+// 🔒 VALIDATOR OBJECT - Consolidated & Fixed
 // ========================================
 const Validator = {
-  // ตรวจสอบชื่อ-นามสกุล
-  name(value) {
+  // ตรวจสอบชื่อผู้ใช้ (username)
+  username(value) {
+    if (!value || value.trim().length < 3) {
+      return 'ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร';
+    }
+    if (value.trim().length > 50) {
+      return 'ชื่อผู้ใช้ยาวเกินไป (ไม่เกิน 50 ตัวอักษร)';
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(value.trim())) {
+      return 'ชื่อผู้ใช้ใช้ได้เฉพาะตัวอักษร A-Z, ตัวเลข 0-9 และ _ เท่านั้น';
+    }
+    if (/^[0-9]/.test(value.trim())) {
+      return 'ชื่อผู้ใช้ต้องขึ้นต้นด้วยตัวอักษร';
+    }
+    return null;
+  },
+  
+  // ตรวจสอบชื่อ-นามสกุล (fullname)
+  fullname(value) {
     if (!value || value.trim().length < 2) {
       return 'กรุณากรอกชื่อ-นามสกุล (อย่างน้อย 2 ตัวอักษร)';
     }
     if (value.trim().length > 100) {
       return 'ชื่อ-นามสกุลยาวเกินไป (ไม่เกิน 100 ตัวอักษร)';
     }
+    if (!/[ก-๙a-zA-Z]{2,}/.test(value)) {
+      return 'ชื่อ-นามสกุลต้องมีตัวอักษรอย่างน้อย 2 ตัว';
+    }
     return null;
+  },
+  
+  // Alias สำหรับ backward compatibility
+  name(value) {
+    return this.fullname(value);
   },
   
   // ตรวจสอบเบอร์โทร
@@ -346,15 +338,15 @@ const Validator = {
     if (!value) {
       return 'กรุณากรอกเบอร์โทรศัพท์';
     }
-    
-    // ลบ spaces, dashes
     const cleaned = value.replace(/[\s-]/g, '');
-    
-    // ต้องขึ้นต้นด้วย 0 และมี 10 หลัก
     if (!/^0[0-9]{9}$/.test(cleaned)) {
       return 'เบอร์โทรไม่ถูกต้อง (ต้องขึ้นต้นด้วย 0 และมี 10 หลัก)';
     }
-    
+    const validPrefixes = ['08', '09', '06', '02', '03', '04', '05', '07'];
+    const prefix = cleaned.substring(0, 2);
+    if (!validPrefixes.includes(prefix)) {
+      return 'เบอร์โทรไม่ถูกต้อง (prefix ไม่ถูกต้อง)';
+    }
     return null;
   },
   
@@ -363,12 +355,10 @@ const Validator = {
     if (!value) {
       return 'กรุณากรอกอีเมล';
     }
-    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(value)) {
       return 'รูปแบบอีเมลไม่ถูกต้อง';
     }
-    
     return null;
   },
   
@@ -377,11 +367,12 @@ const Validator = {
     if (!value) {
       return 'กรุณากรอกรหัสผ่าน';
     }
-    
     if (value.length < 6) {
       return 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
     }
-    
+    if (value.length > 128) {
+      return 'รหัสผ่านยาวเกินไป (ไม่เกิน 128 ตัวอักษร)';
+    }
     return null;
   },
   
@@ -398,22 +389,17 @@ const Validator = {
     if (!value) {
       return 'กรุณาเลือกวันที่';
     }
-    
     const selectedDate = new Date(value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
     if (selectedDate < today) {
       return 'ไม่สามารถเลือกวันที่ในอดีตได้';
     }
-    
     const maxDate = new Date();
     maxDate.setDate(maxDate.getDate() + 30);
-    
     if (selectedDate > maxDate) {
       return 'สามารถจองล่วงหน้าได้ไม่เกิน 30 วัน';
     }
-    
     return null;
   },
   
@@ -430,24 +416,20 @@ const Validator = {
     if (!file) {
       return 'กรุณาเลือกไฟล์';
     }
-    
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
       return 'รองรับเฉพาะไฟล์ JPG และ PNG เท่านั้น';
     }
-    
     const maxSize = maxSizeMB * 1024 * 1024;
     if (file.size > maxSize) {
       return `ไฟล์ใหญ่เกินไป (ไม่เกิน ${maxSizeMB} MB)`;
     }
-    
     return null;
   },
   
   // Validate form ทั้งหมด
   form(data) {
     const errors = {};
-    
     Object.keys(data).forEach(field => {
       if (this[field]) {
         const error = this[field](data[field]);
@@ -456,30 +438,91 @@ const Validator = {
         }
       }
     });
-    
     return Object.keys(errors).length > 0 ? errors : null;
   }
 };
 
-// Helper function สำหรับแสดง errors
-function showValidationErrors(errors) {
+// ========================================
+// 🔒 VALIDATION HELPER FUNCTIONS
+// ========================================
+
+/**
+ * Validate All Fields - ตรวจสอบหลายฟิลด์พร้อมกัน
+ */
+function validateAllFields(data) {
+  const errors = {};
+  
+  Object.keys(data).forEach(field => {
+    const validator = Validator[field];
+    if (validator && typeof validator === 'function') {
+      const error = validator(data[field]);
+      if (error) {
+        errors[field] = error;
+      }
+    }
+  });
+  
+  return Object.keys(errors).length > 0 ? errors : null;
+}
+
+/**
+ * Show Validation Errors - แสดง errors พร้อม highlight fields
+ */
+function showValidationErrors(errors, formId = null) {
   if (!errors) return;
   
-  const errorMessages = Object.values(errors).join('\n');
-  showToast(errorMessages, 'error', 5000);
+  // รวม error messages
+  const messages = Object.entries(errors).map(([field, msg]) => {
+    const fieldName = getFieldDisplayName(field);
+    return `• ${fieldName}: ${msg}`;
+  }).join('\n');
+  
+  showToast('❌ กรุณาแก้ไขข้อมูล:\n' + messages, 'error', 5000);
   
   // Highlight fields with errors
   Object.keys(errors).forEach(field => {
-    const input = document.getElementById(field);
+    const input = document.getElementById(field) || 
+                  document.querySelector(`[name="${field}"]`) ||
+                  document.querySelector(`#${formId} [name="${field}"]`);
+    
     if (input) {
       input.classList.add('error');
-      input.addEventListener('focus', () => input.classList.remove('error'), { once: true });
+      
+      // Remove error class on focus
+      input.addEventListener('focus', function() {
+        this.classList.remove('error');
+      }, { once: true });
+      
+      // Scroll to first error
+      if (Object.keys(errors)[0] === field) {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => input.focus(), 500);
+      }
     }
   });
 }
+
+/**
+ * Get Field Display Name - แปลง field name เป็นชื่อที่อ่านง่าย
+ */
+function getFieldDisplayName(field) {
+  const names = {
+    username: 'ชื่อผู้ใช้',
+    fullname: 'ชื่อ-นามสกุล',
+    phone: 'เบอร์โทร',
+    password: 'รหัสผ่าน',
+    field: 'สนาม',
+    date: 'วันที่',
+    time: 'เวลา'
+  };
+  return names[field] || field;
+}
+
+console.log('✅ Security Utils loaded successfully');
 // ========================================
-// SLIDER FUNCTIONS
+// VALIDATION FUNCTIONS
 // ========================================
+// Helper function สำหรับแสดง errors
 function startSlider() {
   slideInterval = setInterval(() => changeSlide(1), 4000);
 }
@@ -729,14 +772,25 @@ function updateTimeSlotAvailability(bookedTimes) {
   const timeSlots = document.querySelectorAll('.time-slot-btn');
   const bookedTimesSet = new Set(bookedTimes);
   
-  // เช็คว่าวันที่เลือกเป็นวันนี้หรือไม่
+  // ดึงวันที่ที่เลือก
   const selectedDate = document.getElementById('dateSelect').value;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const selectedDateObj = new Date(selectedDate + 'T00:00:00');
-  const isToday = selectedDateObj.getTime() === today.getTime();
+  if (!selectedDate) {
+    resetTimeSlots();
+    return;
+  }
   
-  // เวลาปัจจุบัน
+  // สร้าง Date objects สำหรับเปรียบเทียบ
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // รีเซ็ตเวลาเป็น 00:00:00
+  
+  const selectedDateObj = new Date(selectedDate + 'T00:00:00');
+  
+  // เปรียบเทียบวันที่
+  const isPastDate = selectedDateObj < today; // วันที่ในอดีต (ก่อนวันนี้)
+  const isToday = selectedDateObj.getTime() === today.getTime(); // วันนี้พอดี
+  const isFutureDate = selectedDateObj > today; // วันข้างหน้า (หลังวันนี้)
+  
+  // เวลาปัจจุบัน (ใช้เฉพาะวันนี้)
   const now = new Date();
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
@@ -744,49 +798,84 @@ function updateTimeSlotAvailability(bookedTimes) {
   timeSlots.forEach(btn => {
     const time = btn.getAttribute('data-time');
     
+    // ลบ classes และ badges เดิม
     btn.classList.remove('available', 'booked', 'selected', 'past-time');
     const existingBadge = btn.querySelector('.status-badge');
     if (existingBadge) existingBadge.remove();
+    btn.style.opacity = '1'; // รีเซ็ต opacity
 
-    // เช็คว่าเป็นเวลาที่ผ่านไปแล้วหรือไม่ (เฉพาะวันนี้)
-    let isPastTime = false;
-    if (isToday) {
+    // ตรวจสอบสถานะตามลำดับความสำคัญ
+    let shouldDisable = false;
+    let badgeText = 'ว่าง';
+    let badgeColor = '';
+    let statusClass = 'available';
+    
+    // 1. ถ้าเป็นวันที่ในอดีต → ปิดทุกช่วง (สีแดง "ผ่านแล้ว")
+    if (isPastDate) {
+      shouldDisable = true;
+      badgeText = 'ผ่านแล้ว';
+      badgeColor = '#ef4444'; // สีแดง
+      statusClass = 'booked past-time';
+      btn.style.opacity = '0.5';
+    }
+    // 2. ถ้าเป็นวันนี้ → เช็คเวลา
+    else if (isToday) {
       const timeStart = time.split(' - ')[0]; // เช่น "13:00"
       const [startHour, startMinute] = timeStart.split(':').map(Number);
       
-      // ถ้าเวลาเริ่มน้อยกว่าเวลาปัจจุบัน = เวลาผ่านไปแล้ว
-      if (startHour < currentHour || (startHour === currentHour && startMinute <= currentMinute)) {
-        isPastTime = true;
+      // เช็คว่าเวลาผ่านไปแล้วหรือยัง
+      const isPastTime = startHour < currentHour || 
+                         (startHour === currentHour && startMinute <= currentMinute);
+      
+      if (isPastTime) {
+        // วันนี้ + เวลาผ่านแล้ว → ปิด (สีแดง "ผ่านแล้ว")
+        shouldDisable = true;
+        badgeText = 'ผ่านแล้ว';
+        badgeColor = '#ef4444'; // สีแดง
+        statusClass = 'booked past-time';
+        btn.style.opacity = '0.5';
+      } else if (bookedTimesSet.has(time)) {
+        // วันนี้ + เวลายังไม่ผ่าน + มีคนจอง → ปิด (สีเทา "ไม่ว่าง")
+        shouldDisable = true;
+        badgeText = 'ไม่ว่าง';
+        badgeColor = '';
+        statusClass = 'booked';
+      } else {
+        // วันนี้ + เวลายังไม่ผ่าน + ยังว่าง → เปิด (สีเขียว "ว่าง")
+        shouldDisable = false;
+        badgeText = 'ว่าง';
+        badgeColor = '';
+        statusClass = 'available';
+      }
+    }
+    // 3. ถ้าเป็นวันข้างหน้า → จองได้ทุกช่วง (ไม่สนใจเวลา)
+    else if (isFutureDate) {
+      if (bookedTimesSet.has(time)) {
+        // วันข้างหน้า + มีคนจอง → ปิด (สีเทา "ไม่ว่าง")
+        shouldDisable = true;
+        badgeText = 'ไม่ว่าง';
+        badgeColor = '';
+        statusClass = 'booked';
+      } else {
+        // วันข้างหน้า + ยังว่าง → เปิด (สีเขียว "ว่าง")
+        shouldDisable = false;
+        badgeText = 'ว่าง';
+        badgeColor = '';
+        statusClass = 'available';
       }
     }
 
-    if (isPastTime) {
-      // เวลาผ่านไปแล้ว
-      btn.classList.add('booked');
-      btn.disabled = true;
-      const badge = document.createElement('span');
-      badge.className = 'status-badge';
-      badge.textContent = 'ผ่านแล้ว';
-      badge.style.background = '#9ca3af';
-      btn.appendChild(badge);
-      btn.style.opacity = '0.5';
-    } else if (bookedTimesSet.has(time)) { 
-      // มีคนจองแล้ว
-      btn.classList.add('booked');
-      btn.disabled = true;
-      const badge = document.createElement('span');
-      badge.className = 'status-badge';
-      badge.textContent = 'ไม่ว่าง';
-      btn.appendChild(badge);
-    } else {
-      // ว่าง
-      btn.classList.add('available');
-      btn.disabled = false;
-      const badge = document.createElement('span');
-      badge.className = 'status-badge';
-      badge.textContent = 'ว่าง';
-      btn.appendChild(badge);
+    // ตั้งค่า UI ตามสถานะ
+    btn.classList.add(...statusClass.split(' '));
+    btn.disabled = shouldDisable;
+    
+    const badge = document.createElement('span');
+    badge.className = 'status-badge';
+    badge.textContent = badgeText;
+    if (badgeColor) {
+      badge.style.background = badgeColor;
     }
+    btn.appendChild(badge);
   });
 }
 
@@ -800,68 +889,326 @@ function resetBookingForm() {
 // ========================================
 // AUTH FUNCTIONS
 // ========================================
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
-  const username = document.getElementById("modalLoginUsername").value;
-  const password = document.getElementById("modalLoginPassword").value;
-  const email = username + "@prijitsport.com";
   
-  auth.signInWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      return database.ref('users/' + userCredential.user.uid).once('value');
-    })
-   .then(snapshot => {
-      currentUser = { uid: auth.currentUser.uid, ...snapshot.val() };
-      document.getElementById("currentUser").textContent = currentUser.fullname;
-      document.getElementById("loginNavBtn").style.display = "none";
-      document.getElementById("userInfo").style.display = "flex";
-      closeLoginModal();
-      showToast("✅ เข้าสู่ระบบสำเร็จ!", 'success');
-    })
-    .catch(error => {
-      showToast("❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", 'error');
-    });
-}
-
-function handleRegister(e) {
-  e.preventDefault();
-  const username = document.getElementById("modalRegUsername").value;
-  const fullname = document.getElementById("modalRegFullname").value;
-  const phone = document.getElementById("modalRegPhone").value;
-  const password = document.getElementById("modalRegPassword").value;
-  const email = username + "@prijitsport.com";
+  const loginBtn = e.target.querySelector('button[type="submit"]');
+  const originalText = loginBtn.textContent;
   
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      return database.ref('users/' + userCredential.user.uid).set({
-        username, fullname, phone,
-        createdAt: new Date().toISOString()
-      });
-    })
- .then(() => {
-      showToast("✅ สมัครสมาชิกสำเร็จ!", 'success');
-      e.target.reset();
-      showLoginInModal();
-    })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        showToast("❌ ชื่อผู้ใช้นี้มีอยู่แล้ว", 'error');
-      } else {
-        showToast("❌ เกิดข้อผิดพลาด: " + error.message, 'error');
-      }
-    });
-}
-
-function handleLogout() {
-  if (confirm("ต้องการออกจากระบบใช่หรือไม่?")) {
-    auth.signOut().then(() => {
-      currentUser = null;
-      document.getElementById("loginNavBtn").style.display = "inline-block";
-      document.getElementById("userInfo").style.display = "none";
-      showToast("✅ ออกจากระบบเรียบร้อย", 'success');
-    });
+  try {
+    // ============================================
+    // 1. GET INPUT VALUES
+    // ============================================
+    const usernameInput = document.getElementById("modalLoginUsername");
+    const passwordInput = document.getElementById("modalLoginPassword");
+    
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+    
+    // ============================================
+    // 2. VALIDATION
+    // ============================================
+    const errors = {};
+    
+    // Validate username
+    const usernameError = Validator.username(username);
+    if (usernameError) {
+      errors.modalLoginUsername = usernameError;
+    }
+    
+    // Validate password
+    const passwordError = Validator.password(password);
+    if (passwordError) {
+      errors.modalLoginPassword = passwordError;
+    }
+    
+    // Show validation errors
+    if (Object.keys(errors).length > 0) {
+      showValidationErrors(errors);
+      return;
+    }
+    
+    // ============================================
+    // 3. SANITIZE INPUT (XSS Protection)
+    // ============================================
+    const sanitizedUsername = SecurityUtils.sanitizeUsername(username);
+    
+    // Validate sanitized result
+    if (!sanitizedUsername || sanitizedUsername.length < 3) {
+      showToast('❌ ชื่อผู้ใช้มีตัวอักษรที่ไม่ถูกต้อง', 'error');
+      usernameInput.focus();
+      return;
+    }
+    
+    // ============================================
+    // 4. SHOW LOADING STATE
+    // ============================================
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '⏳ กำลังเข้าสู่ระบบ...';
+    
+    // ============================================
+    // 5. AUTHENTICATE WITH FIREBASE
+    // ============================================
+    const email = sanitizedUsername + "@prijitsport.com";
+    
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    
+    // ============================================
+    // 6. GET USER DATA
+    // ============================================
+    const snapshot = await database.ref('users/' + userCredential.user.uid).once('value');
+    const userData = snapshot.val();
+    
+    // ============================================
+    // 7. SANITIZE USER DATA (XSS Protection)
+    // ============================================
+    currentUser = {
+      uid: auth.currentUser.uid,
+      username: SecurityUtils.escapeHtml(userData.username || ''),
+      fullname: SecurityUtils.escapeHtml(userData.fullname || ''),
+      phone: SecurityUtils.sanitizePhone(userData.phone || ''),
+      createdAt: userData.createdAt
+    };
+    
+    // ============================================
+    // 8. UPDATE UI
+    // ============================================
+    document.getElementById("currentUser").textContent = currentUser.fullname;
+    document.getElementById("loginNavBtn").style.display = "none";
+    document.getElementById("userInfo").style.display = "flex";
+    
+    // ============================================
+    // 9. CLOSE MODAL & SHOW SUCCESS
+    // ============================================
+    closeLoginModal();
+    showToast("✅ เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับ " + currentUser.fullname, 'success');
+    
+    // Clear form
+    e.target.reset();
+    
+    // Update booking list
+    updateBookingList();
+    
+  } catch (error) {
+    console.error('Login error:', error);
+    
+    // ============================================
+    // 10. ERROR HANDLING
+    // ============================================
+    let errorMessage = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+    
+    if (error.code === 'auth/user-not-found') {
+      errorMessage = 'ไม่พบชื่อผู้ใช้นี้ในระบบ';
+    } else if (error.code === 'auth/wrong-password') {
+      errorMessage = 'รหัสผ่านไม่ถูกต้อง';
+    } else if (error.code === 'auth/too-many-requests') {
+      errorMessage = 'ลองเข้าสู่ระบบบ่อยเกินไป กรุณารอสักครู่';
+    } else if (error.code === 'auth/network-request-failed') {
+      errorMessage = 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ กรุณาตรวจสอบการเชื่อมต่อ';
+    }
+    
+    showToast("❌ " + errorMessage, 'error');
+    
+  } finally {
+    // ============================================
+    // 11. HIDE LOADING STATE
+    // ============================================
+    loginBtn.disabled = false;
+    loginBtn.textContent = originalText;
   }
 }
+
+/*** Handle Register - พร้อม Validation และ Loading State  **/
+async function handleRegister(e) {
+  e.preventDefault();
+  
+  const registerBtn = e.target.querySelector('button[type="submit"]');
+  const originalText = registerBtn.textContent;
+  
+  try {
+    // ============================================
+    // 1. GET INPUT VALUES
+    // ============================================
+    const usernameInput = document.getElementById("modalRegUsername");
+    const fullnameInput = document.getElementById("modalRegFullname");
+    const phoneInput = document.getElementById("modalRegPhone");
+    const passwordInput = document.getElementById("modalRegPassword");
+    
+    const username = usernameInput.value;
+    const fullname = fullnameInput.value;
+    const phone = phoneInput.value;
+    const password = passwordInput.value;
+    
+    // ============================================
+    // 2. VALIDATION
+    // ============================================
+    const validationData = {
+      username: username,
+      fullname: fullname,
+      phone: phone,
+      password: password
+    };
+    
+    const errors = validateAllFields(validationData);
+    
+    if (errors) {
+      showValidationErrors(errors);
+      return;
+    }
+    
+    // ============================================
+    // 3. SANITIZE INPUT (XSS Protection)
+    // ============================================
+    const sanitizedData = {
+      username: SecurityUtils.sanitizeUsername(username),
+      fullname: SecurityUtils.sanitizeInput(fullname, {
+        allowThai: true,
+        allowEnglish: true,
+        allowSpaces: true,
+        maxLength: 100
+      }),
+      phone: SecurityUtils.sanitizePhone(phone)
+    };
+    
+    // Validate sanitized results
+    if (!sanitizedData.username || sanitizedData.username.length < 3) {
+      showToast('❌ ชื่อผู้ใช้มีตัวอักษรที่ไม่ถูกต้อง', 'error');
+      usernameInput.focus();
+      return;
+    }
+    
+    if (!sanitizedData.fullname || sanitizedData.fullname.length < 2) {
+      showToast('❌ ชื่อ-นามสกุลมีตัวอักษรที่ไม่ถูกต้อง', 'error');
+      fullnameInput.focus();
+      return;
+    }
+    
+    if (!sanitizedData.phone || sanitizedData.phone.length !== 10) {
+      showToast('❌ เบอร์โทรไม่ถูกต้อง', 'error');
+      phoneInput.focus();
+      return;
+    }
+    
+    // ============================================
+    // 4. SHOW LOADING STATE
+    // ============================================
+    registerBtn.disabled = true;
+    registerBtn.innerHTML = '⏳ กำลังสมัครสมาชิก...';
+    
+    // ============================================
+    // 5. CREATE USER IN FIREBASE AUTH
+    // ============================================
+    const email = sanitizedData.username + "@prijitsport.com";
+    
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    
+    // ============================================
+    // 6. SAVE USER DATA TO DATABASE
+    // ============================================
+    await database.ref('users/' + userCredential.user.uid).set({
+      username: sanitizedData.username,
+      fullname: sanitizedData.fullname,
+      phone: sanitizedData.phone,
+      createdAt: new Date().toISOString()
+    });
+    
+    // ============================================
+    // 7. SUCCESS - SHOW MESSAGE & RESET FORM
+    // ============================================
+    showToast("✅ สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ", 'success', 4000);
+    
+    // Clear form
+    e.target.reset();
+    
+    // Switch to login form
+    setTimeout(() => {
+      showLoginInModal();
+    }, 500);
+    
+  } catch (error) {
+    console.error('Register error:', error);
+    
+    // ============================================
+    // 8. ERROR HANDLING
+    // ============================================
+    let errorMessage = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง';
+    
+    if (error.code === 'auth/email-already-in-use') {
+      errorMessage = 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว กรุณาใช้ชื่ออื่น';
+    } else if (error.code === 'auth/weak-password') {
+      errorMessage = 'รหัสผ่านไม่ปลอดภัยพอ กรุณาใช้รหัสผ่านที่แข็งแรงขึ้น';
+    } else if (error.code === 'auth/network-request-failed') {
+      errorMessage = 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ กรุณาตรวจสอบการเชื่อมต่อ';
+    } else if (error.code === 'auth/operation-not-allowed') {
+      errorMessage = 'ระบบสมัครสมาชิกปิดการใช้งานชั่วคราว';
+    }
+    
+    showToast("❌ " + errorMessage, 'error', 5000);
+    
+  } finally {
+    // ============================================
+    // 9. HIDE LOADING STATE
+    // ============================================
+    registerBtn.disabled = false;
+    registerBtn.textContent = originalText;
+  }
+}
+
+/**
+ * Handle Logout - ปรับปรุงให้ใช้ Toast แทน confirm
+ */
+async function handleLogout() {
+  // ใช้ custom confirm modal ถ้ามี หรือใช้ confirm ปกติ
+  const confirmed = confirm("ต้องการออกจากระบบใช่หรือไม่?");
+  
+  if (!confirmed) return;
+  
+  try {
+    // Show loading
+    showLoading('กำลังออกจากระบบ...');
+    
+    // Sign out
+    await auth.signOut();
+    
+    // Clear current user
+    currentUser = null;
+    
+    // Update UI
+    document.getElementById("loginNavBtn").style.display = "inline-block";
+    document.getElementById("userInfo").style.display = "none";
+    
+    // Clear booking list
+    const bookingListDiv = document.getElementById('bookingList');
+    if (bookingListDiv) {
+      bookingListDiv.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">
+            กรุณา Login เพื่อดูรายการจอง
+          </p>
+          <button onclick="openLoginModal()" 
+                  style="background: #22c55e; color: white; padding: 12px 24px; 
+                         border: none; border-radius: 8px; font-weight: 600; 
+                         cursor: pointer; font-size: 1em;">
+            🔐 เข้าสู่ระบบ
+          </button>
+        </div>
+      `;
+    }
+    
+    hideLoading();
+    showToast("✅ ออกจากระบบเรียบร้อย", 'success');
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+  } catch (error) {
+    console.error('Logout error:', error);
+    hideLoading();
+    showToast("❌ เกิดข้อผิดพลาดในการออกจากระบบ", 'error');
+  }
+}
+
+console.log('✅ Improved Auth Handlers loaded successfully');
 
 
 // ========================================
@@ -1379,7 +1726,9 @@ function updateBookingList() {
       bookingListDiv.innerHTML = bookings.map(booking => {
         return generateBookingCard(booking);
       }).join('');
-    })
+    
+    initializeBookingCardEvents();
+  })
       .catch((error) => {
       console.error('❌ Error loading bookings:', error);
       bookingListDiv.innerHTML = `
@@ -1402,86 +1751,148 @@ function updateBookingList() {
   }
 
 function generateBookingCard(booking) {
-  // กำหนดสถานะและสี
+  // ============================================
+  // 1. SANITIZE DATA (XSS Protection)
+  // ============================================
+  const safeBooking = {
+    id: booking.id,
+    field: SecurityUtils.escapeHtml(booking.field || 'ไม่ระบุสนาม'),
+    date: booking.date, // Date string is safe
+    time: SecurityUtils.escapeHtml(booking.time || '-'),
+    username: SecurityUtils.escapeHtml(booking.username || ''),
+    phone: SecurityUtils.sanitizePhone(booking.phone || ''),
+    totalPrice: parseInt(booking.totalPrice) || 0,
+    depositAmount: parseInt(booking.depositAmount) || 0,
+    remainingAmount: parseInt(booking.remainingAmount) || 0,
+    bookingStatus: booking.bookingStatus || 'pending',
+    depositStatus: booking.depositStatus,
+    remainingStatus: booking.remainingStatus,
+    createdAt: booking.createdAt,
+    depositPaidAt: booking.depositPaidAt,
+    remainingPaidAt: booking.remainingPaidAt
+  };
+  
+  // ============================================
+  // 2. DETERMINE STATUS COLOR AND TEXT
+  // ============================================
   let statusColor = '#f59e0b';
   let statusText = 'รอตรวจสอบ';
   let statusBg = '#fef3c7';
   
-  if (booking.bookingStatus === 'approved') {
+  if (safeBooking.bookingStatus === 'approved') {
     statusColor = '#10b981';
     statusText = 'อนุมัติแล้ว ✅';
     statusBg = '#d1fae5';
-  } else if (booking.bookingStatus === 'pending_payment' || booking.bookingStatus === 'pending') {
+  } else if (safeBooking.bookingStatus === 'pending_payment' || safeBooking.bookingStatus === 'pending') {
     statusColor = '#f59e0b';
     statusText = 'รอตรวจสอบ ⏳';
     statusBg = '#fef3c7';
-  } else if (booking.bookingStatus === 'confirmed') {
+  } else if (safeBooking.bookingStatus === 'confirmed') {
     statusColor = '#3b82f6';
     statusText = 'ยืนยันแล้ว';
     statusBg = '#dbeafe';
-  } else if (booking.bookingStatus === 'completed') {
+  } else if (safeBooking.bookingStatus === 'completed') {
     statusColor = '#10b981';
     statusText = 'เสร็จสิ้น';
     statusBg = '#d1fae5';
-  } else if (booking.bookingStatus === 'cancelled') {
+  } else if (safeBooking.bookingStatus === 'cancelled') {
     statusColor = '#6b7280';
     statusText = 'ยกเลิกแล้ว';
     statusBg = '#f3f4f6';
   }
 
+  // ============================================
+  // 3. FORMAT DATES SAFELY
+  // ============================================
   const formatDate = (dateStr) => {
     if (!dateStr) return '-';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('th-TH', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '-';
+      return date.toLocaleDateString('th-TH', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } catch (e) {
+      return '-';
+    }
   };
 
   const formatDateTime = (dateStr) => {
     if (!dateStr) return '-';
-    const date = new Date(dateStr);
-    return date.toLocaleString('th-TH', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '-';
+      return date.toLocaleString('th-TH', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (e) {
+      return '-';
+    }
   };
 
-
-  // เพิ่มปุ่มต่อเวลา (เฉพาะการจองที่ approved)
+  // ============================================
+  // 4. EXTENSION BUTTON (if applicable)
+  // ============================================
   let extensionButton = '';
-  if (booking.bookingStatus === 'approved') {
-    const bookingDate = new Date(booking.date + 'T00:00:00');
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    if (bookingDate.getTime() === today.getTime()) {
-      extensionButton = `
-        <button class="extend-booking-btn" 
-                onclick="requestBookingExtension('${booking.id}')"
-                id="extend-btn-${booking.id}">
-          <span>🔄</span>
-          <span>ต่อเวลา 1 ชั่วโมง</span>
-        </button>
-        <div class="next-slot-info" id="next-slot-${booking.id}">
-          กำลังตรวจสอบช่วงถัดไป...
-        </div>
-      `;
+  if (safeBooking.bookingStatus === 'approved') {
+    try {
+      const bookingDate = new Date(safeBooking.date + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       
-      setTimeout(() => checkNextSlotForBooking(booking), 100);
+      if (bookingDate.getTime() === today.getTime()) {
+        // ใช้ data attribute แทน inline onclick เพื่อความปลอดภัย
+        extensionButton = `
+          <button class="extend-booking-btn" 
+                  data-booking-id="${safeBooking.id}"
+                  id="extend-btn-${safeBooking.id}">
+            <span>🔄</span>
+            <span>ต่อเวลา 1 ชั่วโมง</span>
+          </button>
+          <div class="next-slot-info" id="next-slot-${safeBooking.id}">
+            กำลังตรวจสอบช่วงถัดไป...
+          </div>
+        `;
+        
+        setTimeout(() => checkNextSlotForBooking(booking), 100);
+      }
+    } catch (e) {
+      console.error('Error creating extension button:', e);
     }
   }
 
+  // ============================================
+  // 5. CANCEL BUTTON (if applicable)
+  // ============================================
+  let cancelButton = '';
+  if (['pending', 'pending_payment', 'approved'].includes(safeBooking.bookingStatus)) {
+    // ใช้ data attribute แทน inline onclick
+    cancelButton = `
+      <button class="cancel-btn" 
+              data-booking-id="${safeBooking.id}"
+              style="background: #ef4444; color: white; padding: 8px 16px; 
+                     border: none; border-radius: 6px; cursor: pointer; 
+                     font-size: 14px; margin-top: 10px;">
+        ❌ ยกเลิกการจอง
+      </button>
+    `;
+  }
+
+  // ============================================
+  // 6. RETURN SAFE HTML
+  // ============================================
   return `
     <div class="booking-card" style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid ${statusColor};">
       
       <!-- Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="margin: 0; color: #1f2937; font-size: 18px;">📋 ${booking.field || 'ไม่ระบุสนาม'}</h3>
+        <h3 style="margin: 0; color: #1f2937; font-size: 18px;">📋 ${safeBooking.field}</h3>
         <span style="background: ${statusBg}; color: ${statusColor}; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 14px;">
           ${statusText}
         </span>
@@ -1491,40 +1902,75 @@ function generateBookingCard(booking) {
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
         <div>
           <p style="margin: 0; color: #6b7280; font-size: 13px;">📅 วันที่เล่น</p>
-          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${formatDate(booking.date)}</p>
+          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${formatDate(safeBooking.date)}</p>
         </div>
         <div>
           <p style="margin: 0; color: #6b7280; font-size: 13px;">⏰ เวลา</p>
-          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${booking.time || '-'}</p>
+          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${safeBooking.time}</p>
         </div>
         <div>
           <p style="margin: 0; color: #6b7280; font-size: 13px;">💰 ราคารวม</p>
-          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">฿${(booking.totalPrice || 0).toLocaleString()}</p>
+          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${safeBooking.totalPrice.toLocaleString()} บาท</p>
         </div>
         <div>
-          <p style="margin: 0; color: #6b7280; font-size: 13px;">💵 มัดจำ</p>
-          <p style="margin: 5px 0 0 0; color: #10b981; font-weight: 600;">฿${(booking.depositAmount || 0).toLocaleString()}</p>
+          <p style="margin: 0; color: #6b7280; font-size: 13px;">📱 เบอร์ติดต่อ</p>
+          <p style="margin: 5px 0 0 0; color: #1f2937; font-weight: 600;">${safeBooking.phone}</p>
         </div>
       </div>
 
-      <!-- Created At -->
-      <p style="margin: 10px 0 0 0; color: #9ca3af; font-size: 12px;">
-        📝 จองเมื่อ: ${formatDateTime(booking.createdAt)}
-      </p>
-
-      <!-- Actions -->
-      ${booking.bookingStatus !== 'cancelled' && booking.bookingStatus !== 'completed' ? `
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
-          ${extensionButton}
-          <button onclick="cancelBooking('${booking.id}')" 
-                  id="cancel-btn-${booking.id}"
-                  style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; ${extensionButton ? 'margin-top: 12px;' : ''}">
-            ❌ ยกเลิกการจอง
-          </button>
+      <!-- Payment Status -->
+      <div style="background: #f9fafb; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #6b7280; font-size: 13px;">💵 ค่าม่วน 30%</span>
+          <span style="font-weight: 600; color: ${safeBooking.depositStatus === 'approved' ? '#10b981' : '#f59e0b'}">
+            ${safeBooking.depositAmount.toLocaleString()} บาท 
+            ${safeBooking.depositStatus === 'approved' ? '✅' : '⏳'}
+          </span>
         </div>
-      ` : ''}
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #6b7280; font-size: 13px;">💸 ค่าบริการคงเหลือ</span>
+          <span style="font-weight: 600; color: ${safeBooking.remainingStatus === 'paid' ? '#10b981' : '#6b7280'}">
+            ${safeBooking.remainingAmount.toLocaleString()} บาท
+            ${safeBooking.remainingStatus === 'paid' ? '✅' : ''}
+          </span>
+        </div>
+      </div>
+
+      <!-- Extension Button -->
+      ${extensionButton}
+
+      <!-- Cancel Button -->
+      ${cancelButton}
+
+      <!-- Booking Info -->
+      <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+        <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+          📋 จองเมื่อ: ${formatDateTime(safeBooking.createdAt)}
+        </p>
+      </div>
     </div>
   `;
+}
+function initializeBookingCardEvents() {
+  // Extension buttons
+  document.querySelectorAll('.extend-booking-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const bookingId = this.getAttribute('data-booking-id');
+      if (bookingId) {
+        requestBookingExtension(bookingId);
+      }
+    });
+  });
+  
+  // Cancel buttons
+  document.querySelectorAll('.cancel-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const bookingId = this.getAttribute('data-booking-id');
+      if (bookingId) {
+        cancelBooking(bookingId);
+      }
+    });
+  });
 }
 
 
@@ -1882,37 +2328,49 @@ if (dateInput) {
     // ========================================
     // STAFF GALLERY FUNCTIONS
     // ========================================
-    function loadStaffGallery() {
-      const container = document.getElementById('staffGalleryContainer');
-      if (!container) return;
-      
-      database.ref('gallery').orderByChild('order').on('value', (snapshot) => {
-        container.innerHTML = '';
-        
-        if (!snapshot.exists()) {
-          container.innerHTML = '<div class="content-loading-state">📷 ยังไม่มีรูปภาพ</div>';
-          return;
-        }
-
-        const items = [];
-        snapshot.forEach((child) => {
-          items.push({ id: child.key, ...child.val() });
-        });
-
-        items.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-        items.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'staff-gallery-card';
-          card.onclick = () => openStaffModal(item.url);
-          card.innerHTML = `
-            <img src="${item.url}" alt="${item.title}" loading="lazy">
-            <div class="staff-gallery-card-title">${item.title}</div>
-          `;
-          container.appendChild(card);
-        });
-      });
+ function loadStaffGallery() {
+  const container = document.getElementById('staffGalleryContainer');
+  if (!container) return;
+  
+  database.ref('gallery').orderByChild('order').on('value', (snapshot) => {
+    container.innerHTML = '';
+    
+    if (!snapshot.exists()) {
+      container.innerHTML = '<div class="content-loading-state">📷 ยังไม่มีรูปภาพ</div>';
+      return;
     }
+
+    const items = [];
+    snapshot.forEach((child) => {
+      items.push({ id: child.key, ...child.val() });
+    });
+
+    items.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    items.forEach(item => {
+      // ✅ XSS Protection: Sanitize title and URL
+      const safeTitle = SecurityUtils.escapeHtml(item.title || 'ไม่มีชื่อ');
+      const safeUrl = (item.url || '').replace(/[<>\"'`]/g, ''); // ลบตัวอักษรอันตราย
+      
+      const card = document.createElement('div');
+      card.className = 'staff-gallery-card';
+      
+      // ใช้ data attribute แทน inline onclick
+      card.setAttribute('data-image-url', safeUrl);
+      card.addEventListener('click', function() {
+        const url = this.getAttribute('data-image-url');
+        if (url) openStaffModal(url);
+      });
+      
+      card.innerHTML = `
+        <img src="${safeUrl}" alt="${safeTitle}" loading="lazy" 
+             onerror="this.src='placeholder.jpg'">
+        <div class="staff-gallery-card-title">${safeTitle}</div>
+      `;
+      container.appendChild(card);
+    });
+  });
+}
 
     // ✅ Modal functions ถูกย้ายไปเป็น global แล้ว (ดูด้านบน)
 
@@ -1975,68 +2433,77 @@ if (dateInput) {
     // ========================================
     // ACTIVITIES FUNCTIONS
     // ========================================
-    function loadActivities() {
-      const container = document.getElementById('activitiesContainer');
-      if (!container) return;
-      
-      database.ref('activities').orderByChild('createdAt').on('value', (snapshot) => {
-        container.innerHTML = '';
-        
-        if (!snapshot.exists()) {
-          container.innerHTML = '<div class="content-loading-state">📝 ยังไม่มีข่าวสาร</div>';
-          return;
-        }
-
-        const items = [];
-        snapshot.forEach((child) => {
-          items.push({ id: child.key, ...child.val() });
-        });
-
-        items.reverse();
-
-        items.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'activity-card';
-          card.innerHTML = `
-            <div class="activity-header">
-              <div class="activity-title">${escapeHtml(item.title)}</div>
-              <div class="activity-date">${formatDate(item.createdAt)}</div>
-            </div>
-            <div class="activity-content">${escapeHtml(item.content)}</div>
-          `;
-          container.appendChild(card);
-        });
-      });
-    }
-
-    function formatDate(iso) {
-      if (!iso) return '-';
-      const d = new Date(iso);
-      return d.toLocaleDateString('th-TH', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // Initialize
-    loadStaffGallery();
-    loadActivities();
-
+   function loadActivities() {
+  const container = document.getElementById('activitiesContainer');
+  if (!container) return;
+  
+  database.ref('activities').orderByChild('createdAt').on('value', (snapshot) => {
+    container.innerHTML = '';
     
-  } catch (error) {
-    console.error("❌ Firebase initialization failed:", error);
-    alert("⚠️ ไม่สามารถเชื่อมต่อระบบได้\n\nError: " + error.message);
+    if (!snapshot.exists()) {
+      container.innerHTML = '<div class="content-loading-state">📝 ยังไม่มีข่าวสาร</div>';
+      return;
+    }
+
+    const items = [];
+    snapshot.forEach((child) => {
+      items.push({ id: child.key, ...child.val() });
+    });
+
+    items.reverse();
+
+    items.forEach(item => {
+      // ✅ XSS Protection: Sanitize all text content
+      const safeTitle = SecurityUtils.escapeHtml(item.title || 'ไม่มีหัวข้อ');
+      const safeContent = SecurityUtils.escapeHtml(item.content || '');
+      
+      const card = document.createElement('div');
+      card.className = 'activity-card';
+      card.innerHTML = `
+        <div class="activity-header">
+          <div class="activity-title">${safeTitle}</div>
+          <div class="activity-date">${formatDate(item.createdAt)}</div>
+        </div>
+        <div class="activity-content">${safeContent}</div>
+      `;
+      container.appendChild(card);
+    });
+  });
+}
+
+function formatDate(iso) {
+  if (!iso) return '-';
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '-';
+    return d.toLocaleDateString('th-TH', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch (e) {
+    return '-';
   }
 }
+
+console.log('✅ XSS Protection Patches loaded successfully');
+
+    // โหลด Staff Gallery
+    loadStaffGallery();
+    console.log("✅ Staff Gallery loaded");
+    // โหลด Activities
+    loadActivities();
+    console.log("✅ Activities loaded");
+  } catch (error) {
+    console.error('❌ Firebase initialization error:', error);
+    alert('❌ เกิดข้อผิดพลาดในการเชื่อมต่อ Firebase:\n' + error.message);
+  }
+}
+
+// เริ่มต้น Firebase
+initializeFirebase();
 
 // ========================================
 // SERVICE WORKER ERROR HANDLING
