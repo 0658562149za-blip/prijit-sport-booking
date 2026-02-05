@@ -2553,6 +2553,24 @@ async function checkNextSlotForBooking(booking) {
   const endTime = timeSlotParts[1];
   const nextStartTime = endTime;
   const nextEndTime = addOneHourToTime(endTime);
+    
+  // ✅ STEP 5: ตรวจสอบว่า nextEndTime เป็น null (เกินเวลาทำการ)
+  if (nextEndTime === null) {
+    const nextSlotInfo = document.getElementById(`next-slot-${booking.id}`);
+    const btn = document.getElementById(`extend-btn-${booking.id}`);
+    
+    if (nextSlotInfo) {
+      nextSlotInfo.innerHTML = `
+        <span style="color: #f59e0b;">⏰ ไม่สามารถต่อเวลาได้ (เกินเวลาทำการ 07:00-20:00)</span>
+      `;
+    }
+    
+    if (btn) {
+      btn.style.display = 'none'; // ซ่อนปุ่มต่อเวลา
+    }
+    
+    return;
+  }
   
   try {
     const snapshot = await database.ref('bookings')
@@ -2596,6 +2614,12 @@ async function requestBookingExtension(bookingId) {
     const endTime = timeSlotParts[1];
     const nextStartTime = endTime;
     const nextEndTime = addOneHourToTime(endTime);
+    
+    // ✅ STEP 2b: ตรวจสอบว่า nextEndTime เป็น null (เกินเวลาทำการ)
+    if (nextEndTime === null) {
+      showToast('⏰ ไม่สามารถต่อเวลาได้ เนื่องจากเกินเวลาทำการสนาม (07:00-20:00)', 'error');
+      return;
+    }
     
     // ตรวจสอบว่าช่วงถัดไปว่างหรือไม่
     const nextSlotSnapshot = await database.ref('bookings')
@@ -2679,6 +2703,14 @@ async function confirmExtensionPayment() {
     const endTime = timeSlotParts[1];
     const nextStartTime = endTime;
     const nextEndTime = addOneHourToTime(endTime);
+    
+    // ✅ STEP 3: ตรวจสอบว่า nextEndTime เป็น null (เกินเวลาทำการ)
+    if (nextEndTime === null) {
+      showToast('⏰ ไม่สามารถต่อเวลาได้ เนื่องจากเกินเวลาทำการสนาม (07:00-20:00)', 'error');
+      confirmBtn.textContent = 'ยืนยันชำระเงิน';
+      confirmBtn.disabled = false;
+      return;
+    }
     const timeSlot = `${nextStartTime} - ${nextEndTime}`;
     
     const hour = parseInt(nextStartTime.split(':')[0]);
@@ -2755,6 +2787,9 @@ async function findAlternativeSlots(booking) {
     for (let i = startIndex + 1; i < allSlots.length && alternativesFound.length < 5; i++) {
       const start = allSlots[i];
       const end = addOneHourToTime(start);
+      
+      // ✅ STEP 4: ข้ามถ้าเกินเวลาทำการ
+      if (end === null) continue;
       const timeSlot = `${start} - ${end}`;
       
       const snapshot = await database.ref('bookings')
@@ -2896,7 +2931,13 @@ function closeExtensionModal() {
 // Helper: เพิ่ม 1 ชั่วโมง
 function addOneHourToTime(timeStr) {
   const [hours, minutes] = timeStr.split(':').map(Number);
-  const newHours = (hours + 1) % 24;
+  const newHours = hours + 1;
+  
+  // ✅ FIX: จำกัดเวลาสูงสุดที่ 20:00 (เนื่องจากสนามเปิด 07:00-20:00)
+  if (newHours > 20) {
+    return null; // ส่งค่า null เมื่อเกินเวลาทำการ
+  }
+  
   return `${newHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 }
 
