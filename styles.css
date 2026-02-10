@@ -230,8 +230,8 @@ body.modal-open {
 /* Inline Loading (สำหรับปุ่ม) */
 .btn-loading {
   position: relative;
-  pointer-events: none;
   opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .btn-loading::after {
