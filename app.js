@@ -1653,16 +1653,17 @@ function uploadSlipAndCreateBooking() {
   reader.readAsDataURL(uploadedSlipFile);
 }
 function updateBookingList() {
-  debugLog('🔄 Updating booking list...');
+  console.log('🔄 [UpdateList] Updating booking list...');
   
   const bookingListDiv = document.getElementById('bookingList');
   if (!bookingListDiv) {
-    console.log('❌ bookingList element not found');
+    console.log('❌ [UpdateList] bookingList element not found');
     return;
   }
 
   const user = auth.currentUser;
   if (!user) {
+    console.log('⏭️ [UpdateList] No user logged in');
     // ✅ แสดงข้อความให้ผู้ใช้ login
     bookingListDiv.innerHTML = `
       <div style="text-align: center; padding: 40px;">
@@ -1679,13 +1680,16 @@ function updateBookingList() {
     `;
     return;
   }
+  
+  console.log(`👤 [UpdateList] Fetching bookings for user: ${user.uid}`);
   bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">⏳ กำลังโหลดข้อมูล...</p>';
+  
   database.ref('bookings')
     .orderByChild('userId')
     .equalTo(user.uid)
     .once('value')
-     .then((snapshot) => {
-      debugLog('📊 Snapshot exists:', snapshot.exists());
+    .then((snapshot) => {
+      console.log(`📊 [UpdateList] Snapshot exists: ${snapshot.exists()}`);
       
       if (!snapshot.exists()) {
         bookingListDiv.innerHTML = `
@@ -1709,10 +1713,11 @@ function updateBookingList() {
         // กรอง: ไม่แสดงรายการที่ถูกปฏิเสธ
         if (booking.bookingStatus !== 'rejected') {
           bookings.push(booking);
+          console.log(`  📋 Booking ${booking.id}: ${booking.field} | ${booking.date} | Status: ${booking.bookingStatus}`);
         }
       });
 
-      debugLog('📋 Total bookings:', bookings.length);
+      console.log(`✅ [UpdateList] Total bookings: ${bookings.length}`);
 
       if (bookings.length === 0) {
         bookingListDiv.innerHTML = '<p style="text-align: center; color: #666;">ยังไม่มีรายการจอง</p>';
@@ -1723,14 +1728,17 @@ function updateBookingList() {
       bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
       // แสดงรายการจอง
+      console.log('🎨 [UpdateList] Generating booking cards...');
       bookingListDiv.innerHTML = bookings.map(booking => {
         return generateBookingCard(booking);
       }).join('');
-    
-    initializeBookingCardEvents();
-  })
-      .catch((error) => {
-      console.error('❌ Error loading bookings:', error);
+      
+      console.log('🎯 [UpdateList] Initializing card events...');
+      initializeBookingCardEvents();
+      console.log('✅ [UpdateList] Booking list updated successfully');
+    })
+    .catch((error) => {
+      console.error('❌ [UpdateList] Error loading bookings:', error);
       bookingListDiv.innerHTML = `
         <div style="text-align: center; padding: 40px; color: #ef4444;">
           <p style="font-size: 1.1em; margin-bottom: 10px;">
@@ -1748,7 +1756,7 @@ function updateBookingList() {
         </div>
       `;
     });
-  }
+}
 
 function generateBookingCard(booking) {
   // ============================================
@@ -1840,17 +1848,24 @@ function generateBookingCard(booking) {
   // 4. EXTENSION BUTTON (if applicable)
   // ============================================
   let extensionButton = '';
-  if (safeBooking.bookingStatus === 'approved') {
+  const shouldShowExtension = safeBooking.bookingStatus === 'approved';
+  
+  if (shouldShowExtension) {
     try {
-      const bookingDate = new Date(safeBooking.date + 'T00:00:00');
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      // ✅ แก้ไข: ใช้ string comparison แทน Date object (แก้ปัญหา timezone)
+      const bookingDateStr = safeBooking.date; // "2025-02-10"
+      const todayStr = new Date().toISOString().split('T')[0]; // "2025-02-10"
       
-      if (bookingDate.getTime() === today.getTime()) {
-        // ใช้ data attribute แทน inline onclick เพื่อความปลอดภัย
+      console.log(`🔍 [Extension] Booking: ${bookingDateStr} | Today: ${todayStr} | Status: ${safeBooking.bookingStatus}`);
+      
+      if (bookingDateStr === todayStr) {
+        // ✅ เก็บ booking data ไว้ใน data attribute เพื่อใช้ใน checkNextSlotForBooking ภายหลัง
+        const bookingDataStr = JSON.stringify(booking).replace(/"/g, '&quot;');
+        
         extensionButton = `
           <button class="extend-booking-btn" 
                   data-booking-id="${safeBooking.id}"
+                  data-booking-data="${bookingDataStr}"
                   id="extend-btn-${safeBooking.id}">
             <span>🔄</span>
             <span>ต่อเวลา 1 ชั่วโมง</span>
@@ -1860,11 +1875,15 @@ function generateBookingCard(booking) {
           </div>
         `;
         
-        setTimeout(() => checkNextSlotForBooking(booking), 100);
+        console.log(`✅ [Extension] Button will be created for booking ${safeBooking.id}`);
+      } else {
+        console.log(`⏭️ [Extension] Skipped - not today (${bookingDateStr} !== ${todayStr})`);
       }
     } catch (e) {
-      console.error('Error creating extension button:', e);
+      console.error('❌ [Extension] Error:', e);
     }
+  } else {
+    console.log(`⏭️ [Extension] Skipped - status: "${safeBooking.bookingStatus}" (need "approved")`);
   }
 
   // ============================================
@@ -1952,10 +1971,31 @@ function generateBookingCard(booking) {
   `;
 }
 function initializeBookingCardEvents() {
+  console.log('🎯 [Events] Initializing booking card events...');
+  
   // Extension buttons
-  document.querySelectorAll('.extend-booking-btn').forEach(btn => {
+  const extensionButtons = document.querySelectorAll('.extend-booking-btn');
+  console.log(`  📊 Found ${extensionButtons.length} extension buttons`);
+  
+  extensionButtons.forEach(btn => {
+    const bookingId = btn.getAttribute('data-booking-id');
+    const bookingDataStr = btn.getAttribute('data-booking-data');
+    
+    // ✅ เรียก checkNextSlotForBooking หลังจาก DOM ready
+    if (bookingDataStr) {
+      try {
+        const booking = JSON.parse(bookingDataStr.replace(/&quot;/g, '"'));
+        
+        // ✅ เรียกทันทีหลัง DOM ถูกสร้าง (ไม่ต้อง setTimeout)
+        checkNextSlotForBooking(booking);
+        console.log(`  ✅ Checked next slot for booking ${bookingId}`);
+      } catch (e) {
+        console.error(`  ❌ Error parsing booking data for ${bookingId}:`, e);
+      }
+    }
+    
+    // เพิ่ม click event
     btn.addEventListener('click', function() {
-      const bookingId = this.getAttribute('data-booking-id');
       if (bookingId) {
         requestBookingExtension(bookingId);
       }
@@ -1963,7 +2003,10 @@ function initializeBookingCardEvents() {
   });
   
   // Cancel buttons
-  document.querySelectorAll('.cancel-btn').forEach(btn => {
+  const cancelButtons = document.querySelectorAll('.cancel-btn');
+  console.log(`  📊 Found ${cancelButtons.length} cancel buttons`);
+  
+  cancelButtons.forEach(btn => {
     btn.addEventListener('click', function() {
       const bookingId = this.getAttribute('data-booking-id');
       if (bookingId) {
@@ -1971,6 +2014,8 @@ function initializeBookingCardEvents() {
       }
     });
   });
+  
+  console.log('✅ [Events] Booking card events initialized');
 }
 
 
