@@ -34,7 +34,55 @@ const CONFIG = {
 // ========================================
 // 2️⃣ GLOBAL VARIABLES
 // ========================================
+// Modal functions
+function openLoginModal() {
+  const modal = document.getElementById('loginModal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.classList.add('modal-open');
+    showLoginInModal();
+  }
+}
+
+function closeLoginModal() {
+  const modal = document.getElementById('loginModal');
+  if (modal) {
+    modal.classList.remove('active');
+     document.body.classList.remove('modal-open');
+  }
+}
+
+function showLoginInModal() {
+  document.getElementById('modalLoginForm').style.display = 'block';
+  document.getElementById('modalRegisterForm').style.display = 'none';
+}
+
+function showRegisterInModal() {
+  const loginForm = document.getElementById('modalLoginForm');
+const registerForm = document.getElementById('modalRegisterForm');
+
+if (!loginForm || !registerForm) {
+  console.error('❌ ไม่เจอ from elements');
+return;}
+
+
+  loginForm.style.display = 'none';
+  registerForm.style.display = 'block';
+
+  registerForm.style.pointerEvents = 'auto';
+  registerForm.style.opacity = '1';
+
+setTimeout(() => {
+  const firstinput = registerForm.querySelector('input');
+  if (firstinput) {
+    firstinput.focus();
+      }
+  },300);
+}
+
+
 debugLog('📦 [2/3] Declaring global variables...');
+
 // Firebase
 let auth, database, currentUser = null;
 let isCancelling = false;
@@ -108,34 +156,6 @@ function togglePassword(inputId, button) {
     input.type = 'password';
     button.textContent = '👁️';
   }
-}
-
-// Modal functions
-function openLoginModal() {
-  const modal = document.getElementById('loginModal');
-  if (modal) {
-    modal.classList.add('active');
-    document.body.classList.add('modal-open');
-    showLoginInModal();
-  }
-}
-
-function closeLoginModal() {
-  const modal = document.getElementById('loginModal');
-  if (modal) {
-    modal.classList.remove('active');
-     document.body.classList.remove('modal-open');
-  }
-}
-
-function showLoginInModal() {
-  document.getElementById('modalLoginForm').style.display = 'block';
-  document.getElementById('modalRegisterForm').style.display = 'none';
-}
-
-function showRegisterInModal() {
-  document.getElementById('modalLoginForm').style.display = 'none';
-  document.getElementById('modalRegisterForm').style.display = 'block';
 }
 
 // Mobile menu functions
