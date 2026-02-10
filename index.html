@@ -61,9 +61,18 @@
     <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
     <link rel="icon" type="image/jpeg" href="f6.jpg">
     
-    <!-- 🚀 PRODUCTION VERSION - Using Minified Files -->
+    <!-- 🚀 PERFORMANCE OPTIMIZATION - ปรับปรุงความเร็ว -->
+    <!-- Preconnect to Firebase - เชื่อมต่อ Firebase ล่วงหน้า -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    
+    <!-- Preload Critical Resources - โหลดทรัพยากรสำคัญก่อน -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    <link rel="preload" href="f6.jpg" as="image" fetchpriority="high">
+    
     <!-- External Stylesheets -->
-    <link rel="stylesheet" href="styles.min.css">
+    <link rel="stylesheet" href="styles.css" media="all">
 
   </head>
   <body>
@@ -417,7 +426,7 @@
         <div class="section-header">📸 ภาพบรรยากาศสนาม PRIJIT SPORT</div>
 
         <div class="gallery-main-image">
-          <img id="galleryMainImage" src="f11.jpg" alt="สนามฟุตบอล PRIJIT SPORT">
+          <img id="galleryMainImage" src="f11.jpg" alt="สนามฟุตบอล PRIJIT SPORT" loading="lazy" decoding="async" width="800" height="600">
           <button class="gallery-nav-btn gallery-prev-btn" onclick="changeGalleryImage(-1)">❮</button>
           <button class="gallery-nav-btn gallery-next-btn" onclick="changeGalleryImage(1)">❯</button>
         </div>
@@ -428,12 +437,12 @@
 
         <div class="gallery-thumbnails">
           <img class="gallery-thumbnail active" src="f11.jpg" onclick="selectGalleryImage(0)" alt="ภาพ 1">
-          <img class="gallery-thumbnail" src="f8.jpg" onclick="selectGalleryImage(1)" alt="ภาพ 2">
-          <img class="gallery-thumbnail" src="f9.jpg" onclick="selectGalleryImage(2)" alt="ภาพ 3">
-          <img class="gallery-thumbnail" src="f1.jpg" onclick="selectGalleryImage(3)" alt="ภาพ 4">
-          <img class="gallery-thumbnail" src="f10.jpg" onclick="selectGalleryImage(4)" alt="ภาพ 5">
-          <img class="gallery-thumbnail" src="f2.jpg" onclick="selectGalleryImage(5)" alt="ภาพ 6">
-          <img class="gallery-thumbnail" src="f3.jpg" onclick="selectGalleryImage(6)" alt="ภาพ 7">
+          <img class="gallery-thumbnail" src="f8.jpg" onclick="selectGalleryImage(1)" alt="ภาพ 2" loading="lazy" width="150" height="100">
+          <img class="gallery-thumbnail" src="f9.jpg" onclick="selectGalleryImage(2)" alt="ภาพ 3" loading="lazy" width="150" height="100">
+          <img class="gallery-thumbnail" src="f1.jpg" onclick="selectGalleryImage(3)" alt="ภาพ 4" loading="lazy" width="150" height="100">
+          <img class="gallery-thumbnail" src="f10.jpg" onclick="selectGalleryImage(4)" alt="ภาพ 5" loading="lazy" width="150" height="100">
+          <img class="gallery-thumbnail" src="f2.jpg" onclick="selectGalleryImage(5)" alt="ภาพ 6" loading="lazy" width="150" height="100">
+          <img class="gallery-thumbnail" src="f3.jpg" onclick="selectGalleryImage(6)" alt="ภาพ 7" loading="lazy" width="150" height="100">
         </div>
 
         <div style="text-align: center; margin-top: 40px; padding: 30px; background: #f0fdf4; border-radius: 15px;">
@@ -483,7 +492,7 @@
 
         <div class="contact-wrapper">
           <div class="contact-logo-img">
-            <img src="f6.jpg" alt="PRIJIT SPORT Logo" />
+            <img src="f6.jpg" alt="PRIJIT SPORT Logo" loading="lazy" width="200" height="200" />
           </div>
 
           <div class="contact-info">
