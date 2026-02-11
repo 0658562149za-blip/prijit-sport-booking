@@ -275,11 +275,11 @@ body.modal-open {
     }
     .nav-item {
       position: relative;
-      left: 6%;
+      left: 10%;
       color:  #fffefe;
       font-weight: bold;
       font-size: 1em;
-      padding: 12px 22px;
+      padding: 5px 10px;
       border-radius: 50px;
       cursor: pointer;
       background:  #000000;
@@ -304,8 +304,10 @@ body.modal-open {
       }
 
       .user-section {
+        position: fixed;
+        left: 15%;
         color: rgb(10, 238, 29);
-        font-weight: bold;
+        font-size:  20px;
         display: flex;
         align-items: center;
         gap: 5px;
@@ -314,22 +316,22 @@ body.modal-open {
       .logout-btn {
         background: #4b4b4b !important;
         border: 2px solid rgb(252, 255, 54) !important;
-        position: absolute;
-        left: 84%;
+        position:fixed;
+        left: 75%;
         padding: 5px 10px;
-        border-radius: 25px;
+        border-radius: 5px;
         cursor: pointer;
       }
 
       .login-btn {
       background: #4b4b4b !important;
       color: #ffffff !important;
-      position: absolute;
-      left: 84%;
+      position: fixed;
+      left: 75%;
       font-weight: bold;
       border: 2px solid  rgb(252, 255, 54) !important;
       padding: 5px 10px;
-      border-radius: 25px;
+      border-radius: 5px;
       cursor: pointer;
     }
 
@@ -396,7 +398,8 @@ body.modal-open {
       gap: 0;
     }
     .menu-overlay .nav-item {
-      padding: 10px 15px;
+      padding: 15px 10px;
+      left: 0%;
       margin: 8px 0;
       border-radius: 15px;
       font-size: 1.2em;
