@@ -274,6 +274,8 @@ body.modal-open {
       flex-wrap: wrap;
     }
     .nav-item {
+      position: relative;
+      left: 6%;
       color:  #fffefe;
       font-weight: bold;
       font-size: 1em;
@@ -320,6 +322,8 @@ body.modal-open {
       .login-btn {
       background: #4b4b4b !important;
       color: #ffffff !important;
+      position: absolute;
+      left: 90%;
       font-weight: bold;
       border: 2px solid  rgb(252, 255, 54) !important;
       padding: 5px 10px;
