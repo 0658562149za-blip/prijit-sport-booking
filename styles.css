@@ -315,7 +315,7 @@ body.modal-open {
         background: #4b4b4b !important;
         border: 2px solid rgb(252, 255, 54) !important;
         position: absolute;
-        left: 85%;
+        left: 84%;
         padding: 5px 10px;
         border-radius: 25px;
         cursor: pointer;
@@ -325,7 +325,7 @@ body.modal-open {
       background: #4b4b4b !important;
       color: #ffffff !important;
       position: absolute;
-      left: 85%;
+      left: 84%;
       font-weight: bold;
       border: 2px solid  rgb(252, 255, 54) !important;
       padding: 5px 10px;
